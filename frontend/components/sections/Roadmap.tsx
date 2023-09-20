@@ -26,7 +26,7 @@ const Roadmap = () => {
           className="rounded-[20px] w-full h-full object-cover"
         />
         <p className="lg:bottom-6 lg:right-6 bottom-2 right-2 leading-none absolute text-[18px] lg:text-[28px] pulse-anim">
-          jk, we don't have a roadmap
+          jk, we don&apos;t have a roadmap
         </p>
         <Image
           src="/img/roadmap/bozo-roadmap.png"

@@ -8,8 +8,8 @@ const Description = () => {
         <h3 className="text-[30px] lg:text-[35px] text-center max-w-[980px] mx-auto">
           Bozo Collective ia a free Solana project with art inspired by diary of
           a wimpy kid. Holding one of these gloriously ugly mfers will grant you
-          access to the Bozo DAO. other than that we don't know what the F*ck to
-          tell you
+          access to the Bozo DAO. other than that we don&apos;t know what the
+          F*ck to tell you
         </h3>
       </div>
       <div className="relative overflow-hidden">
