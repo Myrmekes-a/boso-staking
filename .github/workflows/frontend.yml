@@ -1,0 +1,97 @@
+name: Build and Deploy FRONTEND
+
+on:
+  push:
+    branches:
+      - "*"
+    paths:
+      - "frontend/**/*"
+jobs:
+  build-frontend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js for frontend
+        uses: actions/setup-node@v3
+        with:
+          node-version: latest
+
+      - name: Install pnpm for frontend
+        run: npm install -g pnpm
+
+      - name: Install frontend dependencies
+        run: pnpm install --no-frozen-lockfile
+
+      - name: Run frontend lint and build
+        run: |
+          pnpm run lint
+          pnpm run build
+
+  deploy-frontend:
+    needs: [build-frontend]
+    runs-on: ubuntu-latest
+    if: (github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main') && success()
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: SSH into the server and execute command (dev branch)
+        if: github.ref == 'refs/heads/dev'
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SERVER_HETZNER_IP }}
+          username: ${{ secrets.SERVER_HETZNER_USER }}
+          password: ${{ secrets.SERVER_HETZNER_DEV_PASSWORD }}
+          script: |
+            mkdir -p /home/${{ secrets.SERVER_HETZNER_USER }}/sites/bozo/dev/frontend
+            rm -r /home/${{ secrets.SERVER_HETZNER_USER }}/sites/bozo/dev/frontend
+            mkdir -p /home/${{ secrets.SERVER_HETZNER_USER }}/sites/bozo/dev/frontend
+
+      - name: SSH into the server and execute command (main branch)
+        if: github.ref == 'refs/heads/main'
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SERVER_HETZNER_IP }}
+          username: ${{ secrets.SERVER_HETZNER_USER }}
+          password: ${{ secrets.SERVER_HETZNER_DEV_PASSWORD }}
+          script: |
+            mkdir -p /home/${{ secrets.SERVER_HETZNER_USER }}/sites/bozo/prod/frontend
+            rm -r /home/${{ secrets.SERVER_HETZNER_USER }}/sites/bozo/prod/frontend
+            mkdir -p /home/${{ secrets.SERVER_HETZNER_USER }}/sites/bozo/prod/frontend
+
+      - name: SCP frontend to the server
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.SERVER_HETZNER_IP }}
+          username: ${{ secrets.SERVER_HETZNER_USER }}
+          password: ${{ secrets.SERVER_HETZNER_DEV_PASSWORD }}
+          source: "frontend"
+          target: /home/${{ secrets.SERVER_HETZNER_USER }}/sites/bozo/${{ github.ref == 'refs/heads/dev' && 'dev' || 'prod' }}
+
+      - name: Deploy to x server (dev branch)
+        if: github.ref == 'refs/heads/dev'
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SERVER_HETZNER_IP }}
+          username: ${{ secrets.SERVER_HETZNER_USER }}
+          password: ${{ secrets.SERVER_HETZNER_DEV_PASSWORD }}
+          script: |
+            /home/dev/scripts/start_ticketing_frontend_dev.sh
+
+      - name: Deploy to x server (main branch)
+        if: github.ref == 'refs/heads/main'
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SERVER_HETZNER_IP }}
+          username: ${{ secrets.SERVER_HETZNER_USER }}
+          password: ${{ secrets.SERVER_HETZNER_DEV_PASSWORD }}
+          script: |
+            /home/dev/scripts/start_bozo_frontend_prod.sh
