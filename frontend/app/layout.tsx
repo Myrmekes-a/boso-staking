@@ -4,6 +4,7 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import Footer from "@/components/navigation/Footer";
+import ReactLenisComponent from "@/components/ReactLenisComponent";
 
 const bozoFont = localFont({
   src: "../public/font/bozo.ttf",
@@ -26,8 +27,10 @@ export default function RootLayout({
       lang="en"
       className={bozoFont.className}>
       <body className="bg-beige text-black">
-        {children}
-        <Footer />
+        <ReactLenisComponent>
+          {children}
+          <Footer />
+        </ReactLenisComponent>
       </body>
     </html>
   );
