@@ -81,7 +81,7 @@ const Cards = () => {
               alt="How Many?"
               width={400}
               height={400}
-              className="w-full h-full object-cover group-hover:opacity-100 opacity-0 transition-all duration-500 relative z-10"
+              className="w-full h-full object-cover group-hover:opacity-100 opacity-0 transition-all duration-500 relative z-10 rounded-[20px]"
             />
             <p className="text-[30px] lg:text-[50px] text-center uppercase absolute top-6 right-6 leading-none">
               How

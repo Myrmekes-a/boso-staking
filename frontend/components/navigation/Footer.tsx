@@ -101,7 +101,7 @@ const Footer = () => {
           className={`${
             leftBlockInView
               ? "opacity-100 translate-x-0"
-              : "opacity-0 transform translate-x-full"
+              : "lg:opacity-0 transform lg:translate-x-full"
           } mt-6 text-[18px] lg:text-right text-center transition-all duration-300`}>
           Made with love by Syndra
         </div>
