@@ -1,12 +1,19 @@
 "use client";
 
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
 
-const wallet = ["abc123", "xyz456"];
+interface WalletRecord {
+  id: string;
+  fields: {
+    walletColumn: string;
+  };
+}
 
 const Wallet = () => {
+  const [wallets, setWallets] = useState<string[]>([]);
+
   const [inputValue, setInputValue] = useState("");
   const [isInWallet, setIsInWallet] = useState(false);
 
@@ -31,17 +38,73 @@ const Wallet = () => {
 
   if (leftBlockIsInView && !leftBlockInView) {
     setLeftBlockInView(true);
-  } /* else if (!leftBlockIsInView && leftBlockInView) {
-    setLeftBlockInView(false);
   }
- */
+
+  const API_KEY =
+    "pateHx3UedWCaS5xp.10aa2785cf67395b8d1d85959921b0e58cf9cf6ccd898c9ad4621d10d4e7864b";
+  /* const API_URL = "https://api.airtable.com/v0/appOLxCqzLpnpcTku/Wallets";
+
+  useEffect(() => {
+    const data = fetch(API_URL, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${API_KEY}`,
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => response.json())
+      .then((data: { records: WalletRecord[] }) => {
+        const records = data.records;
+        const fetchedWallets = records.map(
+          (record) => record.fields.walletColumn
+        );
+        setWallets(fetchedWallets);
+      })
+      .catch((error) => {
+        console.error("Errore:", error);
+      });
+  }, []); */
+
+  const API_URL = "https://api.airtable.com/v0/appOLxCqzLpnpcTku/Wallets";
+  const HEADERS = {
+    Authorization: `Bearer ${API_KEY}`,
+    "Content-Type": "application/json",
+  };
+
+  const fetchAllWallets: any = async (offset?: string) => {
+    let url = API_URL;
+
+    if (offset) {
+      url += `?offset=${offset}`;
+    }
+
+    const response = await fetch(url, { method: "GET", headers: HEADERS });
+    const data = await response.json();
+
+    if (data.offset) {
+      return data.records.concat(await fetchAllWallets(data.offset));
+    } else {
+      return data.records;
+    }
+  };
+
+  useEffect(() => {
+    fetchAllWallets().then((allWallets: any) => {
+      const fetchedWallets = allWallets.map(
+        (record: any) => record.fields.walletColumn
+      );
+      setWallets(fetchedWallets);
+    });
+  }, []);
+
+  console.log(wallets);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setInputValue(value);
 
     if (value.length >= 3) {
-      setIsInWallet(wallet.includes(value));
+      setIsInWallet(wallets.includes(value));
     } else {
       setIsInWallet(false);
     }
