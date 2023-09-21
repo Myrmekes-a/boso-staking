@@ -27,7 +27,7 @@ html.lenis {
 /* width */
 ::-webkit-scrollbar {
   width: 6px;
-  height: 6px;
+  height: 0px;
 }
 
 /* Track */
@@ -176,5 +176,87 @@ img, video, svg {
   }
   100% {
     transform: scale(0.95);
+  }
+}
+
+.opacity-anim {
+  animation: opacity-anim 4s infinite ease-in-out;
+}
+
+@keyframes opacity-anim {
+  0% {
+    opacity: 0.6;
+  }
+  25% {
+    opacity: 0.8;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  75% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.6;
+  }
+}
+
+
+/* IS IN VIEWPORT ANIMATIONS START */
+@keyframes fadeUp {
+  0% {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scaleRotate {
+  0% {
+    opacity: 0;
+    transform: scale(0.7) rotate(30deg);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(0);
+  }
+}
+
+.animate-fadeUp {
+  animation: fadeUp 0.5s forwards;
+}
+
+.animate-scaleRotate {
+  animation: scaleRotate 1s forwards;
+}
+
+.animate-rotate-perspective {
+  animation: rotate-perspective 1s forwards;
+}
+
+@keyframes rotate-perspective  {
+  0% {
+    transform: perspective(1200px) scale(0.5) rotate(20deg);
+    opacity: 0;
+  }
+  100% {
+    transform: perspective(1200px) scale(1) rotate(0);
+    opacity: 1;
+  }
+}
+/* IS IN VIEWPORT ANIMATIONS END */
+
+@keyframes fadeInOut {
+  0% {
+    opacity: 1;
+  }
+  30% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
   }
 }

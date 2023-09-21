@@ -1,7 +1,46 @@
+"use client";
+
 import Image from "next/image";
-import React from "react";
+import React, { useState } from "react";
+import { useInView } from "react-intersection-observer";
 
 const Cards = () => {
+  const [h3InView, setH3InView] = useState(false);
+  const [leftBlockInView, setLeftBlockInView] = useState(false);
+  const [rightBlockInView, setRightBlockInView] = useState(false);
+
+  const { ref: cardsRef, inView: h3IsInView } = useInView({
+    threshold: 0,
+    triggerOnce: false,
+  });
+
+  const { ref: leftBlockRef, inView: leftBlockIsInView } = useInView({
+    threshold: 0.3,
+    triggerOnce: false,
+  });
+
+  const { ref: rightBlockRef, inView: rightBlockIsInView } = useInView({
+    threshold: 0.6,
+    triggerOnce: false,
+  });
+
+  if (h3IsInView && !h3InView) {
+    setH3InView(true);
+  } else if (!h3IsInView && h3InView) {
+    setH3InView(false);
+  }
+
+  if (leftBlockIsInView && !leftBlockInView) {
+    setLeftBlockInView(true);
+  } /* else if (!leftBlockIsInView && leftBlockInView) {
+    setLeftBlockInView(false);
+  }
+ */
+  if (rightBlockIsInView && !rightBlockInView) {
+    setRightBlockInView(true);
+  } /* else if (!rightBlockIsInView && rightBlockInView) {
+    setRightBlockInView(false);
+  } */
   return (
     <div className="py-[22rem] bg-black text-white relative overflow-hidden">
       <Image
@@ -19,11 +58,21 @@ const Cards = () => {
         className="absolute bottom-[-1rem] left-0 right-0 mx-auto z-30 pointer-events-none floating-anim"
       />
       <div className="container mx-auto">
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 relative">
-          <p className="text-[60px] lg:text-[90px] absolute top-[-8rem] left-0 lg:left-[-2rem] rotate-[-22deg] z-40">
+        <div
+          ref={cardsRef}
+          className={`${
+            h3InView
+              ? "opacity-100 translate-y-0"
+              : "opacity-0 transform translate-y-20"
+          } grid grid-cols-2 lg:grid-cols-4 gap-4 relative transition-all duration-500`}>
+          <p
+            ref={leftBlockRef}
+            className="text-[60px] lg:text-[90px] absolute top-[-8rem] left-0 lg:left-[-2rem] rotate-[-22deg] z-40">
             Minting
           </p>
-          <p className="text-[60px] lg:text-[90px] absolute bottom-[-8rem] right-0 lg:right-[-2rem] rotate-[-22deg] z-40">
+          <p
+            ref={rightBlockRef}
+            className="text-[60px] lg:text-[90px] absolute bottom-[-8rem] right-0 lg:right-[-2rem] rotate-[-22deg] z-40">
             Details
           </p>
           <div className="bg-primary overflow-hidden rounded-[20px] relative text-black aspect-square group">

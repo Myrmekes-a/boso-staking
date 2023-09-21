@@ -1,16 +1,66 @@
+"use client";
+
 import Image from "next/image";
-import React from "react";
+import React, { useState } from "react";
+import { useInView } from "react-intersection-observer";
 
 const Footer = () => {
+  const [h3InView, setH3InView] = useState(false);
+  const [leftBlockInView, setLeftBlockInView] = useState(false);
+  const [rightBlockInView, setRightBlockInView] = useState(false);
+
+  const { ref: containerRef, inView: h3IsInView } = useInView({
+    threshold: 0.3,
+    triggerOnce: false,
+  });
+
+  const { ref: imgRef, inView: leftBlockIsInView } = useInView({
+    threshold: 0,
+    triggerOnce: false,
+  });
+
+  const { ref: textRef, inView: rightBlockIsInView } = useInView({
+    threshold: 0,
+    triggerOnce: false,
+  });
+
+  if (h3IsInView && !h3InView) {
+    setH3InView(true);
+  } else if (!h3IsInView && h3InView) {
+    setH3InView(false);
+  }
+
+  if (leftBlockIsInView && !leftBlockInView) {
+    setLeftBlockInView(true);
+  } else if (!leftBlockIsInView && leftBlockInView) {
+    setLeftBlockInView(false);
+  }
+
+  if (rightBlockIsInView && !rightBlockInView) {
+    setRightBlockInView(true);
+  } else if (!rightBlockIsInView && rightBlockInView) {
+    setRightBlockInView(false);
+  }
   return (
     <div className="container mb-8 mx-auto">
-      <div className="bg-black text-primary overflow-hidden rounded-[40px] relative px-12 py-6">
+      <div
+        ref={containerRef}
+        className={` ${
+          h3InView
+            ? "opacity-100 translate-y-0"
+            : "opacity-0 transform translate-y-20"
+        } bg-black text-primary overflow-hidden rounded-[40px] relative px-12 py-6 transition-all duration-700`}>
         <Image
           src="/img/footer/footer.png"
           alt="Bozo"
           width={300}
           height={300}
-          className="absolute left-0 bottom-0 hidden lg:block"
+          className={` ${
+            leftBlockInView
+              ? "opacity-100 translate-y-0"
+              : "opacity-0 transform translate-y-[70%]"
+          } absolute left-0 bottom-0 hidden lg:block transition-all duration-300`}
+          ref={imgRef}
         />
         <div className="absolute top-20 left-[20%] hidden lg:block text-[50px]">
           <p className="leading-none rotate-[-15deg] absolute top-0 left-0">
@@ -46,7 +96,13 @@ const Footer = () => {
             <i className="text-2xl bi bi-twitter-x leading-[0]"></i>
           </a>
         </div>
-        <div className="mt-6 text-[18px] lg:text-right text-center">
+        <div
+          ref={textRef}
+          className={`${
+            leftBlockInView
+              ? "opacity-100 translate-x-0"
+              : "opacity-0 transform translate-x-full"
+          } mt-6 text-[18px] lg:text-right text-center transition-all duration-300`}>
           Made with love by Syndra
         </div>
       </div>

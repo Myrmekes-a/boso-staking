@@ -5,6 +5,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import Footer from "@/components/navigation/Footer";
 import ReactLenisComponent from "@/components/ReactLenisComponent";
+import ClickImage from "@/components/ClickImage";
 
 const bozoFont = localFont({
   src: "../public/font/bozo.ttf",
@@ -26,13 +27,16 @@ export default function RootLayout({
     <html
       lang="en"
       className={bozoFont.className}>
-      <body className="bg-beige text-black">
+      <body
+        className="bg-beige text-black"
+        style={{ overflow: "hidden" }}>
         <ReactLenisComponent>
-          {children}
-          <Footer />
+          <ClickImage>
+            {children}
+            <Footer />
+          </ClickImage>
         </ReactLenisComponent>
       </body>
     </html>
   );
 }
-
