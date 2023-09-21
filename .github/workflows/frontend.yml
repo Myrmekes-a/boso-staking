@@ -84,7 +84,7 @@ jobs:
           username: ${{ secrets.SERVER_HETZNER_USER }}
           password: ${{ secrets.SERVER_HETZNER_DEV_PASSWORD }}
           script: |
-            /home/dev/scripts/start_ticketing_frontend_dev.sh
+            /home/dev/scripts/start_bozo_dev_f.sh
 
       - name: Deploy to x server (main branch)
         if: github.ref == 'refs/heads/main'
@@ -94,4 +94,4 @@ jobs:
           username: ${{ secrets.SERVER_HETZNER_USER }}
           password: ${{ secrets.SERVER_HETZNER_DEV_PASSWORD }}
           script: |
-            /home/dev/scripts/start_bozo_frontend_prod.sh
+            /home/dev/scripts/start_bozo_prod_f.sh
