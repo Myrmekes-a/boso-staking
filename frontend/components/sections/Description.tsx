@@ -73,10 +73,10 @@ const Description = () => {
           ${
             h3InView ? "animate-fadeUp" : "opacity-0 transform translate-y-4"
           }`}>
-          Bozo Collective ia a free Solana project with art inspired by diary of
+          Bozo Collective is a free Solana project with art inspired by diary of
           a wimpy kid. Holding one of these gloriously ugly mfers will grant you
-          access to the Bozo DAO. other than that we don&apos;t know what the
-          F*ck to tell you
+          access to the Bozo DAO. Other than that we don&apos;t know what the
+          F*ck to tell you.
         </h3>
       </div>
       <div className="relative overflow-hidden">
