@@ -13,7 +13,7 @@ const Hero = () => {
         alt="Bozo"
         className="anim-perspective mt-[180px] hero-logo sm:mt-[80px] md:mt-[150px] lg:mt-[100px] xl:mt-[50px] 2xl:mt-[0px] max-w-[95%] md:max-w-[85%] lg:max-w-[70%] mx-auto pointer-events-none"
       />
-      <div className="absolute bottom-0 w-full h-screen overflow-hidden pointer-events-none hero-img-container">
+      {/* <div className="absolute bottom-0 w-full h-screen overflow-hidden pointer-events-none hero-img-container">
         <Image
           src="/img/hero/left-hero.png"
           width={1000}
@@ -44,7 +44,7 @@ const Hero = () => {
             className="opacity-anim left-0 right-0 bottom-0 w-full z-[-1] h-full object-cover 2xl:translate-y-8 lg:mt-0 translate-y-[-150px] sm:translate-y-[-200px] md:translate-y-[-100px]"
           />
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };

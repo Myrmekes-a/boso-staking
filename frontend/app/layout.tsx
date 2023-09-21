@@ -30,12 +30,12 @@ export default function RootLayout({
       <body
         className="bg-beige text-black"
         style={{ overflow: "hidden" }}>
-        {/* <ReactLenisComponent> */}
-        <ClickImage>
-          {children}
-          <Footer />
-        </ClickImage>
-        {/* </ReactLenisComponent> */}
+        <ReactLenisComponent>
+          <ClickImage>
+            {children}
+            <Footer />
+          </ClickImage>
+        </ReactLenisComponent>
       </body>
     </html>
   );
