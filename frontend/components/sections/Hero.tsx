@@ -21,13 +21,13 @@ const Hero = () => {
           alt="Bozo"
           className="absolute left-0 bottom-0 md:w-[60%] lg:w-2/5 z-[3] hidden md:block md:scale-100 2xl:bottom-[-2rem] hero-img-1"
         />
-        {/* <Image
+        <Image
           src="/img/hero/center-hero.png"
           width={1000}
           height={1000}
           alt="Bozo"
           className="absolute lg:left-0 md:right-[-2rem] lg:right-0 bottom-0 lg:mx-auto w-full lg:w-[45%] md:w-[60%] z-[2] scale-150 md:scale-100 origin-bottom 2xl:bottom-[-2rem] hero-img-2"
-        /> */}
+        />
         <Image
           src="/img/hero/right-hero.png"
           width={1000}
@@ -35,7 +35,7 @@ const Hero = () => {
           alt="Bozo"
           className="absolute right-0 bottom-0 w-2/5 z-[1] hidden lg:block 2xl:bottom-[-2rem] hero-img-3"
         />
-        <div className="min-h-[600px] absolute bottom-0 left-0 right-0 flex items-end">
+        {/* <div className="min-h-[600px] absolute bottom-0 left-0 right-0 flex items-end">
           <Image
             src="/img/hero/particles-hero.png"
             width={2560}
@@ -43,7 +43,7 @@ const Hero = () => {
             alt="Bozo"
             className="opacity-anim left-0 right-0 bottom-0 w-full z-[-1] h-full object-cover 2xl:translate-y-8 lg:mt-0 translate-y-[-150px] sm:translate-y-[-200px] md:translate-y-[-100px]"
           />
-        </div>
+        </div> */}
       </div>
     </div>
   );
