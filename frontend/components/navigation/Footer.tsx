@@ -100,10 +100,14 @@ const Footer = () => {
           ref={textRef}
           className={`${
             leftBlockInView
-              ? "opacity-100 translate-x-0"
-              : "lg:opacity-0 transform lg:translate-x-full"
+              ? "opacity-100 translate-y-0"
+              : "lg:opacity-0 transform lg:translate-y-full"
           } mt-6 text-[18px] lg:text-right text-center transition-all duration-300`}>
-          Made with love by Syndra
+          <a
+            href="https://www.syndra.io/"
+            target="_blank">
+            Made with love by <span className="text-white">Syndra</span>
+          </a>
         </div>
       </div>
     </div>

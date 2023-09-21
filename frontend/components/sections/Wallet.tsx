@@ -4,7 +4,12 @@ import Image from "next/image";
 import React, { useState } from "react";
 import { useInView } from "react-intersection-observer";
 
+const wallet = ["abc123", "xyz456"];
+
 const Wallet = () => {
+  const [inputValue, setInputValue] = useState("");
+  const [isInWallet, setIsInWallet] = useState(false);
+
   const [h3InView, setH3InView] = useState(false);
   const [leftBlockInView, setLeftBlockInView] = useState(false);
 
@@ -30,6 +35,18 @@ const Wallet = () => {
     setLeftBlockInView(false);
   }
  */
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setInputValue(value);
+
+    if (value.length >= 3) {
+      setIsInWallet(wallet.includes(value));
+    } else {
+      setIsInWallet(false);
+    }
+  };
+
   return (
     <div className="my-64 container mx-auto relative">
       <Image
@@ -55,11 +72,45 @@ const Wallet = () => {
           className="text-[22px] lg:text-[32px] text-center mb-4">
           Check if you are on the F*cking Bozolist.
         </label>
-        <input
-          id="wallet"
-          className="bg-beige/80 backdrop-blur-[6px] placeholder:text-black/70 border-black border-[3px] rounded-2xl py-4 px-4 text-[22px] leading-none"
-          placeholder="Enter wallet address"
-        />
+        <div className="w-full relative">
+          <input
+            id="wallet"
+            className="bg-beige/80 backdrop-blur-[10px] placeholder:text-black/70 border-black border-[3px] rounded-2xl py-4 px-4 text-[22px] leading-none w-full"
+            placeholder="Enter wallet address"
+            onChange={handleChange}
+          />
+        </div>
+      </div>
+      <div className="min-h-[80px]">
+        {inputValue.length > 3 ? (
+          <>
+            {isInWallet ? (
+              <div className="flex center relative z-20">
+                <div className="flex center gap-2 mt-4 select-none bg-[#9CECAE] border-[3px] border-[#004E11] text-[#004E11] w-fit rounded-[10px] px-4 pt-4 pb-3">
+                  <p className="text-[20px] lg:text-[25px] leading-none">
+                    You&apos;re in mf!
+                  </p>
+                  <div className="w-5 aspect-square rounded-full bg-[#44DA6E] relative flex center before:bg-[#44DA6E] outer-circle">
+                    <div className="absolute z-10 w-4 bg-[#6FFE7D] aspect-square rounded-full" />
+                    <div className="absolute z-20 w-2 bg-[#A0FFE8] aspect-square rounded-full" />
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="flex center relative z-20">
+                <div className="flex center gap-2 mt-4 select-none bg-[#EC9C9C] border-[3px] border-[#4E0000] text-[#4E0000] w-fit rounded-[10px] px-4 pt-4 pb-3">
+                  <p className="text-[20px] lg:text-[25px] leading-none">
+                    You&apos;re out mf!
+                  </p>
+                  <div className="w-5 aspect-square rounded-full bg-[#DA4444] relative flex center before:bg-[#DA4444] outer-circle">
+                    <div className="absolute z-10 w-4 bg-[#FE6F6F] aspect-square rounded-full" />
+                    <div className="absolute z-20 w-2 bg-[#FFA0A0] aspect-square rounded-full" />
+                  </div>
+                </div>
+              </div>
+            )}
+          </>
+        ) : null}
       </div>
     </div>
   );

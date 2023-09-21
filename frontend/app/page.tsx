@@ -5,6 +5,7 @@ import MarqueeSection from "@/components/sections/MarqueeSection";
 import Preloader from "@/components/sections/Preloader";
 import Roadmap from "@/components/sections/Roadmap";
 import Wallet from "@/components/sections/Wallet";
+import Image from "next/image";
 
 export default function Home() {
   return (
@@ -15,6 +16,15 @@ export default function Home() {
         <Description />
         <Cards />
         <Roadmap />
+        <div className="w-full lg:pb-8">
+          <Image
+            src="/img/divisore.png"
+            alt="Bozo"
+            width={2560}
+            height={1440}
+            className=""
+          />
+        </div>
         <MarqueeSection />
         <Wallet />
       </div>

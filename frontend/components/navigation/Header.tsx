@@ -2,7 +2,7 @@ import React from "react";
 
 const Header = () => {
   return (
-    <div className="container mx-auto py-3 flex center gap-2">
+    <div className="container mx-auto py-7 flex center gap-2">
       <a
         href="https://discord.com/invite/bozodao"
         target="_blank"
