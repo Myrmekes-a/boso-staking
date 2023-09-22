@@ -11,7 +11,7 @@ const Hero = () => {
         width={2000}
         height={500}
         alt="Bozo"
-        className="anim-perspective mt-[180px] hero-logo sm:mt-[80px] md:mt-[150px] lg:mt-[100px] xl:mt-[50px] 2xl:mt-[0px] max-w-[95%] md:max-w-[85%] lg:max-w-[70%] mx-auto pointer-events-none"
+        className="anim-perspective mt-[180px] hero-logo sm:mt-[80px] md:mt-[150px] lg:mt-[100px] xl:mt-[50px] 2xl:mt-[0px] max-w-[95%] md:max-w-[85%] lg:max-w-[70%] mx-auto pointer-events-none relative z-50"
       />
       <div className="absolute bottom-0 w-full h-screen overflow-hidden pointer-events-none hero-img-container">
         <Image

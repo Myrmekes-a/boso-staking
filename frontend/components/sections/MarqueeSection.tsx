@@ -8,8 +8,6 @@ import images from "@/utils/marquee";
 
 const MarqueeSection = () => {
   const [h3InView, setH3InView] = useState(false);
-  const [leftBlockInView, setLeftBlockInView] = useState(false);
-  const [rightBlockInView, setRightBlockInView] = useState(false);
 
   const { ref: titleRef, inView: h3IsInView } = useInView({
     threshold: 0.5,
@@ -39,7 +37,7 @@ const MarqueeSection = () => {
           Our degen friends
         </h2>
       </div>
-      {[0, 8, 16, 24].map((shift, idx) => (
+      {[0, 9, 18, 27].map((shift, idx) => (
         <Marquee
           key={idx}
           autoFill
@@ -54,54 +52,6 @@ const MarqueeSection = () => {
           ))}
         </Marquee>
       ))}
-      {/* <Marquee
-        autoFill
-        direction="left"
-        speed={20}>
-        {images.map((image, index) => (
-          <MarqueeCard
-            key={index}
-            img={`/img/marquee/${image}`}
-            name={image.replace(".png", "")}
-          />
-        ))}
-      </Marquee>
-      <Marquee
-        autoFill
-        direction="right"
-        speed={20}>
-        {images.map((image, index) => (
-          <MarqueeCard
-            key={index}
-            img={`/img/marquee/${image}`}
-            name={image.replace(".png", "")}
-          />
-        ))}
-      </Marquee>
-      <Marquee
-        autoFill
-        direction="left"
-        speed={20}>
-        {images.map((image, index) => (
-          <MarqueeCard
-            key={index}
-            img={`/img/marquee/${image}`}
-            name={image.replace(".png", "")}
-          />
-        ))}
-      </Marquee>
-      <Marquee
-        autoFill
-        direction="right"
-        speed={20}>
-        {images.map((image, index) => (
-          <MarqueeCard
-            key={index}
-            img={`/img/marquee/${image}`}
-            name={image.replace(".png", "")}
-          />
-        ))}
-      </Marquee> */}
     </div>
   );
 };

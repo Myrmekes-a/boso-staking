@@ -15,7 +15,6 @@ const images = [
     "jpeggler.png",
     "justinOogy.png",
     "kookcapital.png",
-    "lollipop.png",
     "obeyRaves.png",
     "ohareyoufat.png",
     "pattyFi.png",
