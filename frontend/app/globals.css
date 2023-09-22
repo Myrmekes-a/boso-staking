@@ -1,0 +1,284 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* LENIS LIB START */
+html.lenis {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
+}
+/* LENIS LIB END */
+
+/* width */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 0px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #E4DECF;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #C8453B;
+  border-radius: 9999px;
+}
+
+::-moz-selection { /* Code for Firefox */
+  color: #E4DECF;
+  background: #1A1A1A;
+}
+
+::selection {
+  color: #E4DECF;
+  background: #1A1A1A;
+}
+
+.center {
+  justify-content: center;
+  align-items: center;
+}
+
+img, video, svg {
+  user-select: none;
+}
+
+.anim-perspective {
+  animation: perspective 6s infinite cubic-bezier(0.11, 0.73, 0.33, 0.94);
+}
+
+@keyframes perspective {
+  0% {
+    transform: perspective(1200px) rotateX(0) rotateY(0);
+  }
+  50% {
+    transform: perspective(1200px) rotateX(10deg) rotateY(10deg);
+  }
+  100% {
+    transform: perspective(1200px) rotateX(0) rotateY(0);
+  }
+}
+
+.hero-img-1 {
+  animation: hero-img-1 2s infinite ease;
+}
+
+@keyframes hero-img-1 {
+  0% {
+    transform: translateX(0) translateY(0) rotate(0);
+  }
+  50% {
+    transform: translateX(-5px) translateY(7px) rotate(-1deg);
+  }
+  100% {
+    transform: translateX(0) translateY(0) rotate(0);
+  }
+}
+
+.hero-img-2 {
+  animation: hero-img-2 3s infinite ease;
+}
+
+@keyframes hero-img-2 {
+  0% {
+    transform: translateX(0) translateY(0) rotateX(0) scale(1);
+  }
+  50% {
+    transform: translateX(0) translateY(9px) rotateX(4deg) scale(1);
+  }
+  100% {
+    transform: translateX(0) translateY(0) rotateX(0) scale(1);
+  }
+}
+
+@media (max-width: 768px) {
+  @keyframes hero-img-2 {
+    0% {
+      transform: translateX(0) translateY(0) rotateX(0) scale(1.5);
+    }
+    50% {
+      transform: translateX(0) translateY(9px) rotateX(4deg) scale(1.5);
+    }
+    100% {
+      transform: translateX(0) translateY(0) rotateX(0) scale(1.5);
+    }
+  }
+}
+
+.hero-img-3 {
+  animation: hero-img-3 2.5s infinite ease;
+}
+
+@keyframes hero-img-3 {
+  0% {
+    transform: translateX(0) translateY(0) rotate(0);
+  }
+  50% {
+    transform: translateX(3px) translateY(0) rotate(1deg);
+  }
+  100% {
+    transform: translateX(0) translateY(0) rotate(0);
+  }
+}
+
+@media (min-width: 2000px) {
+  .hero-img-container img {
+    bottom: -5rem;
+  }
+  .hero-logo {
+    margin-top: 6rem !important;
+  }
+}
+
+.floating-anim {
+  animation: floating-anim 3s infinite cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+@keyframes floating-anim {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(10px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+.pulse-anim {
+  animation: pulse-anim 2s infinite ease;
+}
+
+@keyframes pulse-anim {
+  0% {
+    transform: scale(0.95);
+  }
+  50% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(0.95);
+  }
+}
+
+.opacity-anim {
+  animation: opacity-anim 4s infinite ease-in-out;
+}
+
+@keyframes opacity-anim {
+  0% {
+    opacity: 0.6;
+  }
+  25% {
+    opacity: 0.8;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  75% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.6;
+  }
+}
+
+
+/* IS IN VIEWPORT ANIMATIONS START */
+@keyframes fadeUp {
+  0% {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scaleRotate {
+  0% {
+    opacity: 0;
+    transform: scale(0.7) rotate(30deg);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(0);
+  }
+}
+
+.animate-fadeUp {
+  animation: fadeUp 0.5s forwards;
+}
+
+.animate-scaleRotate {
+  animation: scaleRotate 1s forwards;
+}
+
+.animate-rotate-perspective {
+  animation: rotate-perspective 1s forwards;
+}
+
+@keyframes rotate-perspective  {
+  0% {
+    transform: perspective(1200px) scale(0.5) rotate(20deg);
+    opacity: 0;
+  }
+  100% {
+    transform: perspective(1200px) scale(1) rotate(0);
+    opacity: 1;
+  }
+}
+/* IS IN VIEWPORT ANIMATIONS END */
+
+@keyframes fadeInOut {
+  0% {
+    opacity: 1;
+  }
+  30% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.outer-circle::before {
+  animation: circle-pulse 2s infinite ease;
+  aspect-ratio: 1/1;
+  border-radius: 9999px;
+  width: 100%;
+  height: 100%;
+}
+
+@keyframes circle-pulse {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  20% {
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.6);
+    opacity: 0;
+  }
+}
