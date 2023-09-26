@@ -1,4 +1,5 @@
 const images = [
+    "syndra.png",
     "anglio.png",
     "atitty.png",
     "base.png",
