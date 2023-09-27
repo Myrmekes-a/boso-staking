@@ -282,3 +282,7 @@ img, video, svg {
     opacity: 0;
   }
 }
+
+*:focus-visible {
+  outline: none;
+}

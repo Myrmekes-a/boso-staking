@@ -12,6 +12,7 @@ const config: Config = {
       black: "#1A1A1A",
       white: "#FFFFFF",
       primary: "#C8453B",
+      transparent: "transparent"
     },
     container: {
       padding: '1rem',

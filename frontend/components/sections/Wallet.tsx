@@ -20,7 +20,7 @@ const Wallet = ({ data }: any) => {
 
   const { ref: walletRef, inView: h3IsInView } = useInView({
     threshold: 0.7,
-    triggerOnce: false,
+    triggerOnce: true,
   });
 
   const { ref: leftBlockRef, inView: leftBlockIsInView } = useInView({
@@ -85,28 +85,22 @@ const Wallet = ({ data }: any) => {
         </label>
         <div className="w-full relative">
           <form>
-            <input
-              id="wallet"
-              className="bg-beige/80 backdrop-blur-[10px] placeholder:text-black/70 border-black border-[3px] rounded-2xl py-4 px-4 text-[22px] leading-none w-full"
-              placeholder="Enter wallet address"
-              onChange={handleChange}
-            />
-            <button
-              type="submit"
-              onClick={handleSubmitWallet}
-              className="absolute right-2 top-[1px] flex center gap-2 mx-auto select-none text-black w-fit px-4 pt-4 pb-3">
-              <p className="text-[20px] lg:text-[25px] leading-none">
-                <i className="bi bi-arrow-right-square-fill text-primary text-4xl hover:text-primary/80 transition-colors"></i>
-              </p>
-            </button>
-            {/* <button
-              id="btnwallet"
-              className="bg-beige/80 backdrop-blur-[10px] placeholder:text-black/70 border-black border-[3px] rounded-2xl py-4 px-4 text-[22px] leading-none w-full"
-              placeholder="Enter wallet address"
-              type="submit"
-              onClick={handleSubmitWallet}>
-              Check
-            </button> */}
+            <div className="bg-beige/80 backdrop-blur-[10px] relative border-black border-[3px] rounded-2xl py-4 px-4">
+              <input
+                id="wallet"
+                className="placeholder:text-black/70 bg-transparent text-[22px] leading-none w-4/5"
+                placeholder="Enter wallet address"
+                onChange={handleChange}
+              />
+              <button
+                type="submit"
+                onClick={handleSubmitWallet}
+                className="absolute right-2 top-[0px] flex center gap-2 mx-auto select-none text-black w-fit px-4 pt-4 pb-3 shrink-0">
+                <p className="text-[20px] lg:text-[25px] leading-none">
+                  <i className="bi bi-arrow-right-square-fill text-primary text-4xl leading-none hover:text-primary/80 transition-colors"></i>
+                </p>
+              </button>
+            </div>
           </form>
         </div>
       </div>
