@@ -24,17 +24,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html
-      lang="en"
-      className={bozoFont.className}>
-      <body
-        className="bg-beige text-black"
-        style={{ overflow: "hidden" }}>
+    <html lang="en" className={bozoFont.className}>
+      <body className="bg-beige text-black" style={{ overflow: "hidden" }}>
         <ReactLenisComponent>
-          <ClickImage>
-            {children}
-            <Footer />
-          </ClickImage>
+          <ClickImage>{children}</ClickImage>
         </ReactLenisComponent>
       </body>
     </html>
