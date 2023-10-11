@@ -1,13 +1,8 @@
 import React from "react";
-import Button from "../dashboard/Button";
 
-const Header = () => {
+const SocialButtons = () => {
   return (
-    <div className="container mx-auto py-7 flex center gap-2 md:relative">
-      <div className="absolute mx-auto top-1/4 md:right-0 md:top-7">
-        <Button text="Open App" redirect="/dashboard" />
-      </div>
-
+    <div className=" w-fit flex center gap-2">
       <a
         href="https://discord.com/invite/bozodao"
         target="_blank"
@@ -26,4 +21,4 @@ const Header = () => {
   );
 };
 
-export default Header;
+export default SocialButtons;
