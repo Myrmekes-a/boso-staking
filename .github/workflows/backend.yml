@@ -4,10 +4,10 @@ env:
   PROJECT_NAME: bozo # Change project name
   PROJECT_TYPE: backend # Change to frontend for frontend deployment
   WORKING_DIRECTORY: backend # Change to frontend for frontend deployment
-  DEV_APP_PORT: 3618 # Update this port as needed
-  DEV_DOMAIN_NAME: bozo.avrean.net # Change domain name
-  PROD_APP_PORT: 3620 # Update this port as needed
-  PROD_DOMAIN_NAME: bozo.network # Change domain name
+  DEV_APP_PORT: 3630 # Update this port as needed
+  DEV_DOMAIN_NAME: api-bozo.avrean.net # Change domain name
+  PROD_APP_PORT: 3631 # Update this port as needed
+  PROD_DOMAIN_NAME: api.bozo.network # Change domain name
   ENABLE_CACHE: false
   ENABLE_CACHE_CONTROL: false
   ENABLE_RATE_LIMITING: false
