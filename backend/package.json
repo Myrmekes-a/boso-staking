@@ -19,6 +19,7 @@
   "author": "Harpreet Singh @redergo",
   "license": "ISC",
   "dependencies": {
+    "@metaplex-foundation/mpl-token-metadata": "^3.1.0",
     "@metaplex/js": "^4.12.0",
     "@sendgrid/mail": "^7.6.2",
     "@solana/web3.js": "^1.87.1",
