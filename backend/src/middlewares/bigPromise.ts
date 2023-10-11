@@ -19,6 +19,7 @@ type CustomFunction = (
 export = (func: CustomFunction) =>
   (req: Request, res: Response, next: NextFunction, ...args: any) =>
     Promise.resolve(func(req, res, next, ...args)).catch((e) => {
+      console.log(e);
       if (e.name === 'MongoServerError') {
         if (e.code === 11000) {
           return next(
