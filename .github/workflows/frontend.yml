@@ -105,4 +105,4 @@ jobs:
           username: ${{ env.SERVER_USER }}
           password: ${{ env.SERVER_PASSWORD }}
           script: |
-            /home/dev/scripts/start_script.sh -e ${{ env.ENVIRONMENT }} -p ${{ env.PROJECT_NAME }} -t ${{ env.PROJECT_TYPE }} -P ${{ env.APP_PORT }} -s ${{ env.DOMAIN_NAME }} -r ${{ env.ENABLE_RATE_LIMITING }} -c ${{ env.ENABLE_CACHE }} -C ${{ env.ENABLE_CACHE_CONTROL }} -v true
+            /home/dev/scripts/start_script.sh -e ${{ env.ENVIRONMENT }} -p ${{ env.PROJECT_NAME }} -d ${{env.WORKING_DIRECTORY}} -t ${{ env.PROJECT_TYPE }} -P ${{ env.APP_PORT }} -s ${{ env.DOMAIN_NAME }} -r ${{ env.ENABLE_RATE_LIMITING }} -c ${{ env.ENABLE_CACHE }} -C ${{ env.ENABLE_CACHE_CONTROL }} -v true
