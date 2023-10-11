@@ -2,6 +2,7 @@
 /* eslint no-continue: 0 */
 
 import { Connection } from '@metaplex/js';
+// @ts-ignore
 import { Metadata } from '@metaplex-foundation/mpl-token-metadata';
 import Nft from '../models/nft';
 
