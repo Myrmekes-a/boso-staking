@@ -13,6 +13,7 @@ import YAML from 'yamljs';
 // import all routes here
 import user from './routes/user';
 import payment from './routes/payment';
+import nft from './routes/nft';
 import errorHandler from './middlewares/errorHanlder';
 
 const app: express.Application = express();
@@ -40,6 +41,8 @@ app.use(
 const whitelist = [
   'http://localhost:3000',
   'http://localhost:3222',
+  'https://bozo.avrean.net',
+  'https://bozo.network',
   'https://domain.net',
 ];
 
@@ -51,6 +54,7 @@ app.use(cors(corsOptions));
 // router middleware
 app.use('/api/v1', user);
 app.use('/api/v1', payment);
+app.use('/api/v1', nft);
 
 // error handler middleware
 app.use(errorHandler);

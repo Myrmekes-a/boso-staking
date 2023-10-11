@@ -2,46 +2,25 @@
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable func-names */
 import mongoose from 'mongoose';
-import validator from 'validator';
-import argon2 from 'argon2';
+/* import validator from 'validator';
+import argon2 from 'argon2'; */
 import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
-import { CustomError } from '../utils/customError';
-import logger from '../utils/logger/logger';
+/* import { CustomError } from '../utils/customError';
+import logger from '../utils/logger/logger'; */
 
 const userSchema: mongoose.Schema = new mongoose.Schema(
   {
-    name: {
+    wallet: {
       type: String,
-      required: [true, 'Please provide a name'],
-      maxlength: [40, 'Name should be under 40 characters'],
-    },
-    email: {
-      type: String,
-      required: [true, 'Please provide an email'],
-      validate: [validator.isEmail, 'Please enter email in correct format'],
+      required: [true, 'Please provide a wallet'],
       unique: true,
     },
-    password: {
-      type: String,
-      required: [true, 'Please provide a password'],
-      minlength: [6, 'password should be atleast 6 char'],
-      select: false, // select false, we don't want to return
-      // the encrypted password in every find
-      // user must select it manually ex: await User.findOne({ email }).select('+password');
-    },
-    role: {
-      type: String,
-      default: 'user',
-      // maybe add enumeration?
-    },
-    forgotPasswordToken: String,
-    forgotPasswordExpiry: Date,
   },
   { timestamps: true }
 );
 
-// encrypt password before save - HOOKS
+/* // encrypt password before save - HOOKS
 userSchema.pre('save', async function (next) {
   if (!this.isModified('password')) {
     return next();
@@ -70,7 +49,7 @@ userSchema.methods.isValidatedPassword = async function (
     });
   }
 };
-
+*/
 // create and return jwt token
 userSchema.methods.getJwtToken = function () {
   return jwt.sign({ id: this._id }, process.env.JWT_SECRET as string, {
