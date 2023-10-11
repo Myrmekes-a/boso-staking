@@ -2,29 +2,34 @@ name: Build and Deploy
 
 env:
   PROJECT_NAME: bozo # Change project name
-  PROJECT_TYPE: backend # Change to frontend for frontend deployment
-  WORKING_DIRECTORY: backend # Change to frontend for frontend deployment
-  DEV_APP_PORT: 3630 # Update this port as needed
-  DEV_DOMAIN_NAME: api-bozo.avrean.net # Change domain name
-  PROD_APP_PORT: 3631 # Update this port as needed
-  PROD_DOMAIN_NAME: api.bozo.network # Change domain name
+  PROJECT_TYPE: backend # supported frontend or backend
+  WORKING_DIRECTORY: backend # this is really important as name of the folder (frontend/backend/landing etc ...) if there is no folder but the current directory, use ./
+  DEV_APP_PORT: 3630 # Update this port as needed -> follow ports please
+  DEV_DOMAIN_NAME: api-bozo.avrean.net # Change domain name -> ask to me
+  PROD_APP_PORT: 3631 # Update this port as needed -> follow ports please
+  PROD_DOMAIN_NAME: api.bozo.network # Change domain name -> ask tome
   ENABLE_CACHE: false
   ENABLE_CACHE_CONTROL: false
   ENABLE_RATE_LIMITING: false
-  DEV_SERVER_USER: ${{ secrets.SERVER_HETZNER_USER }}
-  DEV_SERVER_IP: ${{ secrets.SERVER_HETZNER_IP }}
-  DEV_SERVER_PASSWORD: ${{ secrets.SERVER_HETZNER_DEV_PASSWORD }}
-  PROD_SERVER_USER: ${{ secrets.SERVER_HETZNER_USER }}
-  PROD_SERVER_IP: ${{ secrets.SERVER_HETZNER_IP }}
-  PROD_SERVER_PASSWORD: ${{ secrets.SERVER_HETZNER_DEV_PASSWORD }}
+  RATE_BURST: 10
+  DEV_SERVER_USER: ${{ secrets.DEV_SERVER_HZN_USER }}
+  DEV_SERVER_IP: ${{ secrets.SERVER_HZN_HOSTNAME }}
+  DEV_SERVER_PASSWORD: ${{ secrets.DEV_SERVER_HZN_PASSWORD }}
+  PROD_SERVER_USER: ${{ secrets.PROD_SERVER_HZN_USER }}
+  PROD_SERVER_IP: ${{ secrets.PROD_SERVER_HZN_HOSTNAME }}
+  PROD_SERVER_PASSWORD: ${{ secrets.PROD_SERVER_HZN_PASSWORD }}
 
 on:
   push:
     branches:
       - "*"
     paths:
-      - "backend/**/*" # Change path
-
+      - "backend/**/*" # change this to the working directory as above.
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: "The branch, tag or SHA to run this workflow on"
+        required: true
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -88,8 +93,8 @@ jobs:
           username: ${{ env.SERVER_USER }}
           password: ${{ env.SERVER_PASSWORD }}
           script: |
-            rm -rf /home/${{ env.SERVER_USER }}/sites/${{ env.PROJECT_NAME }}/${{ env.ENVIRONMENT }}/${{ env.PROJECT_TYPE }}
-            mkdir -p /home/${{ env.SERVER_USER }}/sites/${{ env.PROJECT_NAME }}/${{ env.ENVIRONMENT }}/${{ env.PROJECT_TYPE }}
+            rm -rf /home/${{ env.SERVER_USER }}/sites/${{ env.PROJECT_NAME }}/${{ env.ENVIRONMENT }}/${{ env.WORKING_DIRECTORY }}
+            mkdir -p /home/${{ env.SERVER_USER }}/sites/${{ env.PROJECT_NAME }}/${{ env.ENVIRONMENT }}/${{ env.WORKING_DIRECTORY }}
       - name: SCP to Server
         uses: appleboy/scp-action@v0.1.4
         with:
@@ -105,4 +110,5 @@ jobs:
           username: ${{ env.SERVER_USER }}
           password: ${{ env.SERVER_PASSWORD }}
           script: |
-            /home/dev/scripts/start_script.sh -e ${{ env.ENVIRONMENT }} -p ${{ env.PROJECT_NAME }} -t ${{ env.PROJECT_TYPE }} -P ${{ env.APP_PORT }} -s ${{ env.DOMAIN_NAME }} -r ${{ env.ENABLE_RATE_LIMITING }} -c ${{ env.ENABLE_CACHE }} -C ${{ env.ENABLE_CACHE_CONTROL }} -v true
+            ansible-playbook /home/${{ env.SERVER_USER }}/ansible/start_script_yarn.ansible.yml -e "env_environment=${{ env.ENVIRONMENT }} project_name=${{ env.PROJECT_NAME }} project_type=${{ env.PROJECT_TYPE }} app_port=${{ env.APP_PORT }} working_directory=${{ env.WORKING_DIRECTORY }}"
+            ansible-playbook /home/${{ env.SERVER_USER }}/ansible/start_nginx_conf.ansible.yml -e "ansible_become_pass=${{ env.SERVER_PASSWORD }} env_type=${{ env.ENVIRONMENT }} project_name=${{ env.PROJECT_NAME }} project_type=${{ env.PROJECT_TYPE }} app_port=${{ env.APP_PORT }} working_directory=${{ env.WORKING_DIRECTORY }} server_name=${{ env.DOMAIN_NAME }} enable_rate_limiting=${{env.ENABLE_RATE_LIMITING}} rate_burst=${{env.RATE_BURST}} enable_cache=${{env.ENABLE_CACHE}} enable_cache_control=${{env.ENABLE_CACHE_CONTROL}}"
