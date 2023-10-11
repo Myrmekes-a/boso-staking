@@ -32,23 +32,24 @@ html.lenis {
 
 /* Track */
 ::-webkit-scrollbar-track {
-  background: #E4DECF;
+  background: #e4decf;
 }
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: #C8453B;
+  background: #c8453b;
   border-radius: 9999px;
 }
 
-::-moz-selection { /* Code for Firefox */
-  color: #E4DECF;
-  background: #1A1A1A;
+::-moz-selection {
+  /* Code for Firefox */
+  color: #e4decf;
+  background: #1a1a1a;
 }
 
 ::selection {
-  color: #E4DECF;
-  background: #1A1A1A;
+  color: #e4decf;
+  background: #1a1a1a;
 }
 
 .center {
@@ -56,7 +57,13 @@ html.lenis {
   align-items: center;
 }
 
-img, video, svg {
+li::marker {
+  font-size: 24px;
+}
+
+img,
+video,
+svg {
   user-select: none;
 }
 
@@ -201,7 +208,6 @@ img, video, svg {
   }
 }
 
-
 /* IS IN VIEWPORT ANIMATIONS START */
 @keyframes fadeUp {
   0% {
@@ -237,7 +243,7 @@ img, video, svg {
   animation: rotate-perspective 1s forwards;
 }
 
-@keyframes rotate-perspective  {
+@keyframes rotate-perspective {
   0% {
     transform: perspective(1200px) scale(0.5) rotate(20deg);
     opacity: 0;
@@ -285,4 +291,77 @@ img, video, svg {
 
 *:focus-visible {
   outline: none;
+}
+
+/* .nftdraggable:active {
+  width: 150px;
+  height: 150px;
+  animation: drag_style 0.3s ease-in-out;
+}
+
+.nftdraggable {
+  width: 100%;
+  height: 100%;
+  animation: drag_out 0.3s ease-in-out;
+}
+
+@keyframes drag_style {
+  0% {
+    width: 100%;
+    height: 100%;
+  }
+  100% {
+    width: 150px;
+    height: 150px;
+  }
+}
+
+
+@keyframes drag_out {
+  0% {
+    width: 150px;
+    height: 150px;
+  }
+  100% {
+    width: 100%;
+    height: 100%;
+  }
+} */
+
+.nftdraggable:active > div {
+  animation: drag_in 0.2s ease-in-out;
+  animation-fill-mode: forwards;
+}
+
+.nftdraggable:active {
+  cursor: grabbing;
+  cursor: -moz-grabbing;
+  cursor: -webkit-grabbing;
+}
+
+.nftdraggable > div {
+  animation: drag_out 0.2s ease-in-out;
+  animation-fill-mode: forwards;
+}
+
+@keyframes drag_in {
+  0% {
+    width: 100%;
+    height: 100%;
+  }
+  100% {
+    width: 100px;
+    height: 100px;
+  }
+}
+
+@keyframes drag_out {
+  0% {
+    width: 100px;
+    height: 100px;
+  }
+  100% {
+    width: 100%;
+    height: 100%;
+  }
 }
