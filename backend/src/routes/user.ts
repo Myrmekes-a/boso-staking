@@ -1,27 +1,13 @@
 import express from 'express';
-import { check } from 'express-validator';
+// import { check } from 'express-validator';
 
-import {
-  signup,
-  login,
-  logout,
-  forgotPassword,
-  passwordReset,
-  getLoggedInUserDetails,
-  changePassword,
-  updateUserDetails,
-  adminAllUser,
-  adminDeleteOneUser,
-  admingetOneUser,
-  forgotPasswordJwt,
-  passwordResetJwtToken,
-} from '../controllers/userController';
-import { validatedFields } from '../middlewares/fieldsValidation';
-import { isLoggedIn, customRole } from '../middlewares/user';
+import { login, logout } from '../controllers/userController';
+/* import { validatedFields } from '../middlewares/fieldsValidation';
+import { isLoggedIn, customRole } from '../middlewares/user'; */
 
 const router = express.Router();
 
-router
+/* router
   .route('/user/signup')
   .post(
     [
@@ -41,10 +27,12 @@ router
     ],
     validatedFields,
     signup
-  );
+  ); */
 router.route('/user/login').post(login);
 router.route('/user/logout').get(logout);
-// jwt reset pass
+
+/*
+ // jwt reset pass
 router.route('/user/forgotpasswordjwt').post(forgotPasswordJwt);
 router.route('/user/password/resetjwt/:token').post(passwordResetJwtToken);
 // db reset pass
@@ -62,6 +50,6 @@ router
 router
   .route('/user/admin/user/:id')
   .get(isLoggedIn, customRole('admin'), admingetOneUser)
-  .delete(isLoggedIn, customRole('admin'), adminDeleteOneUser);
+  .delete(isLoggedIn, customRole('admin'), adminDeleteOneUser); */
 
 export = router;

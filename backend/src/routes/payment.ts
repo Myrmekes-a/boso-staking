@@ -1,5 +1,5 @@
 import express from 'express';
-import { check } from 'express-validator';
+// import { check } from 'express-validator';
 
 import { isLoggedIn } from '../middlewares/user';
 import {

@@ -31,33 +31,34 @@ export const signup = BigPromise(async (req, res, next) => {
 });
 
 export const login = BigPromise(async (req, res, next) => {
-  const { email, password } = req.body;
-
-  // check for presence of email and password
-  if (!email || !password) {
-    return next(new CustomError('Please provide email and password', 400));
+  const { wallet /* , signature  */ } = req.body;
+  if (!wallet /*  || !signature */) {
+    return next(new CustomError('Wallet address missing', 400));
   }
+
+  // verification of signature
+  /* const pubKey = new PublicKey(wallet);
+  const message = new TextEncoder().encode('Welcome to SYNDRA!');
+  const sigbuffer = Uint8Array.from(Buffer.from(signature));
+  const verified = nacl.sign.detached.verify(
+    message,
+    sigbuffer,
+    pubKey.toBytes()
+  );
+
+  if (!verified) {
+    return next(new CustomError('Unable to verify the signature', 400));
+  } */
 
   // get user from DB
-  const user = await User.findOne({ email }).select('+password');
-
-  // if user not found in DB
-  if (!user) {
-    return next(
-      new CustomError('Email or password does not match or exist', 400)
-    );
-  }
-
-  // match the password
-  const isPasswordCorrect = await user.isValidatedPassword(password);
-
-  // if password do not match, same ad above
-  if (!isPasswordCorrect) {
-    return next(
-      new CustomError('Email or password does not match or exist', 400)
-    );
-  }
-
+  const user = await User.findOneAndUpdate(
+    { wallet },
+    { wallet },
+    {
+      new: true,
+      upsert: true,
+    }
+  );
   // if all goes good and we send the token
   cookieToken(user, res);
 });
@@ -74,8 +75,9 @@ export const logout = BigPromise(async (_req, res) => {
     message: 'Logout success',
   });
 });
+
 // forgot password with db solution
-export const forgotPassword = BigPromise(async (req, res, next) => {
+/* export const forgotPassword = BigPromise(async (req, res, next) => {
   // collect email
   const { email } = req.body;
 
@@ -104,7 +106,7 @@ export const forgotPassword = BigPromise(async (req, res, next) => {
 
   // craft a message, simple as this
   // eslint-disable-next-line no-unused-vars
-  const message = `Copy paste this link in your URL and hit enter \n\n ${resetUrl}`;
+  // const message = `Copy paste this link in your URL and hit enter \n\n ${resetUrl}`;
 
   // attempt to send email, it depends how you want to send it
   try {
@@ -119,7 +121,7 @@ export const forgotPassword = BigPromise(async (req, res, next) => {
     // });
 
     // for now console log
-    console.log(message);
+    // console.log(message);
 
     // json reponse if email is success
     res.status(200).json({
@@ -135,7 +137,7 @@ export const forgotPassword = BigPromise(async (req, res, next) => {
     // send error response
     return next(new CustomError(error.message, 500));
   }
-});
+}); */
 
 // password reset for db solution
 export const passwordReset = BigPromise(async (req, res, next) => {
@@ -176,7 +178,7 @@ export const passwordReset = BigPromise(async (req, res, next) => {
   cookieToken(user, res);
 });
 // forgot password with Jwt solution
-export const forgotPasswordJwt = BigPromise(async (req, res, next) => {
+/* export const forgotPasswordJwt = BigPromise(async (req, res, next) => {
   // collect email
   const { email } = req.body;
 
@@ -205,7 +207,7 @@ export const forgotPasswordJwt = BigPromise(async (req, res, next) => {
 
   // craft a message, simple as this
   // eslint-disable-next-line no-unused-vars
-  const message = `Copy paste this link in your URL and hit enter \n\n ${resetUrl}`;
+  // const message = `Copy paste this link in your URL and hit enter \n\n ${resetUrl}`;
 
   // attempt to send email, it depends how you want to send it
   try {
@@ -220,7 +222,7 @@ export const forgotPasswordJwt = BigPromise(async (req, res, next) => {
     // });
 
     // for now console log
-    console.log(message);
+    // console.log(message);
 
     // json reponse if email is success
     res.status(200).json({
@@ -236,7 +238,7 @@ export const forgotPasswordJwt = BigPromise(async (req, res, next) => {
     // send error response
     return next(new CustomError(error.message, 500));
   }
-});
+}); */
 
 // password reset for JwtTokenb solution
 export const passwordResetJwtToken = BigPromise(async (req, res, next) => {
