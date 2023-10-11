@@ -8,7 +8,7 @@ import { Connection } from '@metaplex/js';
 import { Metadata } from '@metaplex-foundation/mpl-token-metadata';
 import Nft from '../models/nft';
 
-const connection = new Connection('mainnet-beta');
+const connection = new Connection(process.env.SERVER_IP as string);
 const bozoKey = process.env.BOZO_KEY as string;
 
 const getNftFromWallet = async (wallet: string) => {
