@@ -293,44 +293,60 @@ svg {
   outline: none;
 }
 
-/* .nftdraggable:active {
-  width: 150px;
-  height: 150px;
-  animation: drag_style 0.3s ease-in-out;
-}
+/* dashboard */
 
-.nftdraggable {
-  width: 100%;
-  height: 100%;
-  animation: drag_out 0.3s ease-in-out;
-}
-
-@keyframes drag_style {
+@keyframes fadeUpSkeleton {
   0% {
-    width: 100%;
-    height: 100%;
+    opacity: 0;
+    transform: translateY(600px);
   }
   100% {
-    width: 150px;
-    height: 150px;
+    opacity: 1;
+    transform: translateY(0);
   }
 }
+.animate-skeleton {
+  animation: fadeUpSkeleton 1s forwards;
+}
 
-
-@keyframes drag_out {
+@keyframes fadeInSection {
   0% {
-    width: 150px;
-    height: 150px;
+    opacity: 0;
+    left: -110%;
   }
   100% {
-    width: 100%;
-    height: 100%;
+    opacity: 1;
+    left: 0;
   }
-} */
+}
+.animate-dash-section {
+  animation: fadeInSection 1s forwards ease-in-out;
+}
+
+@keyframes connectDash {
+  0% {
+    opacity: 0;
+    scale: 0;
+    rotate: 0deg;
+  }
+  100% {
+    opacity: 1;
+    scale: 1;
+    rotate: 345deg;
+  }
+}
+.animate-dash-text {
+  animation: connectDash 1s forwards ease-out;
+  animation-delay: 1s;
+  opacity: 0;
+}
+/* LOYALTY */
 
 .nftdraggable:active > div {
-  animation: drag_in 0.2s ease-in-out;
-  animation-fill-mode: forwards;
+  /* animation: drag_in 0s ease-in-out;
+  animation-fill-mode: forwards;  */
+  width: 100px !important;
+  height: 100px !important;
 }
 
 .nftdraggable:active {
@@ -340,7 +356,7 @@ svg {
 }
 
 .nftdraggable > div {
-  animation: drag_out 0.2s ease-in-out;
+  animation: drag_out 0.4s ease-out;
   animation-fill-mode: forwards;
 }
 
@@ -357,11 +373,40 @@ svg {
 
 @keyframes drag_out {
   0% {
-    width: 100px;
-    height: 100px;
+    width: 0px;
+    height: 0px;
   }
   100% {
     width: 100%;
     height: 100%;
   }
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+.animate-fadein {
+  animation: fadeIn 0.5s forwards ease-in-out;
+}
+
+@keyframes loyaltyimage {
+  0% {
+    bottom: -370px;
+  }
+  100% {
+    bottom: 0;
+  }
+}
+.animate-loyaltyimage {
+  animation: loyaltyimage 0.5s forwards ease-out;
+}
+
+.strokedpoints {
+  stroke-dasharray: 869;
+  stroke-dashoffset: 500;
 }
