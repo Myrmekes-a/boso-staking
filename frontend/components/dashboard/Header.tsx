@@ -13,7 +13,7 @@ const Header = ({ title }: HeaderProps) => {
         width={336.96}
         height={50.4}
         alt="Bozo"
-        className="w-[337px] relative top-[-13px] mx-auto"
+        className="w-[337px] relative top-[-13px] mx-auto anim-perspective"
       />
       <p className="text-primary text-[30px] mt-[-13px]">{title}</p>
     </div>
