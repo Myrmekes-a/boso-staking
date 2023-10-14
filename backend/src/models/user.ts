@@ -16,6 +16,14 @@ const userSchema: mongoose.Schema = new mongoose.Schema(
       required: [true, 'Please provide a wallet'],
       unique: true,
     },
+    points: {
+      type: Number,
+      default: 0,
+    },
+    lastUpdatedPoints: {
+      type: Date,
+      default: Date.now(),
+    },
   },
   { timestamps: true }
 );
