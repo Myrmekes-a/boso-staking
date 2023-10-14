@@ -13,7 +13,7 @@ const WalletComponents = () => {
 
   /* console.log(wallet); */
   return (
-    <div className="relative flex gap-2">
+    <div className="relative flex gap-2 h-fit">
       {wallet.connected && <PointCounter />}
       <WalletButton />
     </div>

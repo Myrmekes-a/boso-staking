@@ -43,6 +43,7 @@ export default function RootLayout({
     ],
     [solNetwork]
   );
+
   return (
     <ConnectionProvider endpoint={endpoint}>
       <WalletProvider wallets={wallets} autoConnect={true}>

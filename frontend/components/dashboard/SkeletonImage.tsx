@@ -13,12 +13,14 @@ const SkeletonImage = () => {
         width={594}
         height={626}
         alt="Skeleton"
-        className="md:min-w-[594px] md:h-[626px] min-w-[100vw] h-auto absolute bottom-0 md:bottom-[-1.75rem]"
+        className="md:min-w-[594px] md:h-[626px] min-w-[100vw] h-auto absolute bottom-0 md:bottom-[-1.75rem] animate-skeleton"
       />
       {!connected && (
-        <p className="absolute bottom-[75vw]  md:bottom-[400px] text-[28px] md:text-[35px]">
-          Connect Your F*cking Wallet
-        </p>
+        <div className="absolute bottom-[75vw]  md:bottom-[450px] animate-dash-text">
+          <p className=" text-[28px] md:text-[45px]">
+            Connect Your F*cking Wallet
+          </p>
+        </div>
       )}
     </>
   );

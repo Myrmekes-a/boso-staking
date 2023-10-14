@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import Image from "next/image";
 import Nft from "./Nft";
 import { NftType } from "@/app/dashboard/loyalty/page";
 import { StakePositionType } from "./Stake";
+import { useLoyalty } from "@/app/context/LoyaltyContext";
 
 /* export type StakePositionProps = {
   active: boolean;
@@ -14,22 +15,24 @@ import { StakePositionType } from "./Stake";
 
 export type StakePositionProps = {
   index: number;
-  stakeNft: (nft_id: number) => void;
-  setIsDragging: (isDragging: boolean) => void;
+  stakeNft: (nft_id: string) => void;
 } & StakePositionType;
 
 const StakePosition = (props: StakePositionProps) => {
+  const { isGlobalDragging, setIsGlobalDragging } = useLoyalty();
   return (
     <div className="pl-7 pr-4 w-fit relative pt-4">
       <div
         onDragOver={(e) => e.preventDefault()}
         onDrop={(e) => {
+          setIsGlobalDragging(false);
           console.log("drop", e);
           console.log("data", e.dataTransfer.getData("nft"));
-          const nft_id = parseInt(e.dataTransfer.getData("nft"));
+          const nft_id = e.dataTransfer.getData("nft");
           props.stakeNft(nft_id);
         }}
-        className={` w-[190px] h-[190px] bg-[url('/img/dashboard/loyalty/nftnotstaked.png')] bg-cover relative overflow-visible flex justify-center items-center rounded-[0.8rem]  text-center`}
+        style={{ animationDelay: `${props.index * 0.1}s` } as any}
+        className={`w-[150px] h-[150px] md:w-[190px] md:h-[190px] opacity-0 bg-[url('/img/dashboard/loyalty/nftnotstaked.png')]  animate-fadein bg-cover relative overflow-visible flex justify-center items-center rounded-[0.8rem]  text-center`}
       >
         <div className="absolute top-[-1rem] right-3 z-20">
           <p className="text-[30px] text-primary ">{props.index + 1}</p>
@@ -48,14 +51,24 @@ const StakePosition = (props: StakePositionProps) => {
               draggable={false}
             />
             {props.active && (
-              <p className="text-[30px] px-5 text-primary">
-                Drag here your Bozo
-              </p>
+              <div
+                className={`w-full h-full flex center text-center rounded-xl transition-colors duration-200 ${
+                  isGlobalDragging ? "bg-primary/60" : ""
+                }`}
+              >
+                <p
+                  className={`text-[30px] px-5 ${
+                    isGlobalDragging ? "text-beige" : "text-primary"
+                  } `}
+                >
+                  Drag here your Bozo
+                </p>
+              </div>
             )}
           </>
         ) : (
           <>
-            <Nft nft={props.nft} setGlobalDragging={props.setIsDragging} />
+            <Nft nft={props.nft} />
             <Image
               src="/img/dashboard/loyalty/stakingslot.svg"
               alt="activestakingslot"
@@ -65,7 +78,7 @@ const StakePosition = (props: StakePositionProps) => {
           </>
         )}
       </div>
-      <div className="w-full flex flex-col py-4 items-center">
+      <div className="w-full flex flex-col md:py-4 items-center">
         <div className="flex justify-center items-center">
           <div
             className={`w-5 h-5 z-10 ${
@@ -96,7 +109,7 @@ const StakePosition = (props: StakePositionProps) => {
             props.type == "filled" ? "text-primary" : "text-grey"
           } text-[33px] relative`}
         >
-          {`x${1 + props.index * 0.25}`}
+          {(1 + props.index * 0.25) % 1 == 0 && `x${1 + props.index * 0.25}`}
           {(1 + props.index * 0.25) % 1 == 0 && (
             <svg
               width="75"
