@@ -5,14 +5,6 @@ import { NftType } from "@/app/dashboard/loyalty/page";
 import { StakePositionType } from "./Stake";
 import { useLoyalty } from "@/app/context/LoyaltyContext";
 
-/* export type StakePositionProps = {
-  active: boolean;
-  index: number;
-  filled: boolean;
-  nextfilled: boolean;
-  nft?: NftType;
-}; */
-
 export type StakePositionProps = {
   index: number;
   stakeNft: (nft_id: string) => void;
@@ -20,17 +12,18 @@ export type StakePositionProps = {
 
 const StakePosition = (props: StakePositionProps) => {
   const { isGlobalDragging, setIsGlobalDragging } = useLoyalty();
+
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setIsGlobalDragging(false);
+    const nft_id = e.dataTransfer.getData("nft");
+    props.stakeNft(nft_id);
+  };
   return (
     <div className="pl-7 pr-4 w-fit relative pt-4">
       <div
         onDragOver={(e) => e.preventDefault()}
-        onDrop={(e) => {
-          setIsGlobalDragging(false);
-          console.log("drop", e);
-          console.log("data", e.dataTransfer.getData("nft"));
-          const nft_id = e.dataTransfer.getData("nft");
-          props.stakeNft(nft_id);
-        }}
+        onDrop={handleDrop}
         style={{ animationDelay: `${props.index * 0.1}s` } as any}
         className={`w-[150px] h-[150px] md:w-[190px] md:h-[190px] opacity-0 bg-[url('/img/dashboard/loyalty/nftnotstaked.png')]  animate-fadein bg-cover relative overflow-visible flex justify-center items-center rounded-[0.8rem]  text-center`}
       >
@@ -109,8 +102,10 @@ const StakePosition = (props: StakePositionProps) => {
             props.type == "filled" ? "text-primary" : "text-grey"
           } text-[33px] relative`}
         >
-          {(1 + props.index * 0.25) % 1 == 0 && `x${1 + props.index * 0.25}`}
-          {(1 + props.index * 0.25) % 1 == 0 && (
+          {props.index === 0 && "x1"}
+          {(1 + props.index) % 5 == 0 &&
+            `x${((1 + props.index) / 5 - 1) * 0.5 + 2}`}
+          {((1 + props.index) % 5 == 0 || props.index === 0) && (
             <svg
               width="75"
               height="57"

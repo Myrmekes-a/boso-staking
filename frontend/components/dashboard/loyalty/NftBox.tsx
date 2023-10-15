@@ -22,9 +22,6 @@ const NftBox = ({ nfts, unstakeNft, stakeAllNfts }: NftBoxProps) => {
 
   const { isGlobalDragging } = useLoyalty();
 
-  const [boxWidth, setBoxWidth] = React.useState(300);
-  const [boxHeight, setBoxHeight] = React.useState(300);
-
   const [bounds, setBounds] = React.useState({} as DOMRect);
 
   const [nftsPositions, setNftsPositions] = React.useState<
@@ -34,13 +31,7 @@ const NftBox = ({ nfts, unstakeNft, stakeAllNfts }: NftBoxProps) => {
   useEffect(() => {
     const box = boxRef.current;
     if (box) {
-      const boxW = box.clientWidth;
-      const boxH = box.clientHeight;
-
       const boxBounds = box.getBoundingClientRect();
-
-      setBoxWidth(boxW);
-      setBoxHeight(boxH);
       setBounds(boxBounds);
     }
   }, []);
@@ -80,34 +71,23 @@ const NftBox = ({ nfts, unstakeNft, stakeAllNfts }: NftBoxProps) => {
     let newX = x;
     let newY = y;
 
-    if (x < 60) {
-      newX = 60;
-    }
-
-    if (x > bounds.width - 60) {
-      newX = bounds.width - 60;
-    }
-
-    if (y < 60) {
-      newY = 60;
-    }
-
-    if (y > bounds.height - 60) {
-      newY = bounds.height - 60;
-    }
+    if (x < 60) newX = 60;
+    if (x > bounds.width - 60) newX = bounds.width - 60;
+    if (y < 60) newY = 60;
+    if (y > bounds.height - 60) newY = bounds.height - 60;
 
     newPositions.push({
       nft_id,
       x: newX - 50,
       y: newY - 50,
     });
+
     setNftsPositions(newPositions);
 
     if (nfts.find((n) => n.id == nft_id)) {
       return;
     } else {
       unstakeNft(nft_id);
-      //remove from pos
     }
   };
 
@@ -134,11 +114,6 @@ const NftBox = ({ nfts, unstakeNft, stakeAllNfts }: NftBoxProps) => {
             backgroundImage: "url('/img/dashboard/loyalty/nftsbox.png')",
             backgroundRepeat: "no-repeat",
             backgroundSize: "100% 100%",
-            /* borderImage: "url('/img/dashboard/loyalty/nftsbox.png')",
-            border: "30px solid transparent",
-            borderImageSlice: 30,
-            borderImageRepeat: "repeat",
-            borderImageWidth: "424px", */
           }}
         >
           {isGlobalDragging && (
@@ -150,12 +125,6 @@ const NftBox = ({ nfts, unstakeNft, stakeAllNfts }: NftBoxProps) => {
               </div>
             </div>
           )}
-          {/* <Image
-            src="/img/dashboard/loyalty/boxnfts.svg"
-            alt="nftsbox"
-            fill
-            objectFit="fill"
-          /> */}
         </div>
 
         {nfts.map((nft, index) => {
