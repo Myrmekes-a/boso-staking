@@ -18,9 +18,9 @@ const getNftFromWallet = async (wallet: string, userId: string) => {
   const nftsmetadata = await Metadata.findDataByOwner(connection, wallet);
   const mints = [];
   for (let i = 0; i < nftsmetadata.length; i += 1) {
-    if (nftsmetadata[i].collection?.key !== bozoKey) {
+    /* if (nftsmetadata[i].collection?.key !== bozoKey) {
       continue;
-    }
+    } */
     // eslint-disable-next-line no-await-in-loop
     const nft = await Nft.findOne({ mint: nftsmetadata[i].mint });
     if (!nft) {
