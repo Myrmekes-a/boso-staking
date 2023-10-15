@@ -72,7 +72,8 @@ const getNftFromWallet = async (wallet: string, userId: string) => {
       }
     }
   }
-  return mints;
+
+  return Array.from(mints.values());
 };
 
 /*
