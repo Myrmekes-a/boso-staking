@@ -16,7 +16,7 @@ const bozoKey = process.env.BOZO_KEY as string;
 
 const getNftFromWallet = async (wallet: string, userId: string) => {
   const nftsmetadata = await Metadata.findDataByOwner(connection, wallet);
-  const mints = [];
+  const mints = new Map();
   for (let i = 0; i < nftsmetadata.length; i += 1) {
     /* if (nftsmetadata[i].collection?.key !== bozoKey) {
       continue;
@@ -44,19 +44,32 @@ const getNftFromWallet = async (wallet: string, userId: string) => {
 
         await newNft.save();
 
-        mints.push({
+        mints.set(nftsmetadata[i].mint, {
           mint: nftsmetadata[i].mint,
           image: image.image,
+          staked: false,
         });
       } catch (err) {
         console.log(err);
         continue;
       }
     } else {
-      mints.push({
+      mints.set(nft.mint, {
         mint: nft.mint,
         image: nft.image,
+        staked: nft.staked,
       });
+    }
+
+    const allNfts = await Nft.find({ owner: userId });
+    for (let j = 0; j < allNfts.length; j += 1) {
+      if (!mints.has(allNfts[j].mint)) {
+        mints.set(allNfts[j].mint, {
+          mint: allNfts[j].mint,
+          image: allNfts[j].image,
+          staked: allNfts[j].staked,
+        });
+      }
     }
   }
   return mints;
