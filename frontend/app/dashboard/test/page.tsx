@@ -1,25 +1,18 @@
 "use client";
 import WalletButton from "@/components/dashboard/WalletButton";
-import * as anchor from "@project-serum/anchor";
-import { utils, BN } from "@project-serum/anchor";
-import * as token from "@solana/spl-token";
 import { useWallet } from "@solana/wallet-adapter-react";
-import {
-  Connection,
-  PublicKey,
-  ConfirmOptions,
-  Keypair,
-  Transaction,
-} from "@solana/web3.js";
-import idl from "./idl/idl.json";
-import { IDL, NftStakeVault } from "./idl/nft_stake_vault";
-import { getOrCreateAssociatedTokenAccount } from "@solana/spl-token";
-import { useEffect } from "react";
+import { PublicKey } from "@solana/web3.js";
+
+import { stake, unstake } from "@/utils/staking/lib";
 
 export default function Test() {
   const wallet = useWallet();
+  const nftMint = new PublicKey("AZTB2mfGfnxeVf63KUcrcKtYVY82dRQwBdkyPR4iPLEh");
+  const nftMint2 = new PublicKey(
+    "He4gALHUZLP2PgjK7zyFsV9yE9wHTFz9VH3RjFrXeDgh"
+  );
 
-  const connection = new Connection(
+  /*   const connection = new Connection(
     "https://api.devnet.solana.com",
     "confirmed"
   );
@@ -183,7 +176,7 @@ export default function Test() {
     }
   }
 
-  async function createAccountAndStake(/* mint: PublicKey */) {
+  async function createAccountAndStake( mint: PublicKey) {
     const program = await createProgram();
 
     //const mint = nftMint;
@@ -424,12 +417,26 @@ export default function Test() {
     let stakeAccount = await program.account.details.fetch(stakeDetails);
     console.log("Stake Details: ", stakeAccount);
   }
+ */
+
+  const stakeWrapper = async () => {
+    const tx = await stake([nftMint, nftMint2], wallet);
+    console.log(tx);
+  };
+
+  const unstakeWrapper = async () => {
+    const tx = await unstake([nftMint, nftMint2], wallet);
+    console.log(tx);
+  };
 
   return (
     <>
       <WalletButton />
       <div>
-        <h1>Test</h1>
+        <button onClick={stakeWrapper}>Stake</button>
+        <br></br>
+        <button onClick={unstakeWrapper}>Unstake</button>
+        {/*  <h1>Test</h1>
         <button onClick={createAccountAndStake}>Stake</button>
         <br></br>
         <button onClick={doubleStake}>doubleStake</button>
@@ -438,7 +445,7 @@ export default function Test() {
         <br></br>
         <button onClick={doubleUnstake}>doubleUnstake</button>
         <br></br>
-        <button onClick={createTokenAccount}>Create Token Account</button>
+        <button onClick={createTokenAccount}>Create Token Account</button> */}
       </div>
     </>
   );

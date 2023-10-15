@@ -10,6 +10,7 @@
     "lint:fix": "next lint --fix"
   },
   "dependencies": {
+    "@metaplex-foundation/js": "^0.19.5",
     "@project-serum/anchor": "^0.26.0",
     "@solana/spl-token": "^0.3.8",
     "@solana/wallet-adapter-base": "^0.9.23",
