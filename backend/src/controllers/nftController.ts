@@ -9,14 +9,14 @@ import Nft from '../models/nft';
 import Activity from '../models/activity';
 
 export const getNft = BigPromise(async (req: IGetUserAuthInfoRequest, res) => {
-  // const { wallet } = req.user;
+  const { wallet } = req.user;
   const { _id } = req.user;
   // get wallet from url param
   /*  const wallet = req.query.wallet;
     console.log(req.query);
     console.log(wallet); */
-  const testWallet = 'D2yu9YFbHUfKWfGxpFbZmcM4zKFc4DBUMrdPPStaUtPf';
-  const nfts = await getNftFromWallet(testWallet, _id);
+  // const testWallet = 'D2yu9YFbHUfKWfGxpFbZmcM4zKFc4DBUMrdPPStaUtPf';
+  const nfts = await getNftFromWallet(wallet, _id);
 
   res.status(200).json({
     success: true,
