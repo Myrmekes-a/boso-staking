@@ -24,6 +24,10 @@ const userSchema: mongoose.Schema = new mongoose.Schema(
       type: Date,
       default: Date.now(),
     },
+    claimedPoints: {
+      type: Number,
+      default: 0,
+    },
   },
   { timestamps: true }
 );
