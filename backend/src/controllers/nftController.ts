@@ -70,6 +70,7 @@ export const stake = BigPromise(
       // create activity
       await Activity.create({
         operation: 'stake',
+        // @ts-ignore
         nft: nft._id,
         user: _id,
       });
@@ -130,6 +131,7 @@ export const unstake = BigPromise(
       // create activity
       await Activity.create({
         operation: 'unstake',
+        // @ts-ignore
         nft: nft._id,
         user: _id,
       });
