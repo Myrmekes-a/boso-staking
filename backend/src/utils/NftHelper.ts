@@ -60,16 +60,16 @@ const getNftFromWallet = async (wallet: string, userId: string) => {
         staked: nft.staked,
       });
     }
+  }
 
-    const allNfts = await Nft.find({ owner: userId });
-    for (let j = 0; j < allNfts.length; j += 1) {
-      if (!mints.has(allNfts[j].mint)) {
-        mints.set(allNfts[j].mint, {
-          mint: allNfts[j].mint,
-          image: allNfts[j].image,
-          staked: allNfts[j].staked,
-        });
-      }
+  const allNfts = await Nft.find({ owner: userId });
+  for (let j = 0; j < allNfts.length; j += 1) {
+    if (!mints.has(allNfts[j].mint)) {
+      mints.set(allNfts[j].mint, {
+        mint: allNfts[j].mint,
+        image: allNfts[j].image,
+        staked: allNfts[j].staked,
+      });
     }
   }
 
