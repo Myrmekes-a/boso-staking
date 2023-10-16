@@ -1,6 +1,7 @@
 /* eslint @typescript-eslint/naming-convention : 0 */
 /* eslint no-underscore-dangle : 0 */
 /* eslint no-await-in-loop : 0  */
+/* eslint @typescript-eslint/ban-ts-comment: 0  */
 
 import { IGetUserAuthInfoRequest } from 'src/utils/typesAndInterfaces';
 import BigPromise from '../middlewares/bigPromise';
