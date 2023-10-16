@@ -47,8 +47,8 @@ const NftBox = ({ nfts, unstakeNft, stakeAllNfts }: NftBoxProps) => {
       } else {
         return {
           nft_id: nft.id,
-          x: getRandomNumber(0, bounds.width - 100),
-          y: getRandomNumber(0, bounds.height - 100),
+          x: getRandomNumber(0, bounds.width - 120),
+          y: getRandomNumber(0, bounds.height - 120),
         };
       }
     });
@@ -71,15 +71,15 @@ const NftBox = ({ nfts, unstakeNft, stakeAllNfts }: NftBoxProps) => {
     let newX = x;
     let newY = y;
 
-    if (x < 60) newX = 60;
-    if (x > bounds.width - 60) newX = bounds.width - 60;
-    if (y < 60) newY = 60;
-    if (y > bounds.height - 60) newY = bounds.height - 60;
+    if (x < 70) newX = 70;
+    if (x > bounds.width - 70) newX = bounds.width - 70;
+    if (y < 70) newY = 70;
+    if (y > bounds.height - 70) newY = bounds.height - 70;
 
     newPositions.push({
       nft_id,
-      x: newX - 50,
-      y: newY - 50,
+      x: newX - 60,
+      y: newY - 60,
     });
 
     setNftsPositions(newPositions);
@@ -131,7 +131,7 @@ const NftBox = ({ nfts, unstakeNft, stakeAllNfts }: NftBoxProps) => {
           return (
             <div
               key={index}
-              className="w-[100px] h-[100px] absolute "
+              className="w-[120px] h-[120px] absolute flex center "
               style={{
                 top: nftsPositions.find((n) => n.nft_id == nft.id)?.y,
                 left: nftsPositions.find((n) => n.nft_id == nft.id)?.x,

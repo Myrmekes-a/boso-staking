@@ -57,7 +57,7 @@ export const authOptions: AuthOptions = {
       console.log("jwt", { token, user, session });
 
       if (trigger === "update") {
-        /* TODO */
+        return { ...token, ...session };
       }
       if (user) {
         return { ...token, ...user };

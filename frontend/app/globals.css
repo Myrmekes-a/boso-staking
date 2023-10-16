@@ -343,11 +343,21 @@ svg {
 }
 /* LOYALTY */
 
+.animate-nft-mouse-down {
+  animation: drag_in 0.1s ease-in-out;
+  animation-fill-mode: forwards;
+}
+
+.animate-nft-mouse-up {
+  animation: drag_out 0.4s ease-out;
+  animation-fill-mode: forwards;
+}
+
 .nftdraggable:active > div {
   /* animation: drag_in 0s ease-in-out;
-  animation-fill-mode: forwards;  */
+  animation-fill-mode: forwards;
   width: 100px !important;
-  height: 100px !important;
+  height: 100px !important; */
 }
 
 .nftdraggable:active {

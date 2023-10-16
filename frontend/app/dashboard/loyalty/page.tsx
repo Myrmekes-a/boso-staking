@@ -6,10 +6,19 @@ import Header from "@/components/dashboard/Header";
 import WalletComponents from "@/components/dashboard/WalletComponents";
 import NftBox from "@/components/dashboard/loyalty/NftBox";
 import Stake from "@/components/dashboard/loyalty/Stake";
+import {
+  GenericRequest,
+  GenericRequestNoAuth,
+  genericRequest,
+} from "@/utils/request";
+import { getTx, stake, unstake } from "@/utils/staking/lib";
+import { useWallet } from "@solana/wallet-adapter-react";
+import { PublicKey } from "@solana/web3.js";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { createContext, useEffect, useState } from "react";
 import { useQuery } from "react-query";
+import { toast } from "sonner";
 
 export type NftType = {
   id: string;
@@ -27,61 +36,316 @@ export default function Loyalty() {
   const [stakedNfts, setStakedNfts] = useState<NftType[]>([]);
   const [nfts, setNfts] = useState<NftType[]>([]);
 
-  const { data: session } = useSession();
+  const [shouldFetch, setShouldFetch] = useState(true);
 
-  const { data } = useQuery(
+  const [totalPoints, setTotalPoints] = useState(0);
+  const [toClaimPoints, setToClaimPoints] = useState(0);
+
+  const { data: session, update: updateSession } = useSession();
+
+  const wallet = useWallet();
+
+  const { refetch: refetchNft } = useQuery(
     ["nfts"],
     async () => {
-      console.log("fetching nfts", session?.user.token);
-      const res = await fetch(
-        "https://api-bozo.avrean.net/api/v1/nft/nftsByWallet",
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${session?.user.token}`,
-          },
-        }
-      ).then((res) => res.json());
-      console.log(res);
+      console.log("fetching nfts");
+      const nftsRequest: GenericRequest = {
+        method: "GET",
+        url: "/nft/nftsByWallet",
+        token: session?.user.token!,
+      };
+      const response = await genericRequest(nftsRequest);
+
       const tmpnfts: NftType[] = [];
-      res.nfts.forEach((nft: any) => {
-        tmpnfts.push(parseNft(nft));
+      const tmpstakednfts: NftType[] = [];
+      response.nfts.forEach((nft: any) => {
+        if (nft.staked) tmpstakednfts.push(parseNft(nft));
+        else tmpnfts.push(parseNft(nft));
       });
 
       setNfts(tmpnfts);
-      setStakedNfts([]);
-      return res;
+      setStakedNfts(tmpstakednfts);
+      return response;
     },
     {
       enabled: !!session?.user.token,
+      refetchOnWindowFocus: shouldFetch,
     }
   );
 
-  const stakeNft = (nft_id: string) => {
+  useQuery(
+    ["points"],
+    async () => {
+      console.log("fetching points");
+      const nftsRequest: GenericRequest = {
+        method: "GET",
+        url: "/nft/getPoints",
+        token: session?.user.token!,
+      };
+      const response = await genericRequest(nftsRequest);
+
+      setTotalPoints(response.claimedPoints);
+      setToClaimPoints(response.totalPoints - response.claimedPoints);
+      return response;
+    },
+    {
+      enabled: !!session?.user.token,
+      refetchInterval: 60000,
+    }
+  );
+
+  const stakeNft = async (nft_id: string) => {
     const nft = nfts.find((nft) => nft.id === nft_id);
     if (nft) {
-      console.log("staking", nft_id);
+      setShouldFetch(false);
+      const tmpStaked = stakedNfts;
+      const tmpNfts = nfts;
       setStakedNfts([...stakedNfts, nft]);
       setNfts(nfts.filter((nft) => nft.id !== nft_id));
+      try {
+        const transactions = await stake([new PublicKey(nft_id)], wallet);
+        console.log(transactions);
+        if (!transactions || transactions.length == 0) {
+          throw new Error("error staking anchor");
+        }
+        const nftsRequest: GenericRequest = {
+          method: "POST",
+          url: "/nft/stake",
+          token: session?.user.token!,
+          data: { mints: [nft_id], serialized: transactions },
+        };
+        const response = await genericRequest(nftsRequest);
+        if (!response.success) {
+          throw new Error("error staking back");
+        }
+        console.log("staked", response);
+        toast(
+          <div className="py-4 px-8 w-full text-center bg-success border-2 rounded-xl origin-bottom-right">
+            <p className=" font-bozo text-[22px] ">Staking was successful!</p>
+          </div>,
+          {
+            duration: 3000,
+          }
+        );
+      } catch (error) {
+        console.log("error staking", error);
+        toast(
+          <div className="py-4 px-8 w-full text-center bg-error border-2 rounded-xl origin-bottom-right">
+            <p className=" font-bozo text-[22px] ">Staking was unsuccessful!</p>
+          </div>,
+          {
+            duration: 3000,
+          }
+        );
+        setStakedNfts(tmpStaked);
+        setNfts(tmpNfts);
+      } finally {
+        setTimeout(() => {
+          setShouldFetch(true);
+        }, 10000);
+      }
     }
   };
 
-  const unstakeAllNfts = () => {
+  const unstakeAllNfts = async () => {
+    if (stakedNfts.length == 0) return;
+    const publicKeys = stakedNfts.map((nft) => new PublicKey(nft.id));
+    const mints = stakedNfts.map((nft) => nft.id);
+    console.log("mints", mints);
+    setShouldFetch(false);
+    const tmpStaked = stakedNfts;
+    const tmpNfts = nfts;
     setNfts([...nfts, ...stakedNfts]);
     setStakedNfts([]);
+    try {
+      const transactions = await unstake(publicKeys, wallet);
+      console.log(transactions);
+      if (!transactions || transactions.length == 0) {
+        throw new Error("error unstaking anchor");
+      }
+      const nftsRequest: GenericRequest = {
+        method: "POST",
+        url: "/nft/unstake",
+        token: session?.user.token!,
+        data: { mints: mints, serialized: transactions },
+      };
+      const response = await genericRequest(nftsRequest);
+      if (!response.success) {
+        throw new Error("error unstaking back");
+      }
+      console.log("staked", response);
+      toast(
+        <div className="py-4 px-8 w-full text-center bg-success border-2 rounded-xl origin-bottom-right">
+          <p className=" font-bozo text-[22px] ">Unstaking was successful!</p>
+        </div>,
+        {
+          duration: 3000,
+        }
+      );
+    } catch (error) {
+      console.log("error unstaking", error);
+      toast(
+        <div className="py-4 px-8 w-full text-center bg-error border-2 rounded-xl origin-bottom-right">
+          <p className=" font-bozo text-[22px] ">Unstaking was unsuccessful!</p>
+        </div>,
+        {
+          duration: 3000,
+        }
+      );
+      setStakedNfts(tmpStaked);
+      setNfts(tmpNfts);
+    } finally {
+      setTimeout(() => {
+        setShouldFetch(true);
+      }, 10000);
+    }
   };
 
-  const stakeAllNfts = () => {
-    setStakedNfts([...stakedNfts, ...nfts]);
+  const stakeAllNfts = async () => {
+    if (nfts.length == 0) return;
+    const publicKeys = nfts.map((nft) => new PublicKey(nft.id));
+    const mints = nfts.map((nft) => nft.id);
+
+    console.log("mints", mints);
+    setShouldFetch(false);
+    const tmpStaked = stakedNfts;
+    const tmpNfts = nfts;
     setNfts([]);
+    setStakedNfts([...nfts, ...stakedNfts]);
+    try {
+      const transactions = await stake(publicKeys, wallet);
+      console.log(transactions);
+      if (!transactions || transactions.length == 0) {
+        throw new Error("error staking anchor");
+      }
+      const nftsRequest: GenericRequest = {
+        method: "POST",
+        url: "/nft/stake",
+        token: session?.user.token!,
+        data: { mints: mints, serialized: transactions },
+      };
+      const response = await genericRequest(nftsRequest);
+      if (!response.success) {
+        throw new Error("error staking back");
+      }
+      console.log("staked", response);
+      toast(
+        <div className="py-4 px-8 w-full text-center bg-success border-2 rounded-xl origin-bottom-right">
+          <p className=" font-bozo text-[22px] ">Staking was successful!</p>
+        </div>,
+        {
+          duration: 3000,
+        }
+      );
+    } catch (error) {
+      console.log("error staking", error);
+      toast(
+        <div className="py-4 px-8 w-full text-center bg-error border-2 rounded-xl origin-bottom-right">
+          <p className=" font-bozo text-[22px] ">Staking was unsuccessful!</p>
+        </div>,
+        {
+          duration: 3000,
+        }
+      );
+      setStakedNfts(tmpStaked);
+      setNfts(tmpNfts);
+    } finally {
+      setTimeout(() => {
+        setShouldFetch(true);
+      }, 10000);
+    }
   };
 
-  const unstakeNft = (nft_id: string) => {
+  const unstakeNft = async (nft_id: string) => {
     const nft = stakedNfts.find((nft) => nft.id === nft_id);
     if (nft) {
+      setShouldFetch(false);
+      const tmpStaked = stakedNfts;
+      const tmpNfts = nfts;
       setNfts([...nfts, nft]);
       setStakedNfts(stakedNfts.filter((nft) => nft.id !== nft_id));
+      try {
+        const transactions = await unstake([new PublicKey(nft_id)], wallet);
+        console.log(transactions);
+        if (!transactions || transactions.length == 0) {
+          throw new Error("error unstaking anchor");
+        }
+        const nftsRequest: GenericRequest = {
+          method: "POST",
+          url: "/nft/unstake",
+          token: session?.user.token!,
+          data: { mints: [nft_id], serialized: transactions },
+        };
+        const response = await genericRequest(nftsRequest);
+        if (!response.success) {
+          throw new Error("error unstaking back");
+        }
+        console.log("unstaked", response);
+        toast(
+          <div className="py-4 px-8 w-full text-center bg-success border-2 rounded-xl origin-bottom-right">
+            <p className=" font-bozo text-[22px] ">Unstaking was successful!</p>
+          </div>,
+          {
+            duration: 3000,
+          }
+        );
+      } catch (error) {
+        console.log("error unstaking", error);
+        toast(
+          <div className="py-4 px-8 w-full text-center bg-error border-2 rounded-xl origin-bottom-right">
+            <p className=" font-bozo text-[22px] ">
+              Unstaking was unsuccessful!
+            </p>
+          </div>,
+          {
+            duration: 3000,
+          }
+        );
+        setStakedNfts(tmpStaked);
+        setNfts(tmpNfts);
+      } finally {
+        setTimeout(() => {
+          setShouldFetch(true);
+        }, 10000);
+      }
+    }
+  };
+
+  const claimPoints = async () => {
+    if (toClaimPoints == 0) return;
+    const nftsRequest: GenericRequest = {
+      method: "GET",
+      url: "/nft/claimPoints",
+      token: session?.user.token!,
+    };
+    const response = await genericRequest(nftsRequest);
+
+    if (response.success) {
+      toast(
+        <div className="py-4 px-8 w-full text-center bg-beige border-2 rounded-xl origin-bottom-right">
+          <p className=" font-bozo text-[22px] ">Claimed points:</p>
+
+          <p className=" font-bozo text-[22px] text-primary">{toClaimPoints}</p>
+        </div>,
+        {
+          duration: 3000,
+        }
+      );
+      setTotalPoints(response.claimedPoints);
+      setToClaimPoints(response.totalPoints - response.claimedPoints);
+      updateSession({
+        claimedPoints: response.claimedPoints,
+        points: response.totalPoints,
+      });
+    } else {
+      toast(
+        <div className="py-4 px-8 w-full text-center bg-error border-2 rounded-xl origin-bottom-right">
+          <p className=" font-bozo text-[22px] ">Claiming was unsuccessful!</p>
+        </div>,
+        {
+          duration: 3000,
+        }
+      );
     }
   };
 
@@ -100,7 +364,7 @@ export default function Loyalty() {
               <Header title="Loyalty" />
             </div>
             <div className="w-full md:w-1/3 flex justify-center md:justify-end order-3">
-              <WalletComponents />
+              <WalletComponents points={totalPoints} />
             </div>
           </div>
           <Stake
@@ -168,10 +432,10 @@ export default function Loyalty() {
                     />
                   </svg>
                   <p className="text-[20px] md:text-[40px] text-primary">
-                    162.12
+                    {toClaimPoints}
                   </p>
                 </div>
-                <Button text="Claim" />
+                <Button text="Claim" onClick={() => claimPoints()} />
               </div>
             </div>
             <div className="w-1/3 hidden md:inline">

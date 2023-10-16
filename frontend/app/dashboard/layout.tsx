@@ -15,6 +15,7 @@ import {
 } from "@solana/wallet-adapter-react";
 import { WalletModalProvider } from "@solana/wallet-adapter-react-ui";
 import { useMemo } from "react";
+import { Toaster } from "sonner";
 
 /* export const metadata: Metadata = {
   title: "Bozo Collective - Dashboard",
@@ -43,11 +44,21 @@ export default function RootLayout({
     ],
     [solNetwork]
   );
-
+  const toastOptions = {
+    duration: 1000,
+    style: {
+      background: "transparent",
+      border: "none",
+      boxShadow: "none",
+    },
+  };
   return (
     <ConnectionProvider endpoint={endpoint}>
       <WalletProvider wallets={wallets} autoConnect={true}>
-        <WalletModalProvider>{children}</WalletModalProvider>
+        <WalletModalProvider>
+          {children}
+          <Toaster position="bottom-right" toastOptions={toastOptions} />
+        </WalletModalProvider>
       </WalletProvider>
     </ConnectionProvider>
   );

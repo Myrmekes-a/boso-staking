@@ -14,7 +14,9 @@ const Nft = ({ nft }: { nft: NftType }) => {
   const [mouseDown, setMouseDown] = useState(false);
   return (
     <div
-      className={`w-full h-full  rounded-[0.8rem] flex center cursor-grab z-10 nftdraggable ${
+      className={`${
+        mouseDown ? "animate-nft-mouse-down" : "animate-nft-mouse-up"
+      } w-full h-full  rounded-[0.8rem] flex center cursor-grab z-10   ${
         isDragging ? "opacity-[0.001] cursor-grabbing " : ""
       } `}
       /* ${mouseDown ? "!w-[100px] !h-[100px]" : ""} */
@@ -48,7 +50,7 @@ const Nft = ({ nft }: { nft: NftType }) => {
       }}
     >
       <div
-        className={`w-full h-full relative border-[2.75px] border-black rounded-[0.8rem]  transition-all duration-1000 overflow-hidden`}
+        className={` w-full h-full relative border-[2.75px] border-black rounded-[0.8rem]  transition-all duration-1000 overflow-hidden`}
       >
         <Image
           src={nft.image}
