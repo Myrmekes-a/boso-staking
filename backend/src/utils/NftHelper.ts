@@ -61,6 +61,7 @@ const getNftFromWallet = async (wallet: string, userId: string) => {
         image: nft.image,
         staked: nft.staked,
       });
+      // if exists and owner is not the same, update owner
       if (nft.owner !== userId) {
         nft.owner = userId;
         await nft.save();
@@ -68,8 +69,7 @@ const getNftFromWallet = async (wallet: string, userId: string) => {
     }
   }
 
-  // delete all nfts staked false that are not in mints
-
+  // delete all nfts staked false that are not in mints maybe they are sold
   const allNfts = await Nft.find({ owner: userId });
   for (let j = 0; j < allNfts.length; j += 1) {
     if (!mints.has(allNfts[j].mint)) {
@@ -118,25 +118,25 @@ const calculatePoints = async (userId: string, lastUpdatePoints: Date) => {
     let lastUpdate = dayjs(lastUpdatePoints);
     let now = dayjs();
     // set second to 0
-    lastStake = lastStake.set('second', 0);
-    lastUpdate = lastUpdate.set('second', 0);
-    now = now.set('second', 0);
+    //lastStake = lastStake.set('second', 0);
+    lastUpdate = lastUpdate.set('second', lastStake.second());
+    //now = now.set('second', 0);
 
     // set millisecond to 0
-    lastStake = lastStake.set('millisecond', 0);
-    lastUpdate = lastUpdate.set('millisecond', 0);
-    now = now.set('millisecond', 0);
+    //lastStake = lastStake.set('millisecond', 0);
+    lastUpdate = lastUpdate.set('millisecond', lastStake.millisecond());
+    //now = now.set('millisecond', 0);
 
     let diff;
     // use always the most recent date
     if (lastUpdate.isBefore(lastStake)) {
-      // console.log('last stake');
+      //console.log('last stake');
       diff = now.diff(lastStake, 'minute'); // amount of minutes between now and last stake
-      // console.log(now.toDate(), lastStake.toDate(), diff);
+      //console.log(now.toDate(), lastStake.toDate(), diff);
     } else {
-      // console.log('last update');
+      //console.log('last update');
       diff = now.diff(lastUpdate, 'minute'); // amount of minutes between now and last update
-      // console.log(now.toDate(), lastUpdate.toDate(), diff);
+      //console.log(now.toDate(), lastUpdate.toDate(), diff);
     }
     let points = diff; /* / 60 */ // amount of points to add
     if ((i + 1) % 5 === 0) {
