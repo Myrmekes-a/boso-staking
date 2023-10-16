@@ -15,7 +15,7 @@ export const getNft = BigPromise(async (req: IGetUserAuthInfoRequest, res) => {
   /*  const wallet = req.query.wallet;
     console.log(req.query);
     console.log(wallet); */
-  // const testWallet = 'DmS3RqjoSU5khWB76cXsbexeFv7FpwRqoUCyRBYt1Jgg';
+  //const testWallet = 'DmS3RqjoSU5khWB76cXsbexeFv7FpwRqoUCyRBYt1Jgg';
 
   const nfts = await getNftFromWallet(wallet, _id);
 

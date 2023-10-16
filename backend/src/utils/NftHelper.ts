@@ -26,12 +26,14 @@ const getNftFromWallet = async (wallet: string, userId: string) => {
     if (!nft) {
       const response = await fetch(nftsmetadata[i].data.uri);
       if (!response) {
+        console.log('error fetching image');
         continue;
       }
 
       const image = await response.json();
 
       if (!image || !image.image) {
+        console.log('error fetching image');
         continue;
       }
 
@@ -59,17 +61,27 @@ const getNftFromWallet = async (wallet: string, userId: string) => {
         image: nft.image,
         staked: nft.staked,
       });
+      if (nft.owner !== userId) {
+        nft.owner = userId;
+        await nft.save();
+      }
     }
   }
+
+  // delete all nfts staked false that are not in mints
 
   const allNfts = await Nft.find({ owner: userId });
   for (let j = 0; j < allNfts.length; j += 1) {
     if (!mints.has(allNfts[j].mint)) {
-      mints.set(allNfts[j].mint, {
-        mint: allNfts[j].mint,
-        image: allNfts[j].image,
-        staked: allNfts[j].staked,
-      });
+      if (allNfts[j].staked) {
+        mints.set(allNfts[j].mint, {
+          mint: allNfts[j].mint,
+          image: allNfts[j].image,
+          staked: allNfts[j].staked,
+        });
+      } else {
+        await allNfts[j].delete();
+      }
     }
   }
 
