@@ -72,6 +72,8 @@ const getOrCreateTokenAccount = async (mint: PublicKey, owner: PublicKey) => {
     };
   }
 
+  console.log("associated token", associatedToken.toBase58());
+
   return {
     associatedToken,
     tx: null,
@@ -135,11 +137,12 @@ const getAnchorProgram = async (wallet: WalletContextState) => {
 const sendTxs = async (txs: Transaction[], wallet: WalletContextState) => {
   // @ts-ignore
   const signedTxs = await wallet.signAllTransactions(txs);
-  const signatures = [];
+  const serialized = [];
   for (let i = 0; i < signedTxs.length; i++) {
     const signedTx = signedTxs[i];
-    const txid = await connection.sendRawTransaction(signedTx.serialize());
-    signatures.push(txid);
+    serialized.push(signedTx.serialize());
+    /* const txid = await connection.sendRawTransaction(signedTx.serialize()); */
+    /* signatures.push(txid);
     const blockHash = await connection.getLatestBlockhash();
     await connection.confirmTransaction(
       {
@@ -148,9 +151,9 @@ const sendTxs = async (txs: Transaction[], wallet: WalletContextState) => {
         signature: txid,
       },
       "confirmed"
-    );
+    ); */
   }
-  return signatures;
+  return serialized;
 };
 
 const stake = async (mints: PublicKey[], wallet: WalletContextState) => {
@@ -235,4 +238,8 @@ const unstake = async (mints: PublicKey[], wallet: WalletContextState) => {
   return sendTxs(toBeSigned, wallet);
 };
 
-export { stake, unstake };
+const getTx = async (signature: string) => {
+  return await connection.getParsedTransaction(signature);
+};
+
+export { stake, unstake, getTx };

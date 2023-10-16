@@ -1,4 +1,10 @@
-import React, { ReactNode, createContext, useContext, useState } from "react";
+import React, {
+  ReactNode,
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 
 interface LoyaltyContextType {
   isGlobalDragging: boolean;

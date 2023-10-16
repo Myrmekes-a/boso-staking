@@ -57,7 +57,7 @@ export const authOptions: AuthOptions = {
       console.log("jwt", { token, user, session });
 
       if (trigger === "update") {
-        /* TODO */
+        return { ...token, ...session };
       }
       if (user) {
         return { ...token, ...user };
@@ -75,6 +75,13 @@ export const authOptions: AuthOptions = {
         },
       };
     },
+  },
+  pages: {
+    signIn: "/dashboard",
+    signOut: "/dashboard",
+    error: "/dashboard", // Error code passed in query string as ?error=
+    //verifyRequest: "/auth/verify-request", // (used for check email message)
+    //newUser: null, // If set, new users will be directed here on first sign in
   },
 };
 

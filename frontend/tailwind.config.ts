@@ -14,6 +14,8 @@ const config: Config = {
       primary: "#C8453B",
       primarydark: "#902F2F",
       grey: "#726F68",
+      success: "#aaffa8",
+      error: "#ffa8a8",
 
       transparent: "transparent",
     },
@@ -26,6 +28,9 @@ const config: Config = {
         "gradient-conic":
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
+    },
+    fontFamily: {
+      bozo: ["__bozoFont_266f07"],
     },
   },
   plugins: [],

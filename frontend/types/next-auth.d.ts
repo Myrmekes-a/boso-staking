@@ -9,6 +9,8 @@ declare module "next-auth" {
       _id: string;
       token: string;
       wallet: string;
+      claimedPoints: number;
+      points: number;
     };
   }
 }

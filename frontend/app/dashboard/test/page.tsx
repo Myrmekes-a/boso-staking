@@ -4,6 +4,8 @@ import { useWallet } from "@solana/wallet-adapter-react";
 import { PublicKey } from "@solana/web3.js";
 
 import { stake, unstake } from "@/utils/staking/lib";
+import { useSession } from "next-auth/react";
+import { GenericRequest, genericRequest } from "@/utils/request";
 
 export default function Test() {
   const wallet = useWallet();
@@ -419,6 +421,8 @@ export default function Test() {
   }
  */
 
+  const { data: session } = useSession();
+
   const stakeWrapper = async () => {
     const tx = await stake([nftMint, nftMint2], wallet);
     console.log(tx);
@@ -427,6 +431,13 @@ export default function Test() {
   const unstakeWrapper = async () => {
     const tx = await unstake([nftMint, nftMint2], wallet);
     console.log(tx);
+    /*  const nftsRequest: GenericRequest = {
+      method: "POST",
+      url: "/nft/unstake",
+      token: session?.user.token!,
+      data: { mints: [ nftMint2], serialized: tx },
+    };
+    const response = await genericRequest(nftsRequest); */
   };
 
   return (

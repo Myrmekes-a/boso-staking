@@ -1,18 +1,14 @@
-import Button from "@/components/dashboard/Button";
 import DashboardSection from "@/components/dashboard/DashboardSection";
 import Header from "@/components/dashboard/Header";
-import PointCounter from "@/components/dashboard/PointCounter";
 import SkeletonImage from "@/components/dashboard/SkeletonImage";
 import SocialButtons from "@/components/dashboard/SocialButtons";
-import WalletButton from "@/components/dashboard/WalletButton";
 import WalletComponents from "@/components/dashboard/WalletComponents";
-import Image from "next/image";
 
 export default async function Dashboard() {
   return (
-    <main className="">
+    <main className=" select-none">
       <div className="w-screen md:h-screen px-7 md:p-7 flex flex-col-reverse md:flex-row">
-        <div className="w-full md:w-1/3 h-screen md:h-full py-7 md:py-0 flex flex-col gap-4 items-center md:items-start">
+        <div className="w-full md:w-1/3 h-screen md:h-full py-7 md:py-0 flex flex-col justify-between items-center md:items-start">
           <DashboardSection
             text="Loyalty Program"
             image="/img/dashboard/section1.jpeg"

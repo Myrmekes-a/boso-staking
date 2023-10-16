@@ -36,7 +36,8 @@ export default async function RootLayout({
         <Provider session={session}>
           <QueryProvider>
             <ReactLenisComponent>
-              <ClickImage>{children}</ClickImage>
+              {/* <ClickImage>{children}</ClickImage> */}
+              {children}
             </ReactLenisComponent>
           </QueryProvider>
         </Provider>
