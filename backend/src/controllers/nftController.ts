@@ -1,10 +1,12 @@
 /* eslint @typescript-eslint/naming-convention : 0 */
 /* eslint no-underscore-dangle : 0 */
+/* eslint no-await-in-loop : 0  */
+/* eslint @typescript-eslint/ban-ts-comment: 0  */
 
 import { IGetUserAuthInfoRequest } from 'src/utils/typesAndInterfaces';
 import BigPromise from '../middlewares/bigPromise';
 // import { CustomError } from '../utils/customError';
-import { calculatePoints, getNftFromWallet } from '../utils/NftHelper';
+import { calculatePoints, sendTx, getNftFromWallet } from '../utils/NftHelper';
 import Nft from '../models/nft';
 import Activity from '../models/activity';
 
@@ -29,15 +31,16 @@ export const stake = BigPromise(
   async (req: IGetUserAuthInfoRequest, res, next) => {
     const { _id } = req.user;
     // const { wallet } = req.user;
-    const { mint } = req.body;
+    const { mints } = req.body;
+    const { serialized } = req.body;
 
-    // stake nft
-    const nft = await Nft.findOneAndUpdate(
-      { mint, staked: false, owner: _id },
-      { $set: { staked: true, owner: _id }, new: true }
-    );
+    const nfts = await Nft.find({
+      mint: { $in: mints },
+      staked: false,
+      owner: _id,
+    });
 
-    if (!nft) {
+    if (nfts.length !== mints.length) {
       res.status(404).json({
         success: false,
         message: 'Nft not found or already staked',
@@ -46,12 +49,34 @@ export const stake = BigPromise(
       return;
     }
 
-    // create activity
-    await Activity.create({
-      operation: 'stake',
-      nft: nft._id,
-      user: _id,
-    });
+    try {
+      await sendTx(serialized);
+    } catch (err) {
+      res.status(404).json({
+        success: false,
+        message: 'Error sending transaction',
+      });
+      return;
+    }
+
+    for (let i = 0; i < mints.length; i += 1) {
+      const mint = mints[i];
+
+      // stake nft
+      const nft = await Nft.findOneAndUpdate(
+        { mint, staked: false, owner: _id },
+        { $set: { staked: true, owner: _id }, new: true }
+      );
+
+      // create activity
+      await Activity.create({
+        operation: 'stake',
+        // @ts-ignore
+        nft: nft._id,
+        user: _id,
+      });
+    }
+
     next();
   }
 );
@@ -59,7 +84,23 @@ export const stake = BigPromise(
 export const unstake = BigPromise(
   async (req: IGetUserAuthInfoRequest, res, next) => {
     const { _id } = req.user;
-    const { mint } = req.body;
+    const { mints } = req.body;
+    const { serialized } = req.body;
+
+    const nfts = await Nft.find({
+      mint: { $in: mints },
+      staked: true,
+      owner: _id,
+    });
+
+    if (nfts.length !== mints.length) {
+      res.status(404).json({
+        success: false,
+        message: 'Nft not found or already unstaked',
+      });
+
+      return;
+    }
 
     // calculate actual points
     let points = await calculatePoints(_id, req.user.lastUpdatedPoints);
@@ -70,27 +111,32 @@ export const unstake = BigPromise(
       req.user.points = points;
     }
 
-    // unstake nft
-    const nft = await Nft.findOneAndUpdate(
-      { mint, staked: true, owner: _id },
-      { $set: { staked: false, owner: _id }, new: true }
-    );
-
-    if (!nft) {
+    try {
+      await sendTx(serialized);
+    } catch (err) {
       res.status(404).json({
         success: false,
-        message: 'Nft not found or already unstaked',
+        message: 'Error sending transaction',
       });
-
       return;
     }
 
-    // create activity
-    await Activity.create({
-      operation: 'unstake',
-      nft: nft._id,
-      user: _id,
-    });
+    for (let i = 0; i < mints.length; i += 1) {
+      const mint = mints[i];
+      // unstake nft
+      const nft = await Nft.findOneAndUpdate(
+        { mint, staked: true, owner: _id },
+        { $set: { staked: false, owner: _id }, new: true }
+      );
+
+      // create activity
+      await Activity.create({
+        operation: 'unstake',
+        // @ts-ignore
+        nft: nft._id,
+        user: _id,
+      });
+    }
 
     next();
   }
@@ -140,3 +186,66 @@ export const claimPoints = BigPromise(
     });
   }
 );
+
+/* export const stakeBack = BigPromise(
+  async (req: IGetUserAuthInfoRequest, res, next) => {
+    const { serialized } = req.body;
+    if (!serialized) {
+      res.status(404).json({
+        success: false,
+        message: 'No serialized transaction found',
+      });
+    }
+
+    for (let i = 0; i < serialized.length; i++) {
+      const signedTx = serialized[i];
+      const txid = await connection.sendRawTransaction(signedTx);
+      const blockHash = await connection.getLatestBlockhash();
+      await connection.confirmTransaction(
+        {
+          blockhash: blockHash.blockhash,
+          lastValidBlockHeight: blockHash.lastValidBlockHeight,
+          signature: txid,
+        },
+        'confirmed'
+      );
+    }
+
+    res.status(200).json({
+      success: true,
+      message: 'stake back successfull',
+    });
+  }
+);
+
+export const unstakeBack = BigPromise(
+  async (req: IGetUserAuthInfoRequest, res, next) => {
+    const { serialized } = req.body;
+
+    if (!serialized) {
+      res.status(404).json({
+        success: false,
+        message: 'No serialized transaction found',
+      });
+    }
+
+    for (let i = 0; i < serialized.length; i++) {
+      const signedTx = serialized[i];
+      const txid = await connection.sendRawTransaction(signedTx);
+
+      const blockHash = await connection.getLatestBlockhash();
+      await connection.confirmTransaction(
+        {
+          blockhash: blockHash.blockhash,
+          lastValidBlockHeight: blockHash.lastValidBlockHeight,
+          signature: txid,
+        },
+        'confirmed'
+      );
+    }
+    res.status(200).json({
+      success: true,
+      message: 'Unstake back successfull',
+    });
+  }
+); */
