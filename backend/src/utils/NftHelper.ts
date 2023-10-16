@@ -114,29 +114,29 @@ const calculatePoints = async (userId: string, lastUpdatePoints: Date) => {
       continue;
     }
 
-    let lastStake = dayjs(activity[0].createdAt);
+    const lastStake = dayjs(activity[0].createdAt);
     let lastUpdate = dayjs(lastUpdatePoints);
-    let now = dayjs();
+    const now = dayjs();
     // set second to 0
-    //lastStake = lastStake.set('second', 0);
+    // lastStake = lastStake.set('second', 0);
     lastUpdate = lastUpdate.set('second', lastStake.second());
-    //now = now.set('second', 0);
+    // now = now.set('second', 0);
 
     // set millisecond to 0
-    //lastStake = lastStake.set('millisecond', 0);
+    // lastStake = lastStake.set('millisecond', 0);
     lastUpdate = lastUpdate.set('millisecond', lastStake.millisecond());
-    //now = now.set('millisecond', 0);
+    // now = now.set('millisecond', 0);
 
     let diff;
     // use always the most recent date
     if (lastUpdate.isBefore(lastStake)) {
-      //console.log('last stake');
+      // console.log('last stake');
       diff = now.diff(lastStake, 'minute'); // amount of minutes between now and last stake
-      //console.log(now.toDate(), lastStake.toDate(), diff);
+      // console.log(now.toDate(), lastStake.toDate(), diff);
     } else {
-      //console.log('last update');
+      // console.log('last update');
       diff = now.diff(lastUpdate, 'minute'); // amount of minutes between now and last update
-      //console.log(now.toDate(), lastUpdate.toDate(), diff);
+      // console.log(now.toDate(), lastUpdate.toDate(), diff);
     }
     let points = diff; /* / 60 */ // amount of points to add
     if ((i + 1) % 5 === 0) {
@@ -150,4 +150,26 @@ const calculatePoints = async (userId: string, lastUpdatePoints: Date) => {
   return totalPoints;
 };
 
-export { getNftFromWallet, calculatePoints };
+const sendTx = async (serialized: any) => {
+  if (!serialized || serialized.length === 0) {
+    throw new Error('No serialized tx');
+  }
+  const signatures = [];
+  for (let i = 0; i < serialized.length; i += 1) {
+    const signedTx = serialized[i];
+    const txid = await connection.sendRawTransaction(signedTx);
+    signatures.push(txid);
+    const blockHash = await connection.getLatestBlockhash();
+    await connection.confirmTransaction(
+      {
+        blockhash: blockHash.blockhash,
+        lastValidBlockHeight: blockHash.lastValidBlockHeight,
+        signature: txid,
+      },
+      'confirmed'
+    );
+  }
+  return signatures;
+};
+
+export { getNftFromWallet, calculatePoints, sendTx };
