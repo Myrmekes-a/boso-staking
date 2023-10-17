@@ -11,13 +11,19 @@ type StakeProps = {
   stakedNfts: NftType[];
   stakeNft: (nft_id: string) => void;
   unstakeAllNfts: () => void;
+  isNftsDraggable: Map<string, boolean>;
 };
 
 export type StakePositionType =
   | { type: "filled"; nft: NftType; nextfilled: boolean }
   | { type: "empty"; active: boolean };
 
-const Stake = ({ stakedNfts, stakeNft, unstakeAllNfts }: StakeProps) => {
+const Stake = ({
+  stakedNfts,
+  stakeNft,
+  unstakeAllNfts,
+  isNftsDraggable,
+}: StakeProps) => {
   const [positions, setPositions] = useState<StakePositionType[]>([
     {
       type: "empty",
@@ -108,14 +114,14 @@ const Stake = ({ stakedNfts, stakeNft, unstakeAllNfts }: StakeProps) => {
               <path
                 d="M1.00006 15.4624C4.12517 12.8052 11.3928 6.19252 15.4625 0.999999"
                 stroke="#C8453B"
-                stroke-width="1.12639"
-                stroke-linecap="round"
+                strokeWidth="1.12639"
+                strokeLinecap="round"
               />
               <path
                 d="M11.1632 5.90105C9.28086 8.83947 5.26045 15.0844 3.68737 16.7858C1.721 18.9126 10.1121 10.3611 14.0761 6.39704C18.0133 2.45981 13.5465 8.08943 9.71967 12.8387"
                 stroke="#C8453B"
-                stroke-width="1.12639"
-                stroke-linecap="round"
+                strokeWidth="1.12639"
+                strokeLinecap="round"
               />
             </svg>
           </div>
@@ -134,6 +140,7 @@ const Stake = ({ stakedNfts, stakeNft, unstakeAllNfts }: StakeProps) => {
               {...position}
               index={index}
               stakeNft={stakeNft}
+              isNftsDraggable={isNftsDraggable}
             />
           ))}
         </div>

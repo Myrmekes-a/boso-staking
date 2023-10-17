@@ -1,6 +1,6 @@
 "use client";
 
-import { LoyaltyProvider } from "@/app/context/LoyaltyContext";
+import { LoyaltyProvider, useLoyalty } from "@/app/context/LoyaltyContext";
 import Button from "@/components/dashboard/Button";
 import Header from "@/components/dashboard/Header";
 import WalletComponents from "@/components/dashboard/WalletComponents";
@@ -16,7 +16,13 @@ import { useWallet } from "@solana/wallet-adapter-react";
 import { PublicKey } from "@solana/web3.js";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
-import { createContext, useEffect, useState } from "react";
+import {
+  MutableRefObject,
+  createContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { useQuery } from "react-query";
 import { toast } from "sonner";
 
@@ -35,7 +41,9 @@ const parseNft = (nft: any) => {
 export default function Loyalty() {
   const [stakedNfts, setStakedNfts] = useState<NftType[]>([]);
   const [nfts, setNfts] = useState<NftType[]>([]);
-  let timeoutId: NodeJS.Timeout | undefined = undefined;
+  const timerRef = useRef<any>(null);
+
+  const [nftsTimers, setNftsTimers] = useState<MutableRefObject<any>[]>([]);
 
   const [shouldFetch, setShouldFetch] = useState(true);
 
@@ -46,10 +54,26 @@ export default function Loyalty() {
 
   const wallet = useWallet();
 
+  const [isNftsDraggable, setIsNftsDraggable] = useState<Map<string, boolean>>(
+    new Map()
+  );
+
+  useEffect(() => {
+    console.log("isNftsDraggable", isNftsDraggable);
+  }, [isNftsDraggable]);
+
+  const setNftDraggable = (nft_ids: Array<string>, isDraggable: boolean) => {
+    console.log("setNftDraggable", nft_ids, isDraggable);
+    const tmpIsNftsDraggable = isNftsDraggable;
+    nft_ids.forEach((nft_id) => {
+      tmpIsNftsDraggable.set(nft_id, isDraggable);
+    });
+    setIsNftsDraggable(new Map(tmpIsNftsDraggable));
+  };
+
   const { refetch: refetchNft } = useQuery(
     ["nfts"],
     async () => {
-      console.log("SHOULD", shouldFetch);
       if (!shouldFetch) return;
       console.log("fetching nfts");
       const nftsRequest: GenericRequest = {
@@ -61,10 +85,14 @@ export default function Loyalty() {
 
       const tmpnfts: NftType[] = [];
       const tmpstakednfts: NftType[] = [];
+      const mints: string[] = [];
       response.nfts.forEach((nft: any) => {
+        mints.push(nft.mint);
         if (nft.staked) tmpstakednfts.push(parseNft(nft));
         else tmpnfts.push(parseNft(nft));
       });
+
+      setNftDraggable(mints, true);
 
       setNfts(tmpnfts);
       setStakedNfts(tmpstakednfts);
@@ -76,14 +104,9 @@ export default function Loyalty() {
     }
   );
 
-  useEffect(() => {
-    console.log("SHOULD in useeffe", shouldFetch);
-  }, [shouldFetch]);
-
   useQuery(
     ["points"],
     async () => {
-      console.log("fetching points");
       const nftsRequest: GenericRequest = {
         method: "GET",
         url: "/nft/getPoints",
@@ -104,7 +127,7 @@ export default function Loyalty() {
   const stakeNft = async (nft_id: string) => {
     const nft = nfts.find((nft) => nft.id === nft_id);
     if (nft) {
-      if (timeoutId) clearTimeout(timeoutId);
+      if (timerRef.current) clearTimeout(timerRef.current);
       setShouldFetch(false);
       const tmpStaked = stakedNfts;
       const tmpNfts = nfts;
@@ -127,6 +150,7 @@ export default function Loyalty() {
           throw new Error("error staking back");
         }
         console.log("staked", response);
+        setNftDraggable([nft_id], false);
         toast(
           <div className="py-4 px-8 w-full text-center bg-success border-2 rounded-xl origin-bottom-right">
             <p className=" font-bozo text-[22px] ">Staking was successful!</p>
@@ -149,7 +173,7 @@ export default function Loyalty() {
         setNfts(tmpNfts);
       } finally {
         console.log("IM IN FINALLY");
-        timeoutId = setTimeout(() => {
+        timerRef.current = setTimeout(() => {
           console.log("IM IN TIMEOUT");
           setShouldFetch(true);
         }, 10000);
@@ -162,7 +186,7 @@ export default function Loyalty() {
     const publicKeys = stakedNfts.map((nft) => new PublicKey(nft.id));
     const mints = stakedNfts.map((nft) => nft.id);
     console.log("mints", mints);
-    if (timeoutId) clearTimeout(timeoutId);
+    if (timerRef.current) clearTimeout(timerRef.current);
     setShouldFetch(false);
     const tmpStaked = stakedNfts;
     const tmpNfts = nfts;
@@ -185,6 +209,7 @@ export default function Loyalty() {
         throw new Error("error unstaking back");
       }
       console.log("staked", response);
+      setNftDraggable(mints, false);
       toast(
         <div className="py-4 px-8 w-full text-center bg-success border-2 rounded-xl origin-bottom-right">
           <p className=" font-bozo text-[22px] ">Unstaking was successful!</p>
@@ -206,7 +231,7 @@ export default function Loyalty() {
       setStakedNfts(tmpStaked);
       setNfts(tmpNfts);
     } finally {
-      timeoutId = setTimeout(() => {
+      timerRef.current = setTimeout(() => {
         setShouldFetch(true);
       }, 10000);
     }
@@ -218,7 +243,7 @@ export default function Loyalty() {
     const mints = nfts.map((nft) => nft.id);
 
     console.log("mints", mints);
-    if (timeoutId) clearTimeout(timeoutId);
+    if (timerRef.current) clearTimeout(timerRef.current);
     setShouldFetch(false);
     const tmpStaked = stakedNfts;
     const tmpNfts = nfts;
@@ -241,6 +266,7 @@ export default function Loyalty() {
         throw new Error("error staking back");
       }
       console.log("staked", response);
+      setNftDraggable(mints, false);
       toast(
         <div className="py-4 px-8 w-full text-center bg-success border-2 rounded-xl origin-bottom-right">
           <p className=" font-bozo text-[22px] ">Staking was successful!</p>
@@ -262,7 +288,7 @@ export default function Loyalty() {
       setStakedNfts(tmpStaked);
       setNfts(tmpNfts);
     } finally {
-      timeoutId = setTimeout(() => {
+      timerRef.current = setTimeout(() => {
         setShouldFetch(true);
       }, 10000);
     }
@@ -271,7 +297,7 @@ export default function Loyalty() {
   const unstakeNft = async (nft_id: string) => {
     const nft = stakedNfts.find((nft) => nft.id === nft_id);
     if (nft) {
-      if (timeoutId) clearTimeout(timeoutId);
+      if (timerRef.current) clearTimeout(timerRef.current);
       setShouldFetch(false);
       const tmpStaked = stakedNfts;
       const tmpNfts = nfts;
@@ -294,6 +320,7 @@ export default function Loyalty() {
           throw new Error("error unstaking back");
         }
         console.log("unstaked", response);
+        setNftDraggable([nft_id], false);
         toast(
           <div className="py-4 px-8 w-full text-center bg-success border-2 rounded-xl origin-bottom-right">
             <p className=" font-bozo text-[22px] ">Unstaking was successful!</p>
@@ -304,6 +331,8 @@ export default function Loyalty() {
         );
       } catch (error) {
         console.log("error unstaking", error);
+        console.log("error unstaking", typeof error);
+        console.log("error unstaking", JSON.stringify(error));
         toast(
           <div className="py-4 px-8 w-full text-center bg-error border-2 rounded-xl origin-bottom-right">
             <p className=" font-bozo text-[22px] ">
@@ -317,7 +346,7 @@ export default function Loyalty() {
         setStakedNfts(tmpStaked);
         setNfts(tmpNfts);
       } finally {
-        timeoutId = setTimeout(() => {
+        timerRef.current = setTimeout(() => {
           setShouldFetch(true);
         }, 10000);
       }
@@ -384,6 +413,7 @@ export default function Loyalty() {
             stakedNfts={stakedNfts}
             stakeNft={stakeNft}
             unstakeAllNfts={unstakeAllNfts}
+            isNftsDraggable={isNftsDraggable}
           />
           <div className="flex flex-col md:flex-row">
             <div className="w-full flex  md:hidden pb-6 pt-2 justify-between items-center">
@@ -417,6 +447,7 @@ export default function Loyalty() {
                 nfts={nfts}
                 unstakeNft={unstakeNft}
                 stakeAllNfts={stakeAllNfts}
+                isNftsDraggable={isNftsDraggable}
               />
             </div>
 

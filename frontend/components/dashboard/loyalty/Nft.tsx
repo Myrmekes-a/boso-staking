@@ -6,7 +6,15 @@ import Button from "../Button";
 import { NftType } from "@/app/dashboard/loyalty/page";
 import { useLoyalty } from "@/app/context/LoyaltyContext";
 
-const Nft = ({ nft }: { nft: NftType }) => {
+const Nft = ({
+  nft,
+  isStaked,
+  isDraggable,
+}: {
+  nft: NftType;
+  isStaked: boolean;
+  isDraggable: boolean;
+}) => {
   const { setIsGlobalDragging } = useLoyalty();
 
   const [isDragging, setIsDragging] = useState(false);
@@ -15,12 +23,16 @@ const Nft = ({ nft }: { nft: NftType }) => {
   return (
     <div
       className={`${
-        mouseDown ? "animate-nft-mouse-down" : "animate-nft-mouse-up"
+        isDraggable
+          ? mouseDown
+            ? "animate-nft-mouse-down"
+            : "animate-nft-mouse-up"
+          : "animate-pulse"
       } w-full h-full  rounded-[0.8rem] flex center cursor-grab z-10   ${
         isDragging ? "opacity-[0.001] cursor-grabbing " : ""
-      } `}
+      } ${!isDraggable ? "animate-pulse" : ""}`}
       /* ${mouseDown ? "!w-[100px] !h-[100px]" : ""} */
-      draggable={true}
+      draggable={isDraggable}
       onMouseDown={(e) => {
         e.stopPropagation();
         setMouseDown(true);
@@ -39,7 +51,11 @@ const Nft = ({ nft }: { nft: NftType }) => {
         // Imposta i dati da trascinare
         e.dataTransfer.setDragImage(element, offsetX, offsetY);
         setIsDragging(true);
-        setIsGlobalDragging(true);
+        if (isStaked) {
+          setIsGlobalDragging("unstaking");
+        } else {
+          setIsGlobalDragging("staking");
+        }
 
         e.dataTransfer.setData("nft", nft.id.toString());
       }}

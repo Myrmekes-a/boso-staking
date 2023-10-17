@@ -8,6 +8,7 @@ import { useLoyalty } from "@/app/context/LoyaltyContext";
 export type StakePositionProps = {
   index: number;
   stakeNft: (nft_id: string) => void;
+  isNftsDraggable: Map<string, boolean>;
 } & StakePositionType;
 
 const StakePosition = (props: StakePositionProps) => {
@@ -46,12 +47,14 @@ const StakePosition = (props: StakePositionProps) => {
             {props.active && (
               <div
                 className={`w-full h-full flex center text-center rounded-xl transition-colors duration-200 ${
-                  isGlobalDragging ? "bg-primary/60" : ""
+                  isGlobalDragging == "staking" ? "bg-primary/60" : ""
                 }`}
               >
                 <p
                   className={`text-[30px] px-5 ${
-                    isGlobalDragging ? "text-beige" : "text-primary"
+                    isGlobalDragging == "staking"
+                      ? "text-beige"
+                      : "text-primary"
                   } `}
                 >
                   Drag here your Bozo
@@ -61,7 +64,11 @@ const StakePosition = (props: StakePositionProps) => {
           </>
         ) : (
           <>
-            <Nft nft={props.nft} />
+            <Nft
+              nft={props.nft}
+              isStaked={true}
+              isDraggable={props.isNftsDraggable.get(props.nft.id)!}
+            />
             <Image
               src="/img/dashboard/loyalty/stakingslot.svg"
               alt="activestakingslot"

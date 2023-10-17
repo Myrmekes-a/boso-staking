@@ -13,6 +13,7 @@ export const authOptions: AuthOptions = {
       // You can pass any HTML attribute to the <input> tag through the object.
       credentials: {
         wallet: { label: "Wallet", type: "text", placeholder: "jsmith" },
+        signature: { label: "Signature", type: "text", placeholder: "jsmith" },
       },
       async authorize(credentials, req) {
         // Add logic here to look up the user from the credentials supplied
@@ -26,7 +27,10 @@ export const authOptions: AuthOptions = {
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify({ wallet: credentials.wallet }),
+            body: JSON.stringify({
+              wallet: credentials.wallet,
+              signature: credentials.signature,
+            }),
           }
         )
           .then((res) => res.json())
