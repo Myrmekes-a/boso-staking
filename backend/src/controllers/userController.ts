@@ -7,6 +7,7 @@
 
 import crypto from 'crypto';
 import nacl from 'tweetnacl';
+import { PublicKey } from '@solana/web3.js';
 import User from '../models/user';
 import BigPromise from '../middlewares/bigPromise';
 import { cookieToken, veryfyJwtToken } from '../utils/tokenHelper';
