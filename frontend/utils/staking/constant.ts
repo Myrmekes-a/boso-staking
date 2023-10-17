@@ -14,13 +14,11 @@ const programOwner = new PublicKey(
   "iHxTBpZTvSDuUFY8372UCc8jWJoFLq4Lc65nYUEGN9q"
 );
 const collectionAddress = new PublicKey(
-  "2RY7SpwjNpKgaUUs63GmZ2kUUtekMZn4C1S2EXG8RacH"
+  process.env.NEXT_PUBLIC_COLLECTION_ADDRESS!
 );
 
 // REWARD TOKEN
-const rewardMint = new PublicKey(
-  "9wwRfEx7bRhBwZPd8JkK1xL3ceXofMVmCJLT69bWCxai"
-); // Mint of the Token to be given as reward
+const rewardMint = new PublicKey(process.env.NEXT_PUBLIC_REWARD_MINT!); // Mint of the Token to be given as reward
 
 const [stakeDetails] = PublicKey.findProgramAddressSync(
   [
