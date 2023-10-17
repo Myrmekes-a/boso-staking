@@ -11,16 +11,22 @@ type NftBoxProps = {
   nfts: NftType[];
   unstakeNft: (nft_id: string) => void;
   stakeAllNfts: () => void;
+  isNftsDraggable: Map<string, boolean>;
 };
 
 function getRandomNumber(min: number, max: number) {
   return Math.random() * (max - min) + min;
 }
 
-const NftBox = ({ nfts, unstakeNft, stakeAllNfts }: NftBoxProps) => {
+const NftBox = ({
+  nfts,
+  unstakeNft,
+  stakeAllNfts,
+  isNftsDraggable,
+}: NftBoxProps) => {
   const boxRef = useRef<HTMLImageElement | null>(null);
 
-  const { isGlobalDragging } = useLoyalty();
+  const { isGlobalDragging, setIsGlobalDragging } = useLoyalty();
 
   const [bounds, setBounds] = React.useState({} as DOMRect);
 
@@ -63,6 +69,8 @@ const NftBox = ({ nfts, unstakeNft, stakeAllNfts }: NftBoxProps) => {
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
     const x = e.nativeEvent.offsetX;
     const y = e.nativeEvent.offsetY;
+
+    setIsGlobalDragging(false);
 
     const nft_id = e.dataTransfer.getData("nft");
 
@@ -116,7 +124,7 @@ const NftBox = ({ nfts, unstakeNft, stakeAllNfts }: NftBoxProps) => {
             backgroundSize: "100% 100%",
           }}
         >
-          {isGlobalDragging && (
+          {isGlobalDragging == "unstaking" && (
             <div className="absolute z-10 top-0 left-0  w-full h-full pointer-events-none overflow-hidden">
               <div className="w-full h-full bg-primary/60 rounded-[2rem] flex center text-center">
                 <p className="text-[3rem] text-beige w-1/2">
@@ -137,7 +145,11 @@ const NftBox = ({ nfts, unstakeNft, stakeAllNfts }: NftBoxProps) => {
                 left: nftsPositions.find((n) => n.nft_id == nft.id)?.x,
               }}
             >
-              <Nft nft={nft} />
+              <Nft
+                nft={nft}
+                isStaked={false}
+                isDraggable={isNftsDraggable.get(nft.id)!}
+              />
             </div>
           );
         })}
