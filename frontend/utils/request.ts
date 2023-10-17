@@ -42,7 +42,6 @@ export const genericRequest = async ({
   data = {},
   absolute = false,
 }: GenericRequest) => {
-  console.log("token", token);
   const options: Options = {
     method: method,
     headers: {

@@ -7,8 +7,8 @@ import React, {
 } from "react";
 
 interface LoyaltyContextType {
-  isGlobalDragging: boolean;
-  setIsGlobalDragging: (isDragging: boolean) => void;
+  isGlobalDragging: "staking" | "unstaking" | false;
+  setIsGlobalDragging: (isDragging: "staking" | "unstaking" | false) => void;
 }
 
 const LoyaltyContext = createContext<LoyaltyContextType>({
@@ -21,7 +21,9 @@ export const LoyaltyProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const [isGlobalDragging, setIsGlobalDragging] = useState(false);
+  const [isGlobalDragging, setIsGlobalDragging] = useState<
+    "staking" | "unstaking" | false
+  >(false);
 
   return (
     <LoyaltyContext.Provider
