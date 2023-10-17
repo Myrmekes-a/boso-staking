@@ -52,6 +52,7 @@ export const stake = BigPromise(
     try {
       await sendTx(serialized);
     } catch (err) {
+      console.log(err);
       res.status(404).json({
         success: false,
         message: 'Error sending transaction',
@@ -103,7 +104,7 @@ export const unstake = BigPromise(
     }
 
     // calculate actual points
-    let points = await calculatePoints(_id, req.user.lastUpdatedPoints);
+    let points = await calculatePoints(_id);
     points += req.user.points;
 
     if (points !== req.user.points) {
@@ -145,7 +146,7 @@ export const unstake = BigPromise(
 export const getPoints = BigPromise(
   async (req: IGetUserAuthInfoRequest, res) => {
     const { _id } = req.user;
-    let points = await calculatePoints(_id, req.user.lastUpdatedPoints);
+    let points = await calculatePoints(_id);
     points += req.user.points;
 
     if (points !== req.user.points) {
@@ -164,7 +165,7 @@ export const getPoints = BigPromise(
 export const claimPoints = BigPromise(
   async (req: IGetUserAuthInfoRequest, res, next) => {
     const { _id } = req.user;
-    let points = await calculatePoints(_id, req.user.lastUpdatedPoints);
+    let points = await calculatePoints(_id);
     points += req.user.points;
 
     if (points !== req.user.points) {

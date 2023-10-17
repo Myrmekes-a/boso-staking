@@ -424,12 +424,15 @@ export default function Test() {
   const { data: session } = useSession();
 
   const stakeWrapper = async () => {
-    const tx = await stake([nftMint, nftMint2], wallet);
+    const mints = [nftMint /* nftMint2 */];
+
+    const tx = await stake(mints, wallet, true);
     console.log(tx);
   };
 
   const unstakeWrapper = async () => {
-    const tx = await unstake([nftMint, nftMint2], wallet);
+    const mints = [nftMint /* nftMint2 */];
+    const tx = await unstake(mints, wallet, true);
     console.log(tx);
     /*  const nftsRequest: GenericRequest = {
       method: "POST",

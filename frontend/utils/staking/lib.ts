@@ -72,7 +72,7 @@ const getOrCreateTokenAccount = async (mint: PublicKey, owner: PublicKey) => {
     };
   }
 
-  console.log("associated token", associatedToken.toBase58());
+  //console.log("associated token", associatedToken.toBase58());
 
   return {
     associatedToken,
@@ -134,29 +134,40 @@ const getAnchorProgram = async (wallet: WalletContextState) => {
   return program;
 };
 
-const sendTxs = async (txs: Transaction[], wallet: WalletContextState) => {
+const sendTxs = async (
+  txs: Transaction[],
+  wallet: WalletContextState,
+  local?: boolean
+) => {
   // @ts-ignore
   const signedTxs = await wallet.signAllTransactions(txs);
   const serialized = [];
   for (let i = 0; i < signedTxs.length; i++) {
     const signedTx = signedTxs[i];
-    serialized.push(signedTx.serialize());
-    /* const txid = await connection.sendRawTransaction(signedTx.serialize()); */
-    /* signatures.push(txid);
-    const blockHash = await connection.getLatestBlockhash();
-    await connection.confirmTransaction(
-      {
-        blockhash: blockHash.blockhash,
-        lastValidBlockHeight: blockHash.lastValidBlockHeight,
-        signature: txid,
-      },
-      "confirmed"
-    ); */
+    if (!local) {
+      serialized.push(signedTx.serialize());
+    } else {
+      const txid = await connection.sendRawTransaction(signedTx.serialize());
+      serialized.push(txid);
+      const blockHash = await connection.getLatestBlockhash();
+      await connection.confirmTransaction(
+        {
+          blockhash: blockHash.blockhash,
+          lastValidBlockHeight: blockHash.lastValidBlockHeight,
+          signature: txid,
+        },
+        "confirmed"
+      );
+    }
   }
   return serialized;
 };
 
-const stake = async (mints: PublicKey[], wallet: WalletContextState) => {
+const stake = async (
+  mints: PublicKey[],
+  wallet: WalletContextState,
+  local?: boolean
+) => {
   const program = await getAnchorProgram(wallet);
   const toBeSigned = [];
 
@@ -193,10 +204,14 @@ const stake = async (mints: PublicKey[], wallet: WalletContextState) => {
     tx.feePayer = wallet.publicKey!;
     toBeSigned.push(tx);
   }
-  return sendTxs(toBeSigned, wallet);
+  return sendTxs(toBeSigned, wallet, local);
 };
 
-const unstake = async (mints: PublicKey[], wallet: WalletContextState) => {
+const unstake = async (
+  mints: PublicKey[],
+  wallet: WalletContextState,
+  local?: boolean
+) => {
   const program = await getAnchorProgram(wallet);
   const toBeSigned = [];
 
@@ -235,7 +250,7 @@ const unstake = async (mints: PublicKey[], wallet: WalletContextState) => {
     tx.feePayer = wallet.publicKey!;
     toBeSigned.push(tx);
   }
-  return sendTxs(toBeSigned, wallet);
+  return sendTxs(toBeSigned, wallet, local);
 };
 
 const getTx = async (signature: string) => {
