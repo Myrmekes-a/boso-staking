@@ -1,12 +1,13 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { useWalletModal } from "@solana/wallet-adapter-react-ui";
 import Button from "./Button";
 import { useWallet } from "@solana/wallet-adapter-react";
 import Image from "next/image";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 const WalletButton = () => {
   const { setVisible } = useWalletModal();
@@ -16,15 +17,18 @@ const WalletButton = () => {
 
   const { status } = useSession();
 
+  const shoud = useRef(false);
+
   const connect = () => {
+    shoud.current = true;
     setVisible(true);
   };
 
   const disconnect = () => {
     router.push("/dashboard");
-    wallet.disconnect();
-
-    signOut();
+    wallet.disconnect().then(() => {
+      signOut();
+    });
   };
 
   const clampPublicKey = (publicKey: string) => {
@@ -35,26 +39,36 @@ const WalletButton = () => {
 
   useEffect(() => {
     if (!wallet.connected || !wallet.signMessage) return;
-    if (status === "unauthenticated") {
+    if (status === "unauthenticated" && shoud.current) {
+      shoud.current = false;
       fetch(`${process.env.NEXT_PUBLIC_BACKENDURL}/user/getNonce`, {
         method: "GET",
       })
         .then((res) => res.json())
         .then((res) => {
-          const nonce = `Welcome to Bozo Collective!\n\n${res.nonce}`;
-          const message = new TextEncoder().encode(nonce);
-          wallet.signMessage!(message).then((signature) => {
-            signIn("credentials", {
-              wallet: wallet.publicKey?.toString()!,
-              signature: JSON.stringify(signature),
-              nonce: nonce,
-              redirect: false,
-            });
-          });
+          if (res.success) {
+            const nonce = `Welcome to Bozo Collective!\n\n${res.nonce}`;
+            const message = new TextEncoder().encode(nonce);
+            wallet.signMessage!(message)
+              .then((signature) => {
+                signIn("credentials", {
+                  wallet: wallet.publicKey?.toString()!,
+                  signature: JSON.stringify(signature),
+                  nonce: nonce,
+                  redirect: false,
+                });
+              })
+              .catch((error) => {
+                wallet.disconnect();
+              });
+          } else {
+            toast.error("Error authenticating user");
+            wallet.disconnect();
+          }
         });
     }
     setButtonText(clampPublicKey(wallet.publicKey?.toString()!));
-  }, [wallet, status]);
+  }, [wallet.connected]);
 
   const [buttonText, setButtonText] = React.useState(
     clampPublicKey(wallet.publicKey?.toString()!)
