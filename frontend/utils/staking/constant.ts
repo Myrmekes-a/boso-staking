@@ -4,7 +4,9 @@ import { Connection, PublicKey } from "@solana/web3.js";
 import { Metaplex } from "@metaplex-foundation/js";
 import idl from "./idl/idl.json";
 
-const connection = new Connection("https://api.devnet.solana.com", "finalized");
+const network =
+  process.env.NEXT_PUBLIC_SOLANA_NETWORK || "https://api.devnet.solana.com";
+const connection = new Connection(network, "finalized");
 const metaplex = Metaplex.make(connection);
 
 const programId = idl.metadata.address;
