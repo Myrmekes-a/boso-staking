@@ -34,7 +34,7 @@ export const signup = BigPromise(async (req, res, next) => {
 });
 
 export const generateNonce = BigPromise(async (req, res, next) => {
-  const nonce = nacl.randomBytes(32).toString('hex');
+  const nonce = crypto.randomUUID();
   res.status(200).json({
     success: true,
     nonce,
