@@ -11,12 +11,11 @@ import swaggerUi from 'swagger-ui-express';
 import YAML from 'yamljs';
 
 // import all routes here
+import { rateLimit } from 'express-rate-limit';
 import user from './routes/user';
 import payment from './routes/payment';
 import nft from './routes/nft';
 import errorHandler from './middlewares/errorHanlder';
-
-import { rateLimit } from 'express-rate-limit';
 
 const app: express.Application = express();
 

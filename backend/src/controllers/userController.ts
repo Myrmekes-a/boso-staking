@@ -43,8 +43,8 @@ export const generateNonce = BigPromise(async (req, res, next) => {
 
 export const login = BigPromise(async (req, res, next) => {
   const { wallet, signature, nonce } = req.body;
-  console.log('wallet', wallet);
-  console.log('signature', signature);
+  /*   console.log('wallet', wallet);
+  console.log('signature', signature); */
   if (!wallet || !signature) {
     return next(new CustomError('Wallet address missing', 400));
   }
@@ -63,7 +63,6 @@ export const login = BigPromise(async (req, res, next) => {
     return next(new CustomError('Unable to verify the signature', 400));
   }
 
-  console.log('verified', verified);
   // get user from DB
   const user = await User.findOneAndUpdate(
     { wallet },
