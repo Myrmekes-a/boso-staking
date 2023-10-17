@@ -31,7 +31,10 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const solNetwork = WalletAdapterNetwork.Devnet; /* Mainnet */
+  const solNetwork =
+    process.env.NODE_ENV === "development"
+      ? WalletAdapterNetwork.Devnet
+      : WalletAdapterNetwork.Mainnet;
   const endpoint = useMemo(() => clusterApiUrl(solNetwork), [solNetwork]);
   // initialise all the wallets you want to use
   const wallets = useMemo(
