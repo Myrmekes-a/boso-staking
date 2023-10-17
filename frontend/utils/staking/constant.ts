@@ -5,7 +5,7 @@ import { Metaplex } from "@metaplex-foundation/js";
 import idl from "./idl/idl.json";
 
 const network =
-  process.env.NEXT_PUBLIC_SOLANA_NETWORK || "https://api.devnet.solana.com";
+  process.env.NEXT_PUBLIC_NETWORK || "https://api.devnet.solana.com";
 const connection = new Connection(network, "finalized");
 const metaplex = Metaplex.make(connection);
 
