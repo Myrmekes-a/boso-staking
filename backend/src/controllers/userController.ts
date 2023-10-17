@@ -33,15 +33,25 @@ export const signup = BigPromise(async (req, res, next) => {
   cookieToken(user, res);
 });
 
+export const generateNonce = BigPromise(async (req, res, next) => {
+  const nonce = nacl.randomBytes(32).toString('hex');
+  res.status(200).json({
+    success: true,
+    nonce,
+  });
+});
+
 export const login = BigPromise(async (req, res, next) => {
-  const { wallet, signature } = req.body;
+  const { wallet, signature, nonce } = req.body;
+  console.log('wallet', wallet);
+  console.log('signature', signature);
   if (!wallet || !signature) {
     return next(new CustomError('Wallet address missing', 400));
   }
 
   // verification of signature
   const pubKey = new PublicKey(wallet);
-  const message = new TextEncoder().encode('Welcome to Bozo Collective!');
+  const message = new TextEncoder().encode(nonce);
   const sigbuffer = Uint8Array.from(Buffer.from(signature));
   const verified = nacl.sign.detached.verify(
     message,
@@ -53,6 +63,7 @@ export const login = BigPromise(async (req, res, next) => {
     return next(new CustomError('Unable to verify the signature', 400));
   }
 
+  console.log('verified', verified);
   // get user from DB
   const user = await User.findOneAndUpdate(
     { wallet },
