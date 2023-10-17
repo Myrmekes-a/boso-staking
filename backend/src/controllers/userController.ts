@@ -6,9 +6,11 @@
 // note this is not cool to see :()
 
 import crypto from 'crypto';
+import nacl from 'tweetnacl';
 import User from '../models/user';
 import BigPromise from '../middlewares/bigPromise';
 import { cookieToken, veryfyJwtToken } from '../utils/tokenHelper';
+
 // eslint-disable-next-line no-unused-vars
 // import mailHelper from '../utils/emailHelper';
 import { WhereClauseUser } from '../utils/WhereClause';
@@ -31,13 +33,13 @@ export const signup = BigPromise(async (req, res, next) => {
 });
 
 export const login = BigPromise(async (req, res, next) => {
-  const { wallet /* , signature  */ } = req.body;
-  if (!wallet /*  || !signature */) {
+  const { wallet, signature } = req.body;
+  if (!wallet || !signature) {
     return next(new CustomError('Wallet address missing', 400));
   }
 
   // verification of signature
-  /* const pubKey = new PublicKey(wallet);
+  const pubKey = new PublicKey(wallet);
   const message = new TextEncoder().encode('Welcome to SYNDRA!');
   const sigbuffer = Uint8Array.from(Buffer.from(signature));
   const verified = nacl.sign.detached.verify(
@@ -48,7 +50,7 @@ export const login = BigPromise(async (req, res, next) => {
 
   if (!verified) {
     return next(new CustomError('Unable to verify the signature', 400));
-  } */
+  }
 
   // get user from DB
   const user = await User.findOneAndUpdate(
