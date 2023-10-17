@@ -1,3 +1,4 @@
+import { GenericRequestNoAuth } from "@/utils/request";
 import NextAuth from "next-auth";
 import type { AuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
@@ -14,14 +15,15 @@ export const authOptions: AuthOptions = {
       credentials: {
         wallet: { label: "Wallet", type: "text", placeholder: "jsmith" },
         signature: { label: "Signature", type: "text", placeholder: "jsmith" },
+        nonce: { label: "Nonce", type: "text", placeholder: "jsmith" },
       },
       async authorize(credentials, req) {
         // Add logic here to look up the user from the credentials supplied
 
-        console.log(credentials);
         if (!credentials) return null;
+
         const user = await fetch(
-          "https://api-bozo.avrean.net/api/v1/user/login",
+          `${process.env.NEXT_PUBLIC_BACKENDURL}/user/login`,
           {
             method: "POST",
             headers: {
@@ -29,17 +31,16 @@ export const authOptions: AuthOptions = {
             },
             body: JSON.stringify({
               wallet: credentials.wallet,
-              signature: credentials.signature,
+              signature: JSON.parse(credentials.signature),
+              nonce: credentials.nonce,
             }),
           }
         )
           .then((res) => res.json())
           .then((data) => {
-            console.log(data);
             return data;
           })
           .catch((err) => {
-            console.log(err);
             return null;
           });
 
@@ -58,8 +59,6 @@ export const authOptions: AuthOptions = {
   session: { strategy: "jwt" },
   callbacks: {
     async jwt({ token, user, trigger, session }) {
-      console.log("jwt", { token, user, session });
-
       if (trigger === "update") {
         return { ...token, ...session };
       }
@@ -70,7 +69,6 @@ export const authOptions: AuthOptions = {
     },
     async session({ session, token, user }) {
       // Send properties to the client, like an access_token from a provider.
-      console.log("session", { session, token, user });
       return {
         ...session,
         user: {

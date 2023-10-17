@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { redirect, useRouter } from "next/navigation";
+import { signOut } from "next-auth/react";
 
 const buildParams = (data: any) => {
   if (!data) return "";
@@ -65,15 +66,12 @@ export const genericRequest = async ({
 
     const jsonResponse = await result.json();
 
-    /* if (jsonResponse.status === 401) {
+    if (jsonResponse.status === 401) {
       if (jsonResponse.message === "jwt expired") {
-        console.log("jwt expired");
-        goToLogin();
+        signOut();
       }
-      goToLogin();
-    } */
+    }
 
-    console.log("REQUEST FETCH", url, jsonResponse);
     return jsonResponse;
   } catch (err: any) {
     return { status: 500, success: false, data: err.message };

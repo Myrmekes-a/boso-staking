@@ -16,12 +16,11 @@ type WalletComponentsProps = {
 const WalletComponents = ({ points }: WalletComponentsProps) => {
   const wallet = useWallet();
 
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
 
-  /* console.log(wallet); */
   return (
     <div className="relative flex gap-2 h-fit">
-      {wallet.connected && (
+      {wallet.connected && status == "authenticated" && (
         <PointCounter points={points || session?.user.claimedPoints || 0} />
       )}
       <WalletButton />
