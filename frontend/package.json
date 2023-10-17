@@ -1,6 +1,6 @@
 {
   "name": "frontend",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -10,6 +10,14 @@
     "lint:fix": "next lint --fix"
   },
   "dependencies": {
+    "@metaplex-foundation/js": "^0.19.5",
+    "@project-serum/anchor": "^0.26.0",
+    "@solana/spl-token": "^0.3.8",
+    "@solana/wallet-adapter-base": "^0.9.23",
+    "@solana/wallet-adapter-react": "^0.15.35",
+    "@solana/wallet-adapter-react-ui": "^0.9.34",
+    "@solana/wallet-adapter-wallets": "^0.19.23",
+    "@solana/web3.js": "^1.87.1",
     "@studio-freight/react-lenis": "^0.0.30",
     "@types/node": "20.6.3",
     "@types/react": "18.2.22",
@@ -20,14 +28,21 @@
     "eslint-config-next": "13.5.1",
     "gsap": "^3.12.2",
     "next": "13.5.1",
+    "next-auth": "^4.23.2",
     "postcss": "8.4.30",
     "react": "18.2.0",
+    "react-beautiful-dnd": "^13.1.1",
     "react-dom": "18.2.0",
     "react-fast-marquee": "^1.6.0",
     "react-gsap": "^3.2.1",
     "react-intersection-observer": "^9.5.2",
+    "react-query": "^3.39.3",
     "sharp": "^0.32.6",
+    "sonner": "^1.0.3",
     "tailwindcss": "3.3.3",
     "typescript": "5.2.2"
+  },
+  "devDependencies": {
+    "@types/react-beautiful-dnd": "^13.1.5"
   }
 }

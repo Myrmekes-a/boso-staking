@@ -32,23 +32,24 @@ html.lenis {
 
 /* Track */
 ::-webkit-scrollbar-track {
-  background: #E4DECF;
+  background: #e4decf;
 }
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: #C8453B;
+  background: #c8453b;
   border-radius: 9999px;
 }
 
-::-moz-selection { /* Code for Firefox */
-  color: #E4DECF;
-  background: #1A1A1A;
+::-moz-selection {
+  /* Code for Firefox */
+  color: #e4decf;
+  background: #1a1a1a;
 }
 
 ::selection {
-  color: #E4DECF;
-  background: #1A1A1A;
+  color: #e4decf;
+  background: #1a1a1a;
 }
 
 .center {
@@ -56,7 +57,13 @@ html.lenis {
   align-items: center;
 }
 
-img, video, svg {
+li::marker {
+  font-size: 24px;
+}
+
+img,
+video,
+svg {
   user-select: none;
 }
 
@@ -201,7 +208,6 @@ img, video, svg {
   }
 }
 
-
 /* IS IN VIEWPORT ANIMATIONS START */
 @keyframes fadeUp {
   0% {
@@ -237,7 +243,7 @@ img, video, svg {
   animation: rotate-perspective 1s forwards;
 }
 
-@keyframes rotate-perspective  {
+@keyframes rotate-perspective {
   0% {
     transform: perspective(1200px) scale(0.5) rotate(20deg);
     opacity: 0;
@@ -285,4 +291,214 @@ img, video, svg {
 
 *:focus-visible {
   outline: none;
+}
+
+/* dashboard */
+
+@keyframes fadeUpSkeleton {
+  0% {
+    opacity: 0;
+    transform: translateY(600px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.animate-skeleton {
+  animation: fadeUpSkeleton 1s forwards;
+}
+
+@keyframes fadeInSection {
+  0% {
+    opacity: 0;
+    left: -110%;
+  }
+  100% {
+    opacity: 1;
+    left: 0;
+  }
+}
+.animate-dash-section {
+  animation: fadeInSection 1s forwards ease-in-out;
+}
+
+@keyframes connectDash {
+  0% {
+    opacity: 0;
+    scale: 0;
+    rotate: 0deg;
+  }
+
+  100% {
+    opacity: 1;
+    scale: 1;
+    rotate: 360deg;
+  }
+}
+.animate-dash-text {
+  animation: connectDash 1s forwards ease-out;
+  animation-delay: 1s;
+  opacity: 0;
+}
+/* LOYALTY */
+
+.animate-nft-mouse-down {
+  animation: drag_in 0.1s ease-in-out;
+  animation-fill-mode: forwards;
+}
+
+.animate-nft-mouse-up {
+  animation: drag_out 0.4s ease-out;
+  animation-fill-mode: forwards;
+}
+
+.nftdraggable:active > div {
+  /* animation: drag_in 0s ease-in-out;
+  animation-fill-mode: forwards;
+  width: 100px !important;
+  height: 100px !important; */
+}
+
+.nftdraggable:active {
+  cursor: grabbing;
+  cursor: -moz-grabbing;
+  cursor: -webkit-grabbing;
+}
+
+.nftdraggable > div {
+  animation: drag_out 0.4s ease-out;
+  animation-fill-mode: forwards;
+}
+
+@keyframes drag_in {
+  0% {
+    width: 100%;
+    height: 100%;
+  }
+  100% {
+    width: 100px;
+    height: 100px;
+  }
+}
+
+@keyframes drag_out {
+  0% {
+    width: 100px;
+    height: 100px;
+  }
+  100% {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+.animate-fadein {
+  animation: fadeIn 0.5s forwards ease-in-out;
+}
+
+@keyframes loyaltyimage {
+  0% {
+    bottom: -370px;
+  }
+  100% {
+    bottom: 0;
+  }
+}
+.animate-loyaltyimage {
+  animation: loyaltyimage 0.5s forwards ease-out;
+}
+
+.strokedpoints {
+  stroke-dasharray: 869;
+  stroke-dashoffset: 500;
+}
+
+#svgcirclepoints {
+  width: 100%;
+  height: 100%;
+  stroke-dasharray: 869.5447998046875;
+  fill: none;
+  stroke: #c8453b;
+  stroke-width: 3px;
+  animation: svgFillCircle 0.5s ease-in-out forwards;
+}
+
+@keyframes svgFillCircle {
+  0% {
+    stroke-dashoffset: 869.5447998046875;
+    fill: none;
+    stroke-width: 3px;
+  }
+
+  99% {
+    stroke-dashoffset: 440;
+    stroke-width: 3px;
+    fill: none;
+  }
+  100% {
+    fill: #c8453b;
+    stroke-width: 0px;
+    stroke-dashoffset: /* 440 */ 0;
+  }
+}
+
+#svgarrow {
+  stroke-dasharray: 569.213134765625;
+  fill: none;
+  stroke: #000;
+  stroke-width: 4px;
+  /* stroke-dashoffset: 480; */
+  animation: svgArrow 1s ease-in-out forwards;
+}
+
+@keyframes svgArrow {
+  0% {
+    stroke-dashoffset: 480;
+    fill: none;
+    stroke-width: 4px;
+  }
+  100% {
+    fill: #000;
+    stroke-width: 0px;
+    stroke-dashoffset: /* 440 */ 0;
+  }
+}
+
+.animate-connect {
+  animation: fadeIn 0.5s ease-in-out forwards;
+  opacity: 0;
+  animation-delay: 1s;
+}
+
+.animate-your {
+  animation: fadeIn 0.5s ease-in-out forwards;
+  opacity: 0;
+  animation-delay: 1.5s;
+}
+
+.animate-fcking {
+  animation: fadeIn 0.5s ease-in-out forwards;
+  opacity: 0;
+  animation-delay: 2s;
+}
+
+.animate-wallet {
+  animation: fadeIn 0.5s ease-in-out forwards;
+  opacity: 0;
+  animation-delay: 2.5s;
+}
+
+.animate-arrow-wallet {
+  animation: fadeIn 0.5s ease-in-out forwards;
+  opacity: 0;
+  animation-delay: 3s;
 }

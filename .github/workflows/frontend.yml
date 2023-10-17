@@ -7,7 +7,7 @@ env:
   DEV_APP_PORT: 3618 # Update this port as needed
   DEV_DOMAIN_NAME: bozo.avrean.net # Change domain name
   PROD_APP_PORT: 3620 # Update this port as needed
-  PROD_DOMAIN_NAME: bozo.network  # Change domain name
+  PROD_DOMAIN_NAME: bozo.network # Change domain name
   ENABLE_CACHE: false
   ENABLE_CACHE_CONTROL: false
   ENABLE_RATE_LIMITING: false
@@ -21,10 +21,14 @@ env:
 on:
   push:
     branches:
-      - '*'
+      - "*"
     paths:
-      - 'frontend/**/*' # Change path
-
+      - "frontend/**/*" # Change path
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: "The branch, tag or SHA to run this workflow on"
+        required: true
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -37,7 +41,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 'latest'
+          node-version: "20"
       - name: Cache Node.js packages
         uses: actions/cache@v3
         with:
@@ -105,4 +109,4 @@ jobs:
           username: ${{ env.SERVER_USER }}
           password: ${{ env.SERVER_PASSWORD }}
           script: |
-            /home/dev/scripts/start_script.sh -e ${{ env.ENVIRONMENT }} -p ${{ env.PROJECT_NAME }} -t ${{ env.PROJECT_TYPE }} -P ${{ env.APP_PORT }} -s ${{ env.DOMAIN_NAME }} -r ${{ env.ENABLE_RATE_LIMITING }} -c ${{ env.ENABLE_CACHE }} -C ${{ env.ENABLE_CACHE_CONTROL }} -v true
+            /home/dev/scripts/start_script.sh -e ${{ env.ENVIRONMENT }} -p ${{ env.PROJECT_NAME }} -d ${{env.WORKING_DIRECTORY}} -t ${{ env.PROJECT_TYPE }} -P ${{ env.APP_PORT }} -s ${{ env.DOMAIN_NAME }} -r ${{ env.ENABLE_RATE_LIMITING }} -c ${{ env.ENABLE_CACHE }} -C ${{ env.ENABLE_CACHE_CONTROL }} -v true
