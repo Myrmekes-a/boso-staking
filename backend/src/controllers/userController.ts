@@ -6,9 +6,12 @@
 // note this is not cool to see :()
 
 import crypto from 'crypto';
+import nacl from 'tweetnacl';
+import { PublicKey } from '@solana/web3.js';
 import User from '../models/user';
 import BigPromise from '../middlewares/bigPromise';
 import { cookieToken, veryfyJwtToken } from '../utils/tokenHelper';
+
 // eslint-disable-next-line no-unused-vars
 // import mailHelper from '../utils/emailHelper';
 import { WhereClauseUser } from '../utils/WhereClause';
@@ -30,15 +33,25 @@ export const signup = BigPromise(async (req, res, next) => {
   cookieToken(user, res);
 });
 
+export const generateNonce = BigPromise(async (req, res, next) => {
+  const nonce = crypto.randomUUID();
+  res.status(200).json({
+    success: true,
+    nonce,
+  });
+});
+
 export const login = BigPromise(async (req, res, next) => {
-  const { wallet /* , signature  */ } = req.body;
-  if (!wallet /*  || !signature */) {
+  const { wallet, signature, nonce } = req.body;
+  console.log('wallet', wallet);
+  console.log('signature', signature);
+  if (!wallet || !signature) {
     return next(new CustomError('Wallet address missing', 400));
   }
 
   // verification of signature
-  /* const pubKey = new PublicKey(wallet);
-  const message = new TextEncoder().encode('Welcome to SYNDRA!');
+  const pubKey = new PublicKey(wallet);
+  const message = new TextEncoder().encode(nonce);
   const sigbuffer = Uint8Array.from(Buffer.from(signature));
   const verified = nacl.sign.detached.verify(
     message,
@@ -48,8 +61,9 @@ export const login = BigPromise(async (req, res, next) => {
 
   if (!verified) {
     return next(new CustomError('Unable to verify the signature', 400));
-  } */
+  }
 
+  console.log('verified', verified);
   // get user from DB
   const user = await User.findOneAndUpdate(
     { wallet },

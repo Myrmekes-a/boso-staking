@@ -156,13 +156,13 @@ const calculatePoints = async (userId: string) => {
     let diff;
     // use always the most recent date
     if (lastUpdate.isBefore(lastStake)) {
-      console.log('last stake');
+      // console.log('last stake');
       diff = now.diff(lastStake, 'minute'); // amount of minutes between now and last stake
-      console.log(now.toDate(), lastStake.toDate(), diff);
+      // console.log(now.toDate(), lastStake.toDate(), diff);
     } else {
-      console.log('last update');
+      // console.log('last update');
       diff = now.diff(lastUpdate, 'minute'); // amount of minutes between now and last update
-      console.log(now.toDate(), lastUpdate.toDate(), diff);
+      // console.log(now.toDate(), lastUpdate.toDate(), diff);
     }
     let points = diff; /* / 60 */ // amount of points to add
     if (points !== 0) {
@@ -170,6 +170,7 @@ const calculatePoints = async (userId: string) => {
     }
     if ((i + 1) % 5 === 0) {
       const multiplier = 2 + ((i + 1) / 5 - 1) * 0.5; // 2, 2.5, 3, 3.5, 4, 4.5, 5
+      // console.log('MULTIPLIER', multiplier);
       points *= multiplier;
     }
     totalPoints += points;

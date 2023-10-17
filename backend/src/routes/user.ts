@@ -1,7 +1,7 @@
 import express from 'express';
 // import { check } from 'express-validator';
 
-import { login, logout } from '../controllers/userController';
+import { login, logout, generateNonce } from '../controllers/userController';
 /* import { validatedFields } from '../middlewares/fieldsValidation';
 import { isLoggedIn, customRole } from '../middlewares/user'; */
 
@@ -29,6 +29,7 @@ const router = express.Router();
     signup
   ); */
 router.route('/user/login').post(login);
+router.route('/user/getNonce').get(generateNonce);
 router.route('/user/logout').get(logout);
 
 /*
