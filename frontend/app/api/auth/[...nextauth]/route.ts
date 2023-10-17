@@ -20,9 +20,7 @@ export const authOptions: AuthOptions = {
       async authorize(credentials, req) {
         // Add logic here to look up the user from the credentials supplied
 
-        console.log(credentials);
         if (!credentials) return null;
-        console.log("CREDENTIALS", credentials);
 
         const user = await fetch(
           `${process.env.NEXT_PUBLIC_BACKENDURL}/user/login`,
@@ -40,11 +38,9 @@ export const authOptions: AuthOptions = {
         )
           .then((res) => res.json())
           .then((data) => {
-            console.log(data);
             return data;
           })
           .catch((err) => {
-            console.log(err);
             return null;
           });
 
@@ -63,8 +59,6 @@ export const authOptions: AuthOptions = {
   session: { strategy: "jwt" },
   callbacks: {
     async jwt({ token, user, trigger, session }) {
-      console.log("jwt", { token, user, session });
-
       if (trigger === "update") {
         return { ...token, ...session };
       }
@@ -75,7 +69,6 @@ export const authOptions: AuthOptions = {
     },
     async session({ session, token, user }) {
       // Send properties to the client, like an access_token from a provider.
-      console.log("session", { session, token, user });
       return {
         ...session,
         user: {
