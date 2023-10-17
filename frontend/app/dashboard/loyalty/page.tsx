@@ -58,12 +58,9 @@ export default function Loyalty() {
     new Map()
   );
 
-  useEffect(() => {
-    console.log("isNftsDraggable", isNftsDraggable);
-  }, [isNftsDraggable]);
+  useEffect(() => {}, [isNftsDraggable]);
 
   const setNftDraggable = (nft_ids: Array<string>, isDraggable: boolean) => {
-    console.log("setNftDraggable", nft_ids, isDraggable);
     const tmpIsNftsDraggable = isNftsDraggable;
     nft_ids.forEach((nft_id) => {
       tmpIsNftsDraggable.set(nft_id, isDraggable);
@@ -75,7 +72,6 @@ export default function Loyalty() {
     ["nfts"],
     async () => {
       if (!shouldFetch) return;
-      console.log("fetching nfts");
       const nftsRequest: GenericRequest = {
         method: "GET",
         url: "/nft/nftsByWallet",
@@ -135,7 +131,7 @@ export default function Loyalty() {
       setNfts(nfts.filter((nft) => nft.id !== nft_id));
       try {
         const transactions = await stake([new PublicKey(nft_id)], wallet);
-        console.log(transactions);
+
         if (!transactions || transactions.length == 0) {
           throw new Error("error staking anchor");
         }
@@ -149,7 +145,7 @@ export default function Loyalty() {
         if (!response.success) {
           throw new Error("error staking back");
         }
-        console.log("staked", response);
+
         setNftDraggable([nft_id], false);
         toast(
           <div className="py-4 px-8 w-full text-center bg-success border-2 rounded-xl origin-bottom-right">
@@ -160,7 +156,6 @@ export default function Loyalty() {
           }
         );
       } catch (error) {
-        console.log("error staking", error);
         toast(
           <div className="py-4 px-8 w-full text-center bg-error border-2 rounded-xl origin-bottom-right">
             <p className=" font-bozo text-[22px] ">Staking was unsuccessful!</p>
@@ -172,9 +167,7 @@ export default function Loyalty() {
         setStakedNfts(tmpStaked);
         setNfts(tmpNfts);
       } finally {
-        console.log("IM IN FINALLY");
         timerRef.current = setTimeout(() => {
-          console.log("IM IN TIMEOUT");
           setShouldFetch(true);
         }, 10000);
       }
@@ -185,7 +178,7 @@ export default function Loyalty() {
     if (stakedNfts.length == 0) return;
     const publicKeys = stakedNfts.map((nft) => new PublicKey(nft.id));
     const mints = stakedNfts.map((nft) => nft.id);
-    console.log("mints", mints);
+
     if (timerRef.current) clearTimeout(timerRef.current);
     setShouldFetch(false);
     const tmpStaked = stakedNfts;
@@ -194,7 +187,7 @@ export default function Loyalty() {
     setStakedNfts([]);
     try {
       const transactions = await unstake(publicKeys, wallet);
-      console.log(transactions);
+
       if (!transactions || transactions.length == 0) {
         throw new Error("error unstaking anchor");
       }
@@ -208,7 +201,7 @@ export default function Loyalty() {
       if (!response.success) {
         throw new Error("error unstaking back");
       }
-      console.log("staked", response);
+
       setNftDraggable(mints, false);
       toast(
         <div className="py-4 px-8 w-full text-center bg-success border-2 rounded-xl origin-bottom-right">
@@ -219,7 +212,6 @@ export default function Loyalty() {
         }
       );
     } catch (error) {
-      console.log("error unstaking", error);
       toast(
         <div className="py-4 px-8 w-full text-center bg-error border-2 rounded-xl origin-bottom-right">
           <p className=" font-bozo text-[22px] ">Unstaking was unsuccessful!</p>
@@ -242,7 +234,6 @@ export default function Loyalty() {
     const publicKeys = nfts.map((nft) => new PublicKey(nft.id));
     const mints = nfts.map((nft) => nft.id);
 
-    console.log("mints", mints);
     if (timerRef.current) clearTimeout(timerRef.current);
     setShouldFetch(false);
     const tmpStaked = stakedNfts;
@@ -251,7 +242,7 @@ export default function Loyalty() {
     setStakedNfts([...nfts, ...stakedNfts]);
     try {
       const transactions = await stake(publicKeys, wallet);
-      console.log(transactions);
+
       if (!transactions || transactions.length == 0) {
         throw new Error("error staking anchor");
       }
@@ -265,7 +256,7 @@ export default function Loyalty() {
       if (!response.success) {
         throw new Error("error staking back");
       }
-      console.log("staked", response);
+
       setNftDraggable(mints, false);
       toast(
         <div className="py-4 px-8 w-full text-center bg-success border-2 rounded-xl origin-bottom-right">
@@ -276,7 +267,6 @@ export default function Loyalty() {
         }
       );
     } catch (error) {
-      console.log("error staking", error);
       toast(
         <div className="py-4 px-8 w-full text-center bg-error border-2 rounded-xl origin-bottom-right">
           <p className=" font-bozo text-[22px] ">Staking was unsuccessful!</p>
@@ -305,7 +295,7 @@ export default function Loyalty() {
       setStakedNfts(stakedNfts.filter((nft) => nft.id !== nft_id));
       try {
         const transactions = await unstake([new PublicKey(nft_id)], wallet);
-        console.log(transactions);
+
         if (!transactions || transactions.length == 0) {
           throw new Error("error unstaking anchor");
         }
@@ -319,7 +309,7 @@ export default function Loyalty() {
         if (!response.success) {
           throw new Error("error unstaking back");
         }
-        console.log("unstaked", response);
+
         setNftDraggable([nft_id], false);
         toast(
           <div className="py-4 px-8 w-full text-center bg-success border-2 rounded-xl origin-bottom-right">
@@ -330,9 +320,6 @@ export default function Loyalty() {
           }
         );
       } catch (error) {
-        console.log("error unstaking", error);
-        console.log("error unstaking", typeof error);
-        console.log("error unstaking", JSON.stringify(error));
         toast(
           <div className="py-4 px-8 w-full text-center bg-error border-2 rounded-xl origin-bottom-right">
             <p className=" font-bozo text-[22px] ">
