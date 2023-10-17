@@ -18,6 +18,11 @@ const activitySchema: mongoose.Schema = new mongoose.Schema(
       ref: 'User',
       required: true,
     },
+    lastUpdatePoints: {
+      type: Date,
+      default: Date.now,
+      // required: true,
+    },
   },
   { timestamps: true, collection: 'activities' }
 );

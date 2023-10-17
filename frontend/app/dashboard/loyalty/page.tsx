@@ -35,6 +35,7 @@ const parseNft = (nft: any) => {
 export default function Loyalty() {
   const [stakedNfts, setStakedNfts] = useState<NftType[]>([]);
   const [nfts, setNfts] = useState<NftType[]>([]);
+  let timeoutId: NodeJS.Timeout | undefined = undefined;
 
   const [shouldFetch, setShouldFetch] = useState(true);
 
@@ -48,6 +49,8 @@ export default function Loyalty() {
   const { refetch: refetchNft } = useQuery(
     ["nfts"],
     async () => {
+      console.log("SHOULD", shouldFetch);
+      if (!shouldFetch) return;
       console.log("fetching nfts");
       const nftsRequest: GenericRequest = {
         method: "GET",
@@ -68,10 +71,14 @@ export default function Loyalty() {
       return response;
     },
     {
-      enabled: !!session?.user.token,
+      enabled: !!session?.user.token && shouldFetch,
       refetchOnWindowFocus: shouldFetch,
     }
   );
+
+  useEffect(() => {
+    console.log("SHOULD in useeffe", shouldFetch);
+  }, [shouldFetch]);
 
   useQuery(
     ["points"],
@@ -97,6 +104,7 @@ export default function Loyalty() {
   const stakeNft = async (nft_id: string) => {
     const nft = nfts.find((nft) => nft.id === nft_id);
     if (nft) {
+      if (timeoutId) clearTimeout(timeoutId);
       setShouldFetch(false);
       const tmpStaked = stakedNfts;
       const tmpNfts = nfts;
@@ -140,7 +148,9 @@ export default function Loyalty() {
         setStakedNfts(tmpStaked);
         setNfts(tmpNfts);
       } finally {
-        setTimeout(() => {
+        console.log("IM IN FINALLY");
+        timeoutId = setTimeout(() => {
+          console.log("IM IN TIMEOUT");
           setShouldFetch(true);
         }, 10000);
       }
@@ -152,6 +162,7 @@ export default function Loyalty() {
     const publicKeys = stakedNfts.map((nft) => new PublicKey(nft.id));
     const mints = stakedNfts.map((nft) => nft.id);
     console.log("mints", mints);
+    if (timeoutId) clearTimeout(timeoutId);
     setShouldFetch(false);
     const tmpStaked = stakedNfts;
     const tmpNfts = nfts;
@@ -195,7 +206,7 @@ export default function Loyalty() {
       setStakedNfts(tmpStaked);
       setNfts(tmpNfts);
     } finally {
-      setTimeout(() => {
+      timeoutId = setTimeout(() => {
         setShouldFetch(true);
       }, 10000);
     }
@@ -207,6 +218,7 @@ export default function Loyalty() {
     const mints = nfts.map((nft) => nft.id);
 
     console.log("mints", mints);
+    if (timeoutId) clearTimeout(timeoutId);
     setShouldFetch(false);
     const tmpStaked = stakedNfts;
     const tmpNfts = nfts;
@@ -250,7 +262,7 @@ export default function Loyalty() {
       setStakedNfts(tmpStaked);
       setNfts(tmpNfts);
     } finally {
-      setTimeout(() => {
+      timeoutId = setTimeout(() => {
         setShouldFetch(true);
       }, 10000);
     }
@@ -259,6 +271,7 @@ export default function Loyalty() {
   const unstakeNft = async (nft_id: string) => {
     const nft = stakedNfts.find((nft) => nft.id === nft_id);
     if (nft) {
+      if (timeoutId) clearTimeout(timeoutId);
       setShouldFetch(false);
       const tmpStaked = stakedNfts;
       const tmpNfts = nfts;
@@ -304,7 +317,7 @@ export default function Loyalty() {
         setStakedNfts(tmpStaked);
         setNfts(tmpNfts);
       } finally {
-        setTimeout(() => {
+        timeoutId = setTimeout(() => {
           setShouldFetch(true);
         }, 10000);
       }

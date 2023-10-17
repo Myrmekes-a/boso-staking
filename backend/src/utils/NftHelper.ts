@@ -50,6 +50,7 @@ const getNftFromWallet = async (wallet: string, userId: string) => {
           mint: nftsmetadata[i].mint,
           image: image.image,
           staked: false,
+          updatedAt: newNft.updatedAt,
         });
       } catch (err) {
         console.log(err);
@@ -60,6 +61,7 @@ const getNftFromWallet = async (wallet: string, userId: string) => {
         mint: nft.mint,
         image: nft.image,
         staked: nft.staked,
+        updatedAt: nft.updatedAt,
       });
       // if exists and owner is not the same, update owner
       if (nft.owner !== userId) {
@@ -70,7 +72,7 @@ const getNftFromWallet = async (wallet: string, userId: string) => {
   }
 
   // delete all nfts staked false that are not in mints maybe they are sold
-  const allNfts = await Nft.find({ owner: userId });
+  const allNfts = await Nft.find({ owner: userId }).sort({ updatedAt: 1 });
   for (let j = 0; j < allNfts.length; j += 1) {
     if (!mints.has(allNfts[j].mint)) {
       if (allNfts[j].staked) {
@@ -78,14 +80,38 @@ const getNftFromWallet = async (wallet: string, userId: string) => {
           mint: allNfts[j].mint,
           image: allNfts[j].image,
           staked: allNfts[j].staked,
+          updatedAt: allNfts[j].updatedAt,
         });
       } else {
-        await allNfts[j].delete();
+        // if there are not unstaked activity in the last 1 min delete it
+        const nftActivity = await Activity.find({
+          nft: allNfts[j]._id,
+          operation: 'unstake',
+          createdAt: { $gte: dayjs().subtract(1, 'minute') },
+        });
+        if (nftActivity.length === 0) {
+          await allNfts[j].delete();
+        } else {
+          mints.set(allNfts[j].mint, {
+            mint: allNfts[j].mint,
+            image: allNfts[j].image,
+            staked: allNfts[j].staked,
+            updatedAt: allNfts[j].updatedAt,
+          });
+        }
       }
     }
   }
 
-  return Array.from(mints.values());
+  return Array.from(mints.values()).sort((a, b) => {
+    if (a.updatedAt < b.updatedAt) {
+      return -1;
+    }
+    if (a.updatedAt > b.updatedAt) {
+      return 1;
+    }
+    return 0;
+  });
 };
 
 /*
@@ -98,7 +124,7 @@ const getNftFromWallet = async (wallet: string, userId: string) => {
 10 hai il x2.5 sul singolo nft
 ecc...
 */
-const calculatePoints = async (userId: string, lastUpdatePoints: Date) => {
+const calculatePoints = async (userId: string) => {
   const staked = await Nft.find({ owner: userId, staked: true });
   let totalPoints = 0;
 
@@ -115,7 +141,7 @@ const calculatePoints = async (userId: string, lastUpdatePoints: Date) => {
     }
 
     const lastStake = dayjs(activity[0].createdAt);
-    let lastUpdate = dayjs(lastUpdatePoints);
+    let lastUpdate = dayjs(activity[0].lastUpdatePoints);
     const now = dayjs();
     // set second to 0
     // lastStake = lastStake.set('second', 0);
@@ -130,15 +156,18 @@ const calculatePoints = async (userId: string, lastUpdatePoints: Date) => {
     let diff;
     // use always the most recent date
     if (lastUpdate.isBefore(lastStake)) {
-      // console.log('last stake');
+      console.log('last stake');
       diff = now.diff(lastStake, 'minute'); // amount of minutes between now and last stake
-      // console.log(now.toDate(), lastStake.toDate(), diff);
+      console.log(now.toDate(), lastStake.toDate(), diff);
     } else {
-      // console.log('last update');
+      console.log('last update');
       diff = now.diff(lastUpdate, 'minute'); // amount of minutes between now and last update
-      // console.log(now.toDate(), lastUpdate.toDate(), diff);
+      console.log(now.toDate(), lastUpdate.toDate(), diff);
     }
     let points = diff; /* / 60 */ // amount of points to add
+    if (points !== 0) {
+      await activity[0].updateOne({ lastUpdatePoints: now });
+    }
     if ((i + 1) % 5 === 0) {
       const multiplier = 2 + ((i + 1) / 5 - 1) * 0.5; // 2, 2.5, 3, 3.5, 4, 4.5, 5
       points *= multiplier;
@@ -172,4 +201,19 @@ const sendTx = async (serialized: any) => {
   return signatures;
 };
 
-export { getNftFromWallet, calculatePoints, sendTx };
+/* const findForSignature = async (signature: string) => {
+  const retry = 10;
+  while (retry > 0) {
+    const transaction = await connection.getParsedTransaction(
+      signature,
+      'finalized'
+    );
+
+    if (transaction) {
+      return transaction;
+    }
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+  }
+}; */
+
+export { getNftFromWallet, calculatePoints, sendTx /* findForSignature */ };
