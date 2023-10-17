@@ -34,7 +34,6 @@ const getNftInfo = async (mint: PublicKey) => {
   // @ts-ignore
   metadata = nft.metadataAddress?.toBase58();
   if (!metadata || !edition) {
-    console.log(metadata, edition);
     throw new Error("NFT not found");
   }
 
@@ -53,7 +52,6 @@ const getOrCreateTokenAccount = async (mint: PublicKey, owner: PublicKey) => {
 
   const accountInfo = await connection.getAccountInfo(associatedToken);
   if (!accountInfo) {
-    console.log("creating associated token account");
     const tx = new Transaction().add(
       token.createAssociatedTokenAccountInstruction(
         owner, //payer
@@ -71,8 +69,6 @@ const getOrCreateTokenAccount = async (mint: PublicKey, owner: PublicKey) => {
       tx,
     };
   }
-
-  //console.log("associated token", associatedToken.toBase58());
 
   return {
     associatedToken,

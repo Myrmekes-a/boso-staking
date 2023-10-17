@@ -13,7 +13,6 @@ export default withAuth(function middleware(req) {}, {
       const path = req.nextUrl.pathname;
 
       if (new RegExp("/dashboard/[^/]").test(path) && !token?.wallet) {
-        console.log("DASHBOARD: no wallet");
         return false;
       }
 

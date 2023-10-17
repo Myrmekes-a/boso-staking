@@ -18,7 +18,6 @@ const WalletComponents = ({ points }: WalletComponentsProps) => {
 
   const { data: session } = useSession();
 
-  /* console.log(wallet); */
   return (
     <div className="relative flex gap-2 h-fit">
       {wallet.connected && (
