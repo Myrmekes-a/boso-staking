@@ -53,8 +53,6 @@ const DraggableScroll: React.FC<DraggableProps> = ({
     const walkY = (y - mouseCoords.current.startY) * 1.5;
     slider.scrollLeft = mouseCoords.current.scrollLeft - walkX;
     slider.scrollTop = mouseCoords.current.scrollTop - walkY;
-    /* console.log(walkX, walkY);
-    console.log(slider); */
   };
 
   return (

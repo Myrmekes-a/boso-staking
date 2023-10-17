@@ -36,15 +36,22 @@ const WalletButton = () => {
   useEffect(() => {
     if (!wallet.connected || !wallet.signMessage) return;
     if (status === "unauthenticated") {
-      const message = new TextEncoder().encode("Welcome to Bozo Collective!");
-      wallet.signMessage(message).then((signature) => {
-        console.log("signing in", JSON.stringify(signature));
-        signIn("credentials", {
-          wallet: wallet.publicKey?.toString()!,
-          signature: signature,
-          redirect: false,
+      fetch(`${process.env.NEXT_PUBLIC_BACKENDURL}/user/getNonce`, {
+        method: "GET",
+      })
+        .then((res) => res.json())
+        .then((res) => {
+          const nonce = `Welcome to Bozo Collective!\n\n${res.nonce}`;
+          const message = new TextEncoder().encode(nonce);
+          wallet.signMessage!(message).then((signature) => {
+            signIn("credentials", {
+              wallet: wallet.publicKey?.toString()!,
+              signature: JSON.stringify(signature),
+              nonce: nonce,
+              redirect: false,
+            });
+          });
         });
-      });
     }
     setButtonText(clampPublicKey(wallet.publicKey?.toString()!));
   }, [wallet, status]);

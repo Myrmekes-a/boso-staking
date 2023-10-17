@@ -1,3 +1,4 @@
+import { GenericRequestNoAuth } from "@/utils/request";
 import NextAuth from "next-auth";
 import type { AuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
@@ -14,14 +15,17 @@ export const authOptions: AuthOptions = {
       credentials: {
         wallet: { label: "Wallet", type: "text", placeholder: "jsmith" },
         signature: { label: "Signature", type: "text", placeholder: "jsmith" },
+        nonce: { label: "Nonce", type: "text", placeholder: "jsmith" },
       },
       async authorize(credentials, req) {
         // Add logic here to look up the user from the credentials supplied
 
         console.log(credentials);
         if (!credentials) return null;
+        console.log("CREDENTIALS", credentials);
+
         const user = await fetch(
-          "https://api-bozo.avrean.net/api/v1/user/login",
+          `${process.env.NEXT_PUBLIC_BACKENDURL}/user/login`,
           {
             method: "POST",
             headers: {
@@ -29,7 +33,8 @@ export const authOptions: AuthOptions = {
             },
             body: JSON.stringify({
               wallet: credentials.wallet,
-              signature: credentials.signature,
+              signature: JSON.parse(credentials.signature),
+              nonce: credentials.nonce,
             }),
           }
         )
