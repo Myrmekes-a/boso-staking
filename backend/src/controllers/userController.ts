@@ -10,6 +10,7 @@ import nacl from 'tweetnacl';
 import User from '../models/user';
 import BigPromise from '../middlewares/bigPromise';
 import { cookieToken, veryfyJwtToken } from '../utils/tokenHelper';
+import { PublicKey } from '@solana/web3.js';
 
 // eslint-disable-next-line no-unused-vars
 // import mailHelper from '../utils/emailHelper';
