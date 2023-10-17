@@ -11,12 +11,24 @@ import swaggerUi from 'swagger-ui-express';
 import YAML from 'yamljs';
 
 // import all routes here
+import { rateLimit } from 'express-rate-limit';
 import user from './routes/user';
 import payment from './routes/payment';
 import nft from './routes/nft';
 import errorHandler from './middlewares/errorHanlder';
 
 const app: express.Application = express();
+
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  limit: 200, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
+  standardHeaders: 'draft-7', // draft-6: `RateLimit-*` headers; draft-7: combined `RateLimit` header
+  legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+  // store: ... , // Use an external store for more precise rate limiting
+});
+
+// Apply the rate limiting middleware to all requests
+app.use(limiter);
 
 const swaggerDocument = YAML.load('./swagger.yaml');
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
