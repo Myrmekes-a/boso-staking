@@ -41,7 +41,7 @@ export const login = BigPromise(async (req, res, next) => {
 
   // verification of signature
   const pubKey = new PublicKey(wallet);
-  const message = new TextEncoder().encode('Welcome to SYNDRA!');
+  const message = new TextEncoder().encode('Welcome to Bozo Collective!');
   const sigbuffer = Uint8Array.from(Buffer.from(signature));
   const verified = nacl.sign.detached.verify(
     message,
