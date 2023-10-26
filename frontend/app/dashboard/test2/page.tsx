@@ -31,13 +31,15 @@ import {
 } from "@/utils/pnftStaking/sdk";
 import { asWallet } from "./Wallets";
 import type { Wallet } from "@coral-xyz/anchor/dist/cjs/provider";
+import { stakeNfts, unstakeNfts } from "@/utils/pnftStaking/lib";
 
 export default function Test() {
   // const stakePoolIdentifier = `test-${Math.random()}`;
   const connection = new Connection(
     "https://api.devnet.solana.com"
   ); /* getTestConnection(); */
-  const stakerWallet = asWallet(useWallet());
+  const wallet = useWallet();
+  const stakerWallet = asWallet(wallet);
   const programId = "ox64uWcbrhaXBMACS3jpfzxnwxNWQd9J8ozT7PhZA5t";
   const stakePoolIdentifier = "test-0.5628066502435303";
   const mintId = new PublicKey("1gbWoCDS2MHRrvwFFxkbm58z5ffnRLyaodsP3Qpzeyj");
@@ -151,6 +153,14 @@ export default function Test() {
     console.log(tx);
   };
 
+  const stakeLib = async () => {
+    await stakeNfts([mintId], wallet, true);
+  };
+
+  const unstakeLib = async () => {
+    await unstakeNfts([mintId], wallet, true);
+  };
+
   return (
     <>
       <WalletButton />
@@ -161,6 +171,9 @@ export default function Test() {
         <br></br>
         <button onClick={unstakeWrapper}>Unstake</button>
         <br></br>
+        <button onClick={stakeLib}>stakeLib</button>
+        <br></br>
+        <button onClick={unstakeLib}>unstakeLib</button>
       </div>
     </>
   );

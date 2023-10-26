@@ -21,6 +21,7 @@ import {
   bozoPK,
 } from "./constant";
 import { WalletContextState } from "@solana/wallet-adapter-react";
+import { asWallet } from "@/app/dashboard/test2/Wallets";
 
 let provider: anchor.AnchorProvider | undefined;
 let program: anchor.Program<NftStakeVault> | undefined;
@@ -128,7 +129,8 @@ const getAnchorProvider = async (wallet: WalletContextState) => {
   if (!wallet.connected || !wallet) {
     wallet.connect();
   }
-  if (!provider) provider = new anchor.AnchorProvider(connection, wallet, opts);
+  if (!provider)
+    provider = new anchor.AnchorProvider(connection, asWallet(wallet), opts);
   return provider;
 };
 
