@@ -24,20 +24,21 @@ const getNftFromWallet = async (wallet: string, userId: string) => {
     // eslint-disable-next-line no-await-in-loop
     const nft = await Nft.findOne({ mint: nftsmetadata[i].mint });
     if (!nft) {
-      const response = await fetch(nftsmetadata[i].data.uri);
-      if (!response) {
-        console.log('error fetching image');
-        continue;
-      }
-
-      const image = await response.json();
-
-      if (!image || !image.image) {
-        console.log('error fetching image');
-        continue;
-      }
-
+      console.log(nftsmetadata[i].data.uri);
       try {
+        const response = await fetch(nftsmetadata[i].data.uri);
+        if (!response) {
+          console.log('error fetching image');
+          continue;
+        }
+
+        const image = await response.json();
+
+        if (!image || !image.image) {
+          console.log('error fetching image');
+          continue;
+        }
+
         const newNft = new Nft({
           mint: nftsmetadata[i].mint,
           image: image.image,

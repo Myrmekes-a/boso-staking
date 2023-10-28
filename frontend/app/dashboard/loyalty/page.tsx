@@ -6,6 +6,7 @@ import Header from "@/components/dashboard/Header";
 import WalletComponents from "@/components/dashboard/WalletComponents";
 import NftBox from "@/components/dashboard/loyalty/NftBox";
 import Stake from "@/components/dashboard/loyalty/Stake";
+import { stakeNfts, unstakeNfts } from "@/utils/pnftStaking/lib";
 import {
   GenericRequest,
   GenericRequestNoAuth,
@@ -130,7 +131,7 @@ export default function Loyalty() {
       setStakedNfts([...stakedNfts, nft]);
       setNfts(nfts.filter((nft) => nft.id !== nft_id));
       try {
-        const transactions = await stake([new PublicKey(nft_id)], wallet);
+        const transactions = await stakeNfts([new PublicKey(nft_id)], wallet);
 
         if (!transactions || transactions.length == 0) {
           throw new Error("error staking anchor");
@@ -187,7 +188,7 @@ export default function Loyalty() {
     setNfts([...nfts, ...stakedNfts]);
     setStakedNfts([]);
     try {
-      const transactions = await unstake(publicKeys, wallet);
+      const transactions = await unstakeNfts(publicKeys, wallet);
 
       if (!transactions || transactions.length == 0) {
         throw new Error("error unstaking anchor");
@@ -242,7 +243,7 @@ export default function Loyalty() {
     setNfts([]);
     setStakedNfts([...nfts, ...stakedNfts]);
     try {
-      const transactions = await stake(publicKeys, wallet);
+      const transactions = await stakeNfts(publicKeys, wallet);
 
       if (!transactions || transactions.length == 0) {
         throw new Error("error staking anchor");
@@ -295,7 +296,7 @@ export default function Loyalty() {
       setNfts([...nfts, nft]);
       setStakedNfts(stakedNfts.filter((nft) => nft.id !== nft_id));
       try {
-        const transactions = await unstake([new PublicKey(nft_id)], wallet);
+        const transactions = await unstakeNfts([new PublicKey(nft_id)], wallet);
 
         if (!transactions || transactions.length == 0) {
           throw new Error("error unstaking anchor");
