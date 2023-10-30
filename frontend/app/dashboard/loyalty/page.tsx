@@ -386,7 +386,7 @@ export default function Loyalty() {
           <div className="w-full flex mb-2 md:mb-7 flex-col md:flex-row gap-2 md:gap-0">
             <div className="w-full md:w-1/3 md:order-1 order-2 flex justify-center md:justify-start">
               <ul className="list-disc text-[20px] ml-4 w-fit">
-                <li className="w-fit">1 Bozo gives 10 point / day</li>
+                <li className="w-fit">1 Bozo gives 1 point / hour</li>
                 <li className="w-fit">Every 5 Bozos give a bonus</li>
               </ul>
             </div>
