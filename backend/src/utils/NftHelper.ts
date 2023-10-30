@@ -18,9 +18,9 @@ const getNftFromWallet = async (wallet: string, userId: string) => {
   const nftsmetadata = await Metadata.findDataByOwner(connection, wallet);
   const mints = new Map();
   for (let i = 0; i < nftsmetadata.length; i += 1) {
-    /*  if (nftsmetadata[i].collection?.key !== bozoKey) {
+    if (nftsmetadata[i].collection?.key !== bozoKey) {
       continue;
-    } */
+    }
     // eslint-disable-next-line no-await-in-loop
     const nft = await Nft.findOne({ mint: nftsmetadata[i].mint });
     if (!nft) {
@@ -166,7 +166,7 @@ const calculatePoints = async (userId: string) => {
       // console.log(now.toDate(), lastUpdate.toDate(), diff);
     }
     let points = diff / 60; // amount of points to add
-    points = Math.trunc(points * 100) / 100;
+    // points = Math.trunc(points * 100) / 100;
     if (points !== 0) {
       await activity[0].updateOne({ lastUpdatePoints: now });
     }
@@ -178,7 +178,7 @@ const calculatePoints = async (userId: string) => {
     totalPoints += points;
   }
   // troncate to 2 decimal
-  // totalPoints = Math.trunc(totalPoints * 100) / 100;
+  totalPoints = Math.trunc(totalPoints * 100) / 100;
   return totalPoints;
 };
 

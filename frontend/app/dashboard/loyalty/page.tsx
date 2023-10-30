@@ -321,6 +321,7 @@ export default function Loyalty() {
           }
         );
       } catch (error) {
+        console.log(error);
         toast(
           <div className="py-4 px-8 w-full text-center bg-error border-2 rounded-xl origin-bottom-right">
             <p className=" font-bozo text-[22px] ">
@@ -394,7 +395,7 @@ export default function Loyalty() {
               <Header title="Loyalty" />
             </div>
             <div className="w-full md:w-1/3 flex justify-center md:justify-end order-3">
-              <WalletComponents points={totalPoints} />
+              <WalletComponents points={Math.trunc(totalPoints * 100) / 100} />
             </div>
           </div>
           <Stake

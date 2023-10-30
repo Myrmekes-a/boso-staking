@@ -106,6 +106,7 @@ export const unstake = BigPromise(
     // calculate actual points
     let points = await calculatePoints(_id);
     points += req.user.points;
+    points = Math.trunc(points * 100) / 100;
 
     if (points !== req.user.points) {
       await req.user.updateOne({ points, lastUpdatedPoints: Date.now() });
@@ -148,6 +149,7 @@ export const getPoints = BigPromise(
     const { _id } = req.user;
     let points = await calculatePoints(_id);
     points += req.user.points;
+    points = Math.trunc(points * 100) / 100;
 
     if (points !== req.user.points) {
       await req.user.updateOne({ points, lastUpdatedPoints: Date.now() });
@@ -167,6 +169,7 @@ export const claimPoints = BigPromise(
     const { _id } = req.user;
     let points = await calculatePoints(_id);
     points += req.user.points;
+    points = Math.trunc(points * 100) / 100;
 
     if (points !== req.user.points) {
       await req.user.updateOne({ points, lastUpdatedPoints: Date.now() });
