@@ -21,6 +21,7 @@ import {
   bozoPK,
 } from "./constant";
 import { WalletContextState } from "@solana/wallet-adapter-react";
+import { asWallet } from "@/app/dashboard/test2/Wallets";
 
 let provider: anchor.AnchorProvider | undefined;
 let program: anchor.Program<NftStakeVault> | undefined;
@@ -56,9 +57,11 @@ const getOrCreateTokenAccount = async (mint: PublicKey, owner: PublicKey) => {
     mint, // mint of the token
     owner // owner of this token account
   );
-
-  const accountInfo = await connection.getAccountInfo(associatedToken);
+  /*   
+  const accountInfo = await connection.getAccountInfo(associatedToken); */
+  const accountInfo = false;
   if (!accountInfo) {
+    console.log("creating associated token account");
     const tx = new Transaction().add(
       token.createAssociatedTokenAccountInstruction(
         owner, //payer
@@ -126,8 +129,8 @@ const getAnchorProvider = async (wallet: WalletContextState) => {
   if (!wallet.connected || !wallet) {
     wallet.connect();
   }
-  // @ts-ignore
-  if (!provider) provider = new anchor.AnchorProvider(connection, wallet, opts);
+  if (!provider)
+    provider = new anchor.AnchorProvider(connection, asWallet(wallet), opts);
   return provider;
 };
 
@@ -199,6 +202,8 @@ const stake = async (
     } = await buildNftDependencies(mint, wallet.publicKey!);
     if (nftTokenTx) toBeSigned.push(nftTokenTx);
 
+    console.log(nftToken.toBase58());
+
     const stakeIx = await program.methods
       .stake()
       .accounts({
@@ -212,14 +217,14 @@ const stake = async (
         nftCustody,
         signer: wallet.publicKey?.toBase58(),
       })
-      .instruction();
+      .rpc();
 
-    const tx = new Transaction().add(stakeIx);
+    /* const tx = new Transaction().add(stakeIx);
     let blockhash = (await connection.getLatestBlockhash("finalized"))
       .blockhash;
     tx.recentBlockhash = blockhash;
     tx.feePayer = wallet.publicKey!;
-    toBeSigned.push(tx);
+    toBeSigned.push(tx); */
   }
   return sendTxs(toBeSigned, wallet, local);
 };

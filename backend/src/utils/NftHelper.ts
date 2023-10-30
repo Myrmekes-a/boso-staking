@@ -18,26 +18,27 @@ const getNftFromWallet = async (wallet: string, userId: string) => {
   const nftsmetadata = await Metadata.findDataByOwner(connection, wallet);
   const mints = new Map();
   for (let i = 0; i < nftsmetadata.length; i += 1) {
-    if (nftsmetadata[i].collection?.key !== bozoKey) {
+    /*  if (nftsmetadata[i].collection?.key !== bozoKey) {
       continue;
-    }
+    } */
     // eslint-disable-next-line no-await-in-loop
     const nft = await Nft.findOne({ mint: nftsmetadata[i].mint });
     if (!nft) {
-      const response = await fetch(nftsmetadata[i].data.uri);
-      if (!response) {
-        console.log('error fetching image');
-        continue;
-      }
-
-      const image = await response.json();
-
-      if (!image || !image.image) {
-        console.log('error fetching image');
-        continue;
-      }
-
+      console.log(nftsmetadata[i].data.uri);
       try {
+        const response = await fetch(nftsmetadata[i].data.uri);
+        if (!response) {
+          console.log('error fetching image');
+          continue;
+        }
+
+        const image = await response.json();
+
+        if (!image || !image.image) {
+          console.log('error fetching image');
+          continue;
+        }
+
         const newNft = new Nft({
           mint: nftsmetadata[i].mint,
           image: image.image,
@@ -164,7 +165,8 @@ const calculatePoints = async (userId: string) => {
       diff = now.diff(lastUpdate, 'minute'); // amount of minutes between now and last update
       // console.log(now.toDate(), lastUpdate.toDate(), diff);
     }
-    let points = diff; /* / 60 */ // amount of points to add
+    let points = diff / 60; // amount of points to add
+    points = Math.trunc(points * 100) / 100;
     if (points !== 0) {
       await activity[0].updateOne({ lastUpdatePoints: now });
     }
