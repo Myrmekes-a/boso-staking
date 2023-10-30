@@ -427,7 +427,9 @@ export default function Loyalty() {
                     fill="#C8453B"
                   />
                 </svg>
-                <p className="text-[25px]  text-primary">162.12</p>
+                <p className="text-[25px]  text-primary">
+                  {toClaimPoints || 0}
+                </p>
               </div>
             </div>
             <div className="md:w-1/3 w-full">
@@ -464,7 +466,7 @@ export default function Loyalty() {
                     />
                   </svg>
                   <p className="text-[20px] md:text-[40px] text-primary">
-                    {toClaimPoints}
+                    {toClaimPoints || 0}
                   </p>
                 </div>
                 <Button text="Claim" onClick={() => claimPoints()} />
