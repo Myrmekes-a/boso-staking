@@ -12,21 +12,21 @@ import { IDL } from "./idl/solana_nft_programs_rewards_center";
 export const REWARDS_CENTER_IDL = IDL;
 
 export const REWARDS_CENTER_ADDRESS = new PublicKey(
-  "ox64uWcbrhaXBMACS3jpfzxnwxNWQd9J8ozT7PhZA5t"
+  "EnUpcqfqHozLZdojn2595cLSZkUqgPCDujSonJvP27HP"
 );
 
 export const WRAPPED_SOL_PAYMENT_INFO = new PublicKey(
-  "4NiNfWaUSrpmLmQmyX2WVtAQfQeMU4yrNuhJf5Ad4KLa"
+  "CdmzhWts3cpmWn4yGGocPxmQkvGjreEcspgSnszN1aCv"
 );
 // 382KXQfzC26jbFmLZBmKoZ6eRz53iwGfxXwoGyyyH8po
 
 export const SOL_PAYMENT_INFO = new PublicKey(
-  "F9Poe7UaPH9MBwgcwZcsqXqSF42SP4LTLkRxw2nwovpo"
+  "pbDnMFT8nUrCj6xJjmG4ZVT4apEQpNunSC2Ws9QXC7s"
 );
 // HqiCY5NqfHfyhyjheQ4ENo5J2XSQBpeqhNoeESkDWBpU
 
 export const DEFAULT_PAYMENT_INFO = new PublicKey(
-  "5gky4L1nEFsZJHCgnPYrEMAmnYsgVJu17qtmamrwaivK"
+  "6tD82AAhCA5Hc6dJaerc8oBuGUBwGzn7jsETJ857ibVK"
 );
 // SdFEeJxn7XxcnYEMNpnoMMSsTfmA1bHfiRdu6qra7zL
 

@@ -165,7 +165,8 @@ const calculatePoints = async (userId: string) => {
       diff = now.diff(lastUpdate, 'minute'); // amount of minutes between now and last update
       // console.log(now.toDate(), lastUpdate.toDate(), diff);
     }
-    let points = diff; /* / 60 */ // amount of points to add
+    let points = diff / 60; // amount of points to add
+    points = Math.trunc(points * 100) / 100;
     if (points !== 0) {
       await activity[0].updateOne({ lastUpdatePoints: now });
     }

@@ -6,12 +6,13 @@ import Button from "./Button";
 import { useWallet } from "@solana/wallet-adapter-react";
 import Image from "next/image";
 import { signIn, signOut, useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 
 const WalletButton = () => {
   const { setVisible } = useWalletModal();
   const wallet = useWallet();
+  const params = useSearchParams();
 
   const router = useRouter();
 
@@ -38,7 +39,16 @@ const WalletButton = () => {
   };
 
   useEffect(() => {
-    if (!wallet.connected || !wallet.signMessage) return;
+    if (params.get("expired") === "true") {
+      wallet.disconnect();
+      signOut({
+        callbackUrl: "/dashboard",
+      });
+    }
+  }, [params]);
+
+  useEffect(() => {
+    //if (!wallet.connected || !wallet.signMessage) return;
     if (status === "unauthenticated" && shoud.current) {
       shoud.current = false;
       fetch(`${process.env.NEXT_PUBLIC_BACKENDURL}/user/getNonce`, {
