@@ -386,7 +386,7 @@ export default function Loyalty() {
           <div className="w-full flex mb-2 md:mb-7 flex-col md:flex-row gap-2 md:gap-0">
             <div className="w-full md:w-1/3 md:order-1 order-2 flex justify-center md:justify-start">
               <ul className="list-disc text-[20px] ml-4 w-fit">
-                <li className="w-fit">1 Bozo gives 10 point / day</li>
+                <li className="w-fit">1 Bozo gives 1 point / hour</li>
                 <li className="w-fit">Every 5 Bozos give a bonus</li>
               </ul>
             </div>
@@ -427,7 +427,9 @@ export default function Loyalty() {
                     fill="#C8453B"
                   />
                 </svg>
-                <p className="text-[25px]  text-primary">162.12</p>
+                <p className="text-[25px]  text-primary">
+                  {toClaimPoints || 0}
+                </p>
               </div>
             </div>
             <div className="md:w-1/3 w-full">
@@ -464,7 +466,7 @@ export default function Loyalty() {
                     />
                   </svg>
                   <p className="text-[20px] md:text-[40px] text-primary">
-                    {toClaimPoints}
+                    {toClaimPoints || 0}
                   </p>
                 </div>
                 <Button text="Claim" onClick={() => claimPoints()} />
