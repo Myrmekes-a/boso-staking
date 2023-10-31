@@ -10,14 +10,13 @@
     "lint:fix": "next lint --fix"
   },
   "dependencies": {
-    "bn.js": "^5.2.0",
-    "@solana-nft-programs/common": "^1.0.0",
-    "@solana-nft-programs/creator-standard": "1.1.0",
     "@coral-xyz/anchor": "^0.27.0",
     "@metaplex-foundation/js": "^0.19.5",
     "@metaplex-foundation/mpl-token-auth-rules": "^1.1.0",
     "@metaplex-foundation/mpl-token-metadata": "^2.11.0",
     "@project-serum/anchor": "^0.26.0",
+    "@solana-nft-programs/common": "^1.0.0",
+    "@solana-nft-programs/creator-standard": "1.1.0",
     "@solana/spl-token": "^0.3.8",
     "@solana/wallet-adapter-base": "^0.9.23",
     "@solana/wallet-adapter-react": "^0.15.35",
@@ -29,6 +28,7 @@
     "@types/react": "18.2.22",
     "@types/react-dom": "18.2.7",
     "autoprefixer": "10.4.15",
+    "bn.js": "^5.2.0",
     "bootstrap-icons": "^1.11.1",
     "eslint": "8.49.0",
     "eslint-config-next": "13.5.1",
@@ -49,10 +49,10 @@
     "typescript": "5.2.2"
   },
   "devDependencies": {
-    "@types/react-beautiful-dnd": "^13.1.5",
     "@rushstack/eslint-patch": "^1.2.0",
     "@types/bn.js": "^5.1.0",
     "@types/node-fetch": "^2.6.2",
+    "@types/react-beautiful-dnd": "^13.1.5",
     "@types/yargs": "^17.0.13",
     "dotenv": "^16.0.3",
     "eslint": "^8.25.0",

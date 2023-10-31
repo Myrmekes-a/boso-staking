@@ -38,7 +38,7 @@ const getNftFromWallet = async (wallet: string, userId: string) => {
     // eslint-disable-next-line no-await-in-loop
     const nft = await Nft.findOne({ mint: nftsmetadata[i].mint });
     if (!nft) {
-      //console.log(nftsmetadata[i].data.uri);
+      // console.log(nftsmetadata[i].data.uri);
       try {
         const response = await fetch(nftsmetadata[i].data.uri);
         if (!response) {
