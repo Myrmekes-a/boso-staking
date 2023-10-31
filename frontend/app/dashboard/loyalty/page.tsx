@@ -382,6 +382,19 @@ export default function Loyalty() {
     }
   };
 
+  function calcolaPunteggio(numero: number) {
+    let punteggio = 0;
+    for (let i = 1; i <= numero; i++) {
+      if (i % 5 === 0) {
+        console.log(2 + (i / 5 - 1) * 0.5);
+        punteggio += 24 * (2 + (i / 5 - 1) * 0.5);
+      } else {
+        punteggio += 24;
+      }
+    }
+    return punteggio;
+  }
+
   return (
     <main className="select-none">
       <LoyaltyProvider>
@@ -391,6 +404,16 @@ export default function Loyalty() {
               <ul className="list-disc text-[20px] ml-4 w-fit">
                 <li className="w-fit">1 Bozo gives 1 point / hour</li>
                 <li className="w-fit">Every 5 Bozos give a bonus</li>
+
+                <li className="w-fit">
+                  <p className="flex">
+                    You will earn&nbsp;
+                    <p className=" text-primary">
+                      {calcolaPunteggio(stakedNfts.length)}
+                    </p>
+                    &nbsp;points / day
+                  </p>
+                </li>
               </ul>
             </div>
             <div className="md:w-1/3 w-full md:order-2 order-1">
