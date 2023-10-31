@@ -178,7 +178,7 @@ const calculatePoints = async (userId: string) => {
     totalPoints += points;
   }
   // troncate to 2 decimal
-  totalPoints = Math.trunc(totalPoints * 100) / 100;
+  // totalPoints = Math.trunc(totalPoints * 100) / 100;
   return totalPoints;
 };
 
