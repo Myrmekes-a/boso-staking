@@ -25,9 +25,9 @@ import { asWallet } from "@/app/dashboard/test2/Wallets";
 
 let provider: anchor.AnchorProvider;
 let program: anchor.Program<SolanaNftProgramsRewardsCenter>;
-const connection = new Connection(
-  "https://shy-wiser-star.solana-mainnet.discover.quiknode.pro/18f39159d1b51c9911f52c8e1c6159b63cac2f49/"
-); /* getTestConnection(); */
+const connString =
+  process.env.NEXT_PUBLIC_NETWORK || "https://api.mainnet-beta.solana.com";
+const connection = new Connection(connString); /* getTestConnection(); */
 
 const bozoK =
   process.env.NEXT_PUBLIC_BOZOPK ||
