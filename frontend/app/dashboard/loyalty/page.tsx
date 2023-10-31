@@ -356,7 +356,9 @@ export default function Loyalty() {
         <div className="py-4 px-8 w-full text-center bg-beige border-2 rounded-xl origin-bottom-right">
           <p className=" font-bozo text-[22px] ">Claimed points:</p>
 
-          <p className=" font-bozo text-[22px] text-primary">{toClaimPoints}</p>
+          <p className=" font-bozo text-[22px] text-primary">
+            {Math.trunc(toClaimPoints * 100) / 100}
+          </p>
         </div>,
         {
           duration: 3000,
@@ -429,7 +431,7 @@ export default function Loyalty() {
                   />
                 </svg>
                 <p className="text-[25px]  text-primary">
-                  {toClaimPoints || 0}
+                  {Math.trunc(toClaimPoints * 100) / 100}
                 </p>
               </div>
             </div>
@@ -467,7 +469,7 @@ export default function Loyalty() {
                     />
                   </svg>
                   <p className="text-[20px] md:text-[40px] text-primary">
-                    {toClaimPoints || 0}
+                    {Math.trunc(toClaimPoints * 100) / 100}
                   </p>
                 </div>
                 <Button text="Claim" onClick={() => claimPoints()} />
