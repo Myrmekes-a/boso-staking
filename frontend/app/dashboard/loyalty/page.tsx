@@ -6,6 +6,7 @@ import Header from "@/components/dashboard/Header";
 import WalletComponents from "@/components/dashboard/WalletComponents";
 import NftBox from "@/components/dashboard/loyalty/NftBox";
 import Stake from "@/components/dashboard/loyalty/Stake";
+import { stakeNfts, unstakeNfts } from "@/utils/pnftStaking/lib";
 import {
   GenericRequest,
   GenericRequestNoAuth,
@@ -130,7 +131,7 @@ export default function Loyalty() {
       setStakedNfts([...stakedNfts, nft]);
       setNfts(nfts.filter((nft) => nft.id !== nft_id));
       try {
-        const transactions = await stake([new PublicKey(nft_id)], wallet);
+        const transactions = await stakeNfts([new PublicKey(nft_id)], wallet);
 
         if (!transactions || transactions.length == 0) {
           throw new Error("error staking anchor");
@@ -186,7 +187,7 @@ export default function Loyalty() {
     setNfts([...nfts, ...stakedNfts]);
     setStakedNfts([]);
     try {
-      const transactions = await unstake(publicKeys, wallet);
+      const transactions = await unstakeNfts(publicKeys, wallet);
 
       if (!transactions || transactions.length == 0) {
         throw new Error("error unstaking anchor");
@@ -241,7 +242,7 @@ export default function Loyalty() {
     setNfts([]);
     setStakedNfts([...nfts, ...stakedNfts]);
     try {
-      const transactions = await stake(publicKeys, wallet);
+      const transactions = await stakeNfts(publicKeys, wallet);
 
       if (!transactions || transactions.length == 0) {
         throw new Error("error staking anchor");
@@ -294,7 +295,7 @@ export default function Loyalty() {
       setNfts([...nfts, nft]);
       setStakedNfts(stakedNfts.filter((nft) => nft.id !== nft_id));
       try {
-        const transactions = await unstake([new PublicKey(nft_id)], wallet);
+        const transactions = await unstakeNfts([new PublicKey(nft_id)], wallet);
 
         if (!transactions || transactions.length == 0) {
           throw new Error("error unstaking anchor");
@@ -320,6 +321,7 @@ export default function Loyalty() {
           }
         );
       } catch (error) {
+        console.log(error);
         toast(
           <div className="py-4 px-8 w-full text-center bg-error border-2 rounded-xl origin-bottom-right">
             <p className=" font-bozo text-[22px] ">
@@ -354,7 +356,9 @@ export default function Loyalty() {
         <div className="py-4 px-8 w-full text-center bg-beige border-2 rounded-xl origin-bottom-right">
           <p className=" font-bozo text-[22px] ">Claimed points:</p>
 
-          <p className=" font-bozo text-[22px] text-primary">{toClaimPoints}</p>
+          <p className=" font-bozo text-[22px] text-primary">
+            {Math.trunc(toClaimPoints * 100) / 100}
+          </p>
         </div>,
         {
           duration: 3000,
@@ -378,6 +382,19 @@ export default function Loyalty() {
     }
   };
 
+  function calcolaPunteggio(numero: number) {
+    let punteggio = 0;
+    for (let i = 1; i <= numero; i++) {
+      if (i % 5 === 0) {
+        console.log(2 + (i / 5 - 1) * 0.5);
+        punteggio += 24 * (2 + (i / 5 - 1) * 0.5);
+      } else {
+        punteggio += 24;
+      }
+    }
+    return punteggio;
+  }
+
   return (
     <main className="select-none">
       <LoyaltyProvider>
@@ -385,15 +402,25 @@ export default function Loyalty() {
           <div className="w-full flex mb-2 md:mb-7 flex-col md:flex-row gap-2 md:gap-0">
             <div className="w-full md:w-1/3 md:order-1 order-2 flex justify-center md:justify-start">
               <ul className="list-disc text-[20px] ml-4 w-fit">
-                <li className="w-fit">1 Bozo gives 10 point / day</li>
+                <li className="w-fit">1 Bozo gives 1 point / hour</li>
                 <li className="w-fit">Every 5 Bozos give a bonus</li>
+
+                <li className="w-fit">
+                  <p className="flex">
+                    You will earn&nbsp;
+                    <p className=" text-primary">
+                      {calcolaPunteggio(stakedNfts.length)}
+                    </p>
+                    &nbsp;points / day
+                  </p>
+                </li>
               </ul>
             </div>
             <div className="md:w-1/3 w-full md:order-2 order-1">
               <Header title="Loyalty" />
             </div>
             <div className="w-full md:w-1/3 flex justify-center md:justify-end order-3">
-              <WalletComponents points={totalPoints} />
+              <WalletComponents points={Math.trunc(totalPoints * 100) / 100} />
             </div>
           </div>
           <Stake
@@ -426,7 +453,9 @@ export default function Loyalty() {
                     fill="#C8453B"
                   />
                 </svg>
-                <p className="text-[25px]  text-primary">162.12</p>
+                <p className="text-[25px]  text-primary">
+                  {Math.trunc(toClaimPoints * 100) / 100}
+                </p>
               </div>
             </div>
             <div className="md:w-1/3 w-full">
@@ -463,7 +492,7 @@ export default function Loyalty() {
                     />
                   </svg>
                   <p className="text-[20px] md:text-[40px] text-primary">
-                    {toClaimPoints}
+                    {Math.trunc(toClaimPoints * 100) / 100}
                   </p>
                 </div>
                 <Button text="Claim" onClick={() => claimPoints()} />
