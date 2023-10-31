@@ -136,6 +136,10 @@ const unstakeNfts = async (
   wallet: WalletContextState,
   local?: boolean
 ) => {
+  if (!program) {
+    await getAnchorProgram(wallet);
+  }
+
   const mappedMints = mints.map((mint) => {
     return { mintId: mint };
   });
