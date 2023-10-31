@@ -31,7 +31,6 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  console.log(process.env.NODE_ENV);
   /* const solNetwork =
     process.env.NODE_ENV === "development"
       ? WalletAdapterNetwork.Devnet
