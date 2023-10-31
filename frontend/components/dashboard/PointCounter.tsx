@@ -20,7 +20,7 @@ const PointCounter = ({ points }: PointCounterProps) => {
           />
         </div>
       </div>
-      <p className="ml-5">{points}</p>
+      <p className="ml-5">{Math.trunc(points * 100) / 100}</p>
     </div>
   );
 };
