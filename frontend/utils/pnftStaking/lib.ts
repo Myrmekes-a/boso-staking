@@ -25,12 +25,18 @@ import { asWallet } from "@/app/dashboard/test2/Wallets";
 
 let provider: anchor.AnchorProvider;
 let program: anchor.Program<SolanaNftProgramsRewardsCenter>;
-const connection = new Connection(
-  "https://api.devnet.solana.com"
-); /* getTestConnection(); */
+const connString =
+  process.env.NEXT_PUBLIC_NETWORK || "https://api.mainnet-beta.solana.com";
+const connection = new Connection(connString); /* getTestConnection(); */
 
-const programId = "ox64uWcbrhaXBMACS3jpfzxnwxNWQd9J8ozT7PhZA5t";
-const stakePoolIdentifier = "test-0.5628066502435303";
+const bozoK =
+  process.env.NEXT_PUBLIC_BOZOPK ||
+  "G9cDjsCJYNtacVF6ty4GSUBGa5vsNWn8ZSKawA4TXpa6 ";
+
+const bozoPK = new PublicKey(bozoK);
+
+const programId = "EnUpcqfqHozLZdojn2595cLSZkUqgPCDujSonJvP27HP";
+const stakePoolIdentifier = "test-0.15774236139258568";
 
 const getAnchorProvider = async (wallet: WalletContextState) => {
   const opts: ConfirmOptions = {
@@ -56,7 +62,7 @@ const sendTxs = async (
   wallet: WalletContextState,
   local?: boolean
 ) => {
-  /*  const feeTX = new Transaction().add(
+  const feeTX = new Transaction().add(
     SystemProgram.transfer({
       fromPubkey: wallet.publicKey!,
       toPubkey: bozoPK,
@@ -68,7 +74,7 @@ const sendTxs = async (
   feeTX.recentBlockhash = blockhash;
   feeTX.feePayer = wallet.publicKey!;
 
-  txs.push(feeTX); */
+  txs.push(feeTX);
   const latestBlockhash = (await connection.getLatestBlockhash()).blockhash;
 
   // @ts-ignore
@@ -130,6 +136,10 @@ const unstakeNfts = async (
   wallet: WalletContextState,
   local?: boolean
 ) => {
+  if (!program) {
+    await getAnchorProgram(wallet);
+  }
+
   const mappedMints = mints.map((mint) => {
     return { mintId: mint };
   });

@@ -107,7 +107,7 @@ const StakePosition = (props: StakePositionProps) => {
         <p
           className={` ${
             props.type == "filled" ? "text-primary" : "text-grey"
-          } text-[33px] relative`}
+          } text-[33px] relative w-[75px] h-[57px] flex justify-center items-center`}
         >
           {props.index === 0 && "x1"}
           {(1 + props.index) % 5 == 0 &&
@@ -119,7 +119,7 @@ const StakePosition = (props: StakePositionProps) => {
               viewBox="0 0 75 57"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
-              className="absolute top-[-0.5rem] left-[-1.3rem]"
+              className="absolute top-[-5px] left-[8px]"
             >
               <path
                 fillRule="evenodd"

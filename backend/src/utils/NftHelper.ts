@@ -14,17 +14,31 @@ import Activity from '../models/activity';
 const connection = new Connection(process.env.SERVER_IP as string);
 const bozoKey = process.env.BOZO_KEY as string;
 
+const allowedMints = [
+  'FoYStpPtgrJ37RWhvhqU3dKU3SmVfQdH7V4BwDpdcGri',
+  '6CnfzYw12RdHvy2eEhMX3MJv1Egd8MMfcRvpTf7yNXoT',
+  'JcKjy4PrDi7DiEStpFEBgF243FrX4UBK496NywfU1zo',
+  'Q6h1GMH5iCPZWH6cnyRSJhrnD2ARpKLgBA84TfLE4ro',
+  'FFQjaPFb2Z5p9jvjdXYxoCJjsSm26aNhdK1j5norvWJa',
+  '91XeuNSrs9zr2HGj2KVJntpUuQmfXe9AoCeMnZApfVSi',
+  'AsfcmHnDudxPDKU6nTtMoPQHeq4WCLoADXribMTxk3Nb',
+  'BrXQEB8mAV8smC1yPyN5khxFBmbsqs7aybn5hpDLzdpL',
+];
+
 const getNftFromWallet = async (wallet: string, userId: string) => {
   const nftsmetadata = await Metadata.findDataByOwner(connection, wallet);
   const mints = new Map();
   for (let i = 0; i < nftsmetadata.length; i += 1) {
-    /*   if (nftsmetadata[i].collection?.key !== bozoKey) {
+    const allowed =
+      nftsmetadata[i].collection?.key === bozoKey ||
+      allowedMints.includes(nftsmetadata[i].mint);
+    if (!allowed) {
       continue;
-    } */
+    }
     // eslint-disable-next-line no-await-in-loop
     const nft = await Nft.findOne({ mint: nftsmetadata[i].mint });
     if (!nft) {
-      console.log(nftsmetadata[i].data.uri);
+      // console.log(nftsmetadata[i].data.uri);
       try {
         const response = await fetch(nftsmetadata[i].data.uri);
         if (!response) {
@@ -165,7 +179,8 @@ const calculatePoints = async (userId: string) => {
       diff = now.diff(lastUpdate, 'minute'); // amount of minutes between now and last update
       // console.log(now.toDate(), lastUpdate.toDate(), diff);
     }
-    let points = diff; /* / 60 */ // amount of points to add
+    let points = diff / 60; // amount of points to add
+    // points = Math.trunc(points * 100) / 100;
     if (points !== 0) {
       await activity[0].updateOne({ lastUpdatePoints: now });
     }

@@ -64,13 +64,23 @@ export const genericRequest = async ({
       options
     );
 
+    // console.log(result.status);
+
+    if (result.status === 500) {
+      if (typeof window !== "undefined") {
+        window.location.href = "/dashboard?expired=true";
+      }
+      // signOut();
+    }
+
     const jsonResponse = await result.json();
 
-    if (jsonResponse.status === 401) {
+    /*   if (jsonResponse.status === 500) {
+      console.log("HERE");
       if (jsonResponse.message === "jwt expired") {
         signOut();
       }
-    }
+    } */
 
     return jsonResponse;
   } catch (err: any) {
