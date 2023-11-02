@@ -11,7 +11,7 @@ const Header = () => {
       </div>
 
       <a
-        href="https://discord.com/invite/bozodao"
+        href="https://discord.com/invite/bozocollective"
         target="_blank"
         className="rounded-2xl bg-primary hover:bg-black hover:text-primary transition-colors text-white aspect-square shrink-0 w-[50px] flex center"
       >
