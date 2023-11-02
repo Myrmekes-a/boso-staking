@@ -121,12 +121,18 @@ const stakeNfts = async (
     return { mintId: mint };
   });
 
-  const toBeSigned = await stake(
-    provider.connection,
-    stakerWallet,
-    stakePoolIdentifier,
-    mappedMints
-  );
+  const toBeSigned = [];
+  const chunkSize = 10;
+  for (let i = 0; i < mappedMints.length; i += chunkSize) {
+    toBeSigned.push(
+      ...(await stake(
+        provider.connection,
+        stakerWallet,
+        stakePoolIdentifier,
+        mappedMints.slice(i, i + chunkSize)
+      ))
+    );
+  }
 
   return sendTxs(toBeSigned, wallet, local);
 };
@@ -144,13 +150,18 @@ const unstakeNfts = async (
     return { mintId: mint };
   });
 
-  const toBeSigned = await unstake(
-    provider.connection,
-    asWallet(wallet),
-    stakePoolIdentifier,
-    mappedMints
-  );
-
+  const chunkSize = 10;
+  const toBeSigned = [];
+  for (let i = 0; i < mappedMints.length; i += chunkSize) {
+    toBeSigned.push(
+      ...(await unstake(
+        provider.connection,
+        asWallet(wallet),
+        stakePoolIdentifier,
+        mappedMints.slice(i, i + chunkSize)
+      ))
+    );
+  }
   return sendTxs(toBeSigned, wallet, local);
 };
 

@@ -64,7 +64,7 @@ export const genericRequest = async ({
       options
     );
 
-    console.log(result.status);
+    // console.log(result.status);
 
     if (result.status === 500) {
       if (typeof window !== "undefined") {

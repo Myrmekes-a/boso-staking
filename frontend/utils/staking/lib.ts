@@ -61,7 +61,7 @@ const getOrCreateTokenAccount = async (mint: PublicKey, owner: PublicKey) => {
   const accountInfo = await connection.getAccountInfo(associatedToken); */
   const accountInfo = false;
   if (!accountInfo) {
-    console.log("creating associated token account");
+    // console.log("creating associated token account");
     const tx = new Transaction().add(
       token.createAssociatedTokenAccountInstruction(
         owner, //payer
@@ -202,7 +202,7 @@ const stake = async (
     } = await buildNftDependencies(mint, wallet.publicKey!);
     if (nftTokenTx) toBeSigned.push(nftTokenTx);
 
-    console.log(nftToken.toBase58());
+    // console.log(nftToken.toBase58());
 
     const stakeIx = await program.methods
       .stake()
