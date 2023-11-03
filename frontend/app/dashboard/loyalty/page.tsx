@@ -167,6 +167,7 @@ export default function Loyalty() {
         );
         setStakedNfts(tmpStaked);
         setNfts(tmpNfts);
+        console.log(error);
       } finally {
         timerRef.current = setTimeout(() => {
           setShouldFetch(true);
