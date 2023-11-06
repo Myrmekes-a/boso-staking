@@ -32,7 +32,9 @@ export default async function RootLayout({
 
   return (
     <html lang="en" className={bozoFont.className}>
-      <body className="bg-beige text-black" style={{ overflow: "hidden" }}>
+      <body
+        className="bg-beige text-black" /* style={{ overflow: "hidden" }} */
+      >
         <Provider session={session}>
           <QueryProvider>
             <ReactLenisComponent>

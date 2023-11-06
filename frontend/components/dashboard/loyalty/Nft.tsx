@@ -73,6 +73,7 @@ const Nft = ({
           alt="nft"
           className={``}
           fill
+          sizes="100%"
           draggable={false}
         />
       </div>

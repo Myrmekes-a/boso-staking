@@ -15,10 +15,10 @@ const SkeletonImage = () => {
         width={594}
         height={626}
         alt="Skeleton"
-        className="md:min-w-[594px] md:h-[626px] min-w-[100vw] h-auto  absolute bottom-0 md:bottom-[-1.75rem] animate-skeleton"
+        className="md:min-w-[594px] md:h-[626px] h-auto md:max-h-none max-h-[60vh] w-auto  absolute bottom-0 md:bottom-[-1.75rem] animate-skeleton"
       />
       {!connected && (
-        <div className="absolute bottom-[75vw] md:bottom-[450px]">
+        <div className="absolute bottom-[60vw] md:bottom-[450px]">
           <div className="text-[28px] md:text-[45px] flex gap-4 ">
             <p className="animate-connect">Connect</p>
             <p className="animate-your">Your</p>

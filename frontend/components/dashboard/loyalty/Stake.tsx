@@ -61,6 +61,26 @@ const Stake = ({
       type: "empty",
       active: false,
     },
+    {
+      type: "empty",
+      active: false,
+    },
+    {
+      type: "empty",
+      active: false,
+    },
+    {
+      type: "empty",
+      active: false,
+    },
+    {
+      type: "empty",
+      active: false,
+    },
+    {
+      type: "empty",
+      active: false,
+    },
   ]);
 
   useEffect(() => {
@@ -69,7 +89,7 @@ const Stake = ({
       type: "empty",
       active: true,
     });
-    for (let i = 0; i < 9; i++) {
+    for (let i = 0; i < 18; i++) {
       fillerElements.push({
         active: false,
         type: "empty",
@@ -96,9 +116,9 @@ const Stake = ({
   }, [stakedNfts]);
 
   return (
-    <div className="w-screen ml-[-1.75rem] ">
-      <div className="px-7 md:pb-5 flex justify-between items-center">
-        <div className="flex text-[22px] leading-none">
+    <div className="w-screen ml-[-1.75rem] h-[40vh] mt-8 md:mt-0 md:h-[45%] flex flex-col justify-center">
+      <div className="px-7 md:pb-2  flex justify-between items-center">
+        <div className="flex text-[22px] leading-none items-end">
           <p className="">Staked Bozos C</p>
           <div className="relative">
             <p>o</p>
@@ -132,8 +152,8 @@ const Stake = ({
       </div>
       {/* <div className="w-full overflow-x-scroll  flex"> */}
 
-      <DraggableScroll>
-        <div className="flex max-w-screen overflow-x-scroll cursor-grab">
+      <DraggableScroll rootClass="h-full overflow-y-hidden">
+        <div className="flex max-w-screen overflow-x-scroll cursor-grab w-screen overflow-y-hidden">
           {positions.map((position, index) => (
             <StakePosition
               key={index}
