@@ -17,6 +17,7 @@ const PointCounter = ({ points }: PointCounterProps) => {
             alt="Counter"
             className=""
             fill
+            sizes="100% 100%"
           />
         </div>
       </div>

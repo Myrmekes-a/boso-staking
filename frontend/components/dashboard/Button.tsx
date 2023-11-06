@@ -31,9 +31,9 @@ const Button = ({
       className={` ${
         variant == "primary"
           ? `text-beige ${
-              !disabled && " hover:bg-black hover:text-primary"
+              !disabled && " md:hover:bg-black md:hover:text-primary"
             }  bg-primary`
-          : `text-beige ${!disabled && " hover:text-primary"}  bg-black`
+          : `text-beige ${!disabled && " md:hover:text-primary"}  bg-black`
       }   flex center select-none  w-fit text-[22px] leading-none shrink-0 rounded-lg px-6 pt-3 pb-2  duration-300 transition-colors ${passedclass}`}
       onClick={(e) => {
         /* e.preventDefault(); */

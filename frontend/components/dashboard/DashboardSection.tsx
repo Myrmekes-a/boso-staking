@@ -25,7 +25,7 @@ const DashboardSection = ({
   return (
     <a
       href={redirect}
-      className="relative h-fit hover:scale-[101%] hover:shadow-lg cursor-pointer transition-all duration-300 group rounded-xl animate-dash-section opacity-0"
+      className="relative w-full max-w-[400px] h-fit hover:scale-[101%] hover:shadow-lg cursor-pointer transition-all duration-300 group rounded-xl animate-dash-section opacity-0"
       style={{ animationDelay: `${(index + 1) * 0.25}s` }}
     >
       <Image
