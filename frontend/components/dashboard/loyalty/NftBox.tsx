@@ -63,12 +63,16 @@ const NftBox = ({
   }, [nfts]);
 
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    console.log("dragging over");
     e.preventDefault();
   };
 
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    console.log("DROPPING");
     const x = e.nativeEvent.offsetX;
     const y = e.nativeEvent.offsetY;
+
+    console.log(x, y);
 
     setIsGlobalDragging(false);
 

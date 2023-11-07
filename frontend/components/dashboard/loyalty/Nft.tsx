@@ -15,9 +15,11 @@ const Nft = ({
   isStaked: boolean;
   isDraggable: boolean;
 }) => {
-  const { setIsGlobalDragging } = useLoyalty();
+  const { setIsGlobalDragging, isGlobalDragging } = useLoyalty();
 
   const [isDragging, setIsDragging] = useState(false);
+
+  const [loading, setLoading] = useState(true);
 
   const [mouseDown, setMouseDown] = useState(false);
   return (
@@ -28,9 +30,11 @@ const Nft = ({
             ? "animate-nft-mouse-down"
             : "animate-nft-mouse-up"
           : "animate-pulse"
-      } w-full h-full  rounded-[0.8rem] flex center cursor-grab z-10   ${
-        isDragging ? "opacity-[0.001] cursor-grabbing " : ""
-      } ${!isDraggable ? "animate-pulse" : ""}`}
+      } w-full h-full  rounded-[0.8rem] flex center cursor-grab  z-10 ${
+        isGlobalDragging && !isDragging ? "pointer-events-none" : ""
+      }  ${isDragging ? "!opacity-[0.001] cursor-grabbing " : ""} ${
+        !isDraggable ? "animate-pulse" : ""
+      }`}
       /* ${mouseDown ? "!w-[100px] !h-[100px]" : ""} */
       draggable={isDraggable}
       onMouseDown={(e) => {
@@ -66,15 +70,27 @@ const Nft = ({
       }}
     >
       <div
-        className={` w-full h-full relative border-[2.75px] border-black rounded-[0.8rem]  transition-all duration-1000 overflow-hidden`}
+        className={` w-full h-full relative border-[2.75px] bg-beige border-black rounded-[0.8rem]  transition-all duration-1000 overflow-hidden`}
       >
+        {loading && (
+          <div className="absolute top-0 left-0 w-full h-full flex center z-10 p-5  animate-pulse">
+            <Image
+              src="/img/dashboard/counter.png"
+              alt="Counter"
+              className="animate-spin"
+              fill
+              sizes="100% 100%"
+            />
+          </div>
+        )}
         <Image
           src={nft.image}
           alt="nft"
           className={``}
           fill
-          sizes="100%"
+          sizes="100% 100% "
           draggable={false}
+          onLoadingComplete={() => setLoading(false)}
         />
       </div>
     </div>

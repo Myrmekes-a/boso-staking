@@ -52,6 +52,28 @@ function calcolaPunteggio(numero: number) {
   return punteggio;
 }
 
+function arrayDifference(vecchio: any, nuovo: any) {
+  if (vecchio.length !== nuovo.length) return true;
+  // Estrai gli id dai vecchi e nuovi oggetti in due array separati
+  const vecchioIds = vecchio.map((obj: any) => obj.id);
+  const nuovoIds = nuovo.map((obj: any) => obj.id);
+
+  // Confronta gli array di id
+  const differenze: any = [];
+  nuovoIds.forEach((id: any) => {
+    if (!vecchioIds.includes(id)) {
+      differenze.push(id);
+    }
+  });
+
+  // Verifica se ci sono differenze e restituisci il risultato
+  if (differenze.length > 0) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
 export default function Loyalty() {
   const [stakedNfts, setStakedNfts] = useState<NftType[]>([]);
   const [nfts, setNfts] = useState<NftType[]>([]);
@@ -82,10 +104,23 @@ export default function Loyalty() {
     setIsNftsDraggable(new Map(tmpIsNftsDraggable));
   };
 
+  const setNtfsTimouted = (nfts: NftType[]) => {
+    setNfts([]);
+    const tmpNftsTimers: any = [];
+    nfts.forEach((nft, index) => {
+      const timer = setTimeout(() => {
+        setNfts((nfts) => [...nfts, nft]);
+      }, (Math.random() * (10 - 1) + 1) * index);
+      tmpNftsTimers.push(timer);
+    });
+    setNftsTimers(tmpNftsTimers);
+  };
+
   const { refetch: refetchNft } = useQuery(
     ["nfts"],
     async () => {
       if (!shouldFetch) return;
+
       const nftsRequest: GenericRequest = {
         method: "GET",
         url: "/nft/nftsByWallet",
@@ -102,11 +137,28 @@ export default function Loyalty() {
         else tmpnfts.push(parseNft(nft));
       });
 
+      /* const prova = [];
+      console.log(tmpnfts);
+      for (let index = 0; index < 200; index++) {
+        prova.push({
+          id: index.toString(),
+          image:
+            "https://bafybeih5pne3wm5ugxlkd7fdgxgzfa4hnpdaui5htgy7y4mtk42dvdb5ue.ipfs.nftstorage.link/4470.png",
+        });
+      } */
+
       setNftDraggable(mints, true);
 
-      setNfts(tmpnfts);
+      if (arrayDifference(nfts, tmpnfts)) {
+        /* setNtfsTimouted(prova); */
+        setNfts(tmpnfts);
+      }
+
       setStakedNfts(tmpstakednfts);
-      return response;
+      //timeouted setNfts
+
+      /*       setNfts(prova);
+       */ return response;
     },
     {
       enabled: !!session?.user.token && shouldFetch,
@@ -397,7 +449,7 @@ export default function Loyalty() {
   };
 
   return (
-    <main className="select-none md:max-w-screen overflow-x-hidden min-h-screen md:max-h-screen md:h-screen">
+    <main className="select-none overflow-y-clip md:max-w-screen overflow-x-hidden min-h-screen md:max-h-screen md:h-screen">
       <LoyaltyProvider>
         <div className="w-screen h-full md:max-h-screen md:overflow-hidden p-7 pb-0 flex flex-col justify-between">
           <div className="w-full flex mb-2 md:mb-7 flex-col md:flex-row gap-2 md:gap-0 h-[15%]">
@@ -430,7 +482,7 @@ export default function Loyalty() {
             unstakeAllNfts={unstakeAllNfts}
             isNftsDraggable={isNftsDraggable}
           />
-          <div className="flex flex-col md:flex-row min-w-full md:min-h-[45%] md:max-h-[45%] md:h-[45vh] pb-10">
+          <div className="flex flex-col md:flex-row min-w-full md:min-h-[45%] md:max-h-[45%] md:h-[45vh]">
             <div className="w-full flex md:hidden pb-6 pt-2 justify-between items-center">
               <Button text="Claim !!!" />
 
