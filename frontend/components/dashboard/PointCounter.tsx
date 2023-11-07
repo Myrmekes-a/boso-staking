@@ -15,7 +15,7 @@ const PointCounter = ({ points }: PointCounterProps) => {
           <Image
             src="/img/dashboard/counter.png"
             alt="Counter"
-            className=""
+            className=" "
             fill
             sizes="100% 100%"
           />
