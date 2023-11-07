@@ -73,14 +73,16 @@ const Nft = ({
         className={` w-full h-full relative border-[2.75px] bg-beige border-black rounded-[0.8rem]  transition-all duration-1000 overflow-hidden`}
       >
         {loading && (
-          <div className="absolute top-0 left-0 w-full h-full flex center z-10 p-5  animate-pulse">
-            <Image
-              src="/img/dashboard/counter.png"
-              alt="Counter"
-              className="animate-spin"
-              fill
-              sizes="100% 100%"
-            />
+          <div className="absolute top-0 left-0 w-full h-full flex center z-10  ">
+            <div className="relative w-[70%] h-[70%] ">
+              <Image
+                src="/img/dashboard/counter.png"
+                alt="Counter"
+                className="animate-spin"
+                fill
+                sizes="100% 100%"
+              />
+            </div>
           </div>
         )}
         <Image
