@@ -5,10 +5,14 @@
 
 import { IGetUserAuthInfoRequest } from 'src/utils/typesAndInterfaces';
 import BigPromise from '../middlewares/bigPromise';
+import { Worker } from 'worker_threads';
+import mongoose from 'mongoose';
+
 // import { CustomError } from '../utils/customError';
 import { calculatePoints, sendTx, getNftFromWallet } from '../utils/NftHelper';
 import Nft from '../models/nft';
 import Activity from '../models/activity';
+import User from '../models/user';
 
 export const getNft = BigPromise(async (req: IGetUserAuthInfoRequest, res) => {
   const { wallet } = req.user;
@@ -27,14 +31,34 @@ export const getNft = BigPromise(async (req: IGetUserAuthInfoRequest, res) => {
   });
 });
 
+function createWorker(serialized: any) {
+  return new Promise(function (resolve, reject) {
+    const worker = new Worker('./src/utils/txsWoker.ts', {
+      workerData: { serialized },
+    });
+    worker.on('message', (data) => {
+      resolve(data);
+    });
+    worker.on('error', (msg) => {
+      console.log(msg);
+      reject(msg);
+    });
+  });
+}
+
 export const stake = BigPromise(
   async (req: IGetUserAuthInfoRequest, res, next) => {
-    const { _id } = req.user;
+    // const { _id } = req.user;
+
+    const { wallet } = req.body;
+    const user = await User.findOne({ wallet });
+    const _id = user?._id;
     // const { wallet } = req.user;
     const { mints } = req.body;
     const { serialized } = req.body;
+    console.log(mints);
 
-    const nfts = await Nft.find({
+    /*  const nfts = await Nft.find({
       mint: { $in: mints },
       staked: false,
       owner: _id,
@@ -45,11 +69,24 @@ export const stake = BigPromise(
         success: false,
         message: 'Nft not found or already staked',
       });
+      return;
+    } */
 
+    let thread_results: any = await createWorker(serialized);
+
+    if (thread_results.success === false) {
+      res.status(404).json({
+        success: false,
+        message: 'Error sending transaction',
+      });
       return;
     }
 
-    try {
+    // const thread_results = await Promise.all(workerPromises);
+
+    // res.status(200).send(`result is ${total}`);
+
+    /*  try {
       await sendTx(serialized);
     } catch (err) {
       console.log(err);
@@ -58,9 +95,9 @@ export const stake = BigPromise(
         message: 'Error sending transaction',
       });
       return;
-    }
+    } */
 
-    for (let i = 0; i < mints.length; i += 1) {
+    /* for (let i = 0; i < mints.length; i += 1) {
       const mint = mints[i];
 
       // stake nft
@@ -76,9 +113,13 @@ export const stake = BigPromise(
         nft: nft._id,
         user: _id,
       });
-    }
+    } */
 
-    next();
+    //next();
+    res.status(200).json({
+      success: true,
+      message: 'stake successfull',
+    });
   }
 );
 

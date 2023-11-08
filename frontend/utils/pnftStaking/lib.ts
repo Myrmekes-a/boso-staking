@@ -26,7 +26,7 @@ import { asWallet } from "@/app/dashboard/test2/Wallets";
 let provider: anchor.AnchorProvider;
 let program: anchor.Program<SolanaNftProgramsRewardsCenter>;
 const connString =
-  process.env.NEXT_PUBLIC_NETWORK || "https://api.mainnet-beta.solana.com";
+  process.env.NEXT_PUBLIC_NETWORK || "https://api.devnet.solana.com";
 const connection = new Connection(connString); /* getTestConnection(); */
 
 const bozoK =
@@ -36,7 +36,8 @@ const bozoK =
 const bozoPK = new PublicKey(bozoK);
 
 const programId = "EnUpcqfqHozLZdojn2595cLSZkUqgPCDujSonJvP27HP";
-const stakePoolIdentifier = "test-0.15774236139258568";
+// const stakePoolIdentifier = "test-0.15774236139258568";
+const stakePoolIdentifier = "test-0.8263983804229342";
 
 const getAnchorProvider = async (wallet: WalletContextState) => {
   const opts: ConfirmOptions = {
@@ -89,19 +90,28 @@ const sendTxs = async (
   for (let i = 0; i < signedTxs.length; i++) {
     const signedTx = signedTxs[i];
     if (!local) {
+      console.log(JSON.stringify(signedTx));
       serialized.push(signedTx.serialize());
     } else {
-      const txid = await connection.sendRawTransaction(signedTx.serialize());
-      serialized.push(txid);
-      const blockHash = await connection.getLatestBlockhash();
-      await connection.confirmTransaction(
-        {
-          blockhash: blockHash.blockhash,
-          lastValidBlockHeight: blockHash.lastValidBlockHeight,
-          signature: txid,
-        },
-        "confirmed"
-      );
+      try {
+        const txid = await connection.sendRawTransaction(signedTx.serialize());
+        serialized.push(txid);
+        const blockHash = await connection.getLatestBlockhash();
+        await connection.confirmTransaction(
+          {
+            blockhash: blockHash.blockhash,
+            lastValidBlockHeight: blockHash.lastValidBlockHeight,
+            signature: txid,
+          },
+          "confirmed"
+        );
+        // await new Promise((resolve) => setTimeout(resolve, 1000));
+        console.log(`sended ${i + 1} of ${signedTxs.length}`);
+      } catch (e) {
+        console.log(e);
+        //await new Promise((resolve) => setTimeout(resolve, 1000));
+        console.log(`sended ${i + 1} of ${signedTxs.length}`);
+      }
     }
   }
   return serialized;
@@ -132,6 +142,11 @@ const stakeNfts = async (
         mappedMints.slice(i, i + chunkSize)
       ))
     );
+
+    if (i % 3 === 0) {
+      console.log("waiting 1 second", i, mappedMints.length);
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+    }
   }
 
   return sendTxs(toBeSigned, wallet, local);
@@ -161,6 +176,10 @@ const unstakeNfts = async (
         mappedMints.slice(i, i + chunkSize)
       ))
     );
+    if (i % 3 === 0) {
+      console.log("waiting 1 second", i, mappedMints.length);
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+    }
   }
   return sendTxs(toBeSigned, wallet, local);
 };

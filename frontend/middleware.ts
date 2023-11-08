@@ -11,10 +11,10 @@ export default withAuth(function middleware(req) {}, {
       } */
 
       const path = req.nextUrl.pathname;
-
+      /* 
       if (new RegExp("/dashboard/[^/]").test(path) && !token?.wallet) {
         return false;
-      }
+      } */
 
       return true;
     },
