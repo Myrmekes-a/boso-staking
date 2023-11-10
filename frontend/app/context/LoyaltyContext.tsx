@@ -1,3 +1,4 @@
+"use client";
 import React, {
   ReactNode,
   createContext,
@@ -9,11 +10,15 @@ import React, {
 interface LoyaltyContextType {
   isGlobalDragging: "staking" | "unstaking" | false;
   setIsGlobalDragging: (isDragging: "staking" | "unstaking" | false) => void;
+  isGlobalLoading: boolean;
+  setIsGlobalLoading: (isGlobalLoading: boolean) => void;
 }
 
 const LoyaltyContext = createContext<LoyaltyContextType>({
   isGlobalDragging: false,
   setIsGlobalDragging: () => {},
+  isGlobalLoading: false,
+  setIsGlobalLoading: () => {},
 });
 
 export const LoyaltyProvider = ({
@@ -25,11 +30,15 @@ export const LoyaltyProvider = ({
     "staking" | "unstaking" | false
   >(false);
 
+  const [isGlobalLoading, setIsGlobalLoading] = useState(false);
+
   return (
     <LoyaltyContext.Provider
       value={{
         isGlobalDragging,
         setIsGlobalDragging,
+        isGlobalLoading,
+        setIsGlobalLoading,
       }}
     >
       {children}

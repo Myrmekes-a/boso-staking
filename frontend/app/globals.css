@@ -377,15 +377,15 @@ svg {
     height: 100%;
   }
   100% {
-    width: 100px;
-    height: 100px;
+    width: 80%;
+    height: 80%;
   }
 }
 
 @keyframes drag_out {
   0% {
-    width: 100px;
-    height: 100px;
+    width: 80%;
+    height: 80%;
   }
   100% {
     width: 100%;

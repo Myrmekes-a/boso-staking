@@ -63,12 +63,16 @@ const NftBox = ({
   }, [nfts]);
 
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    console.log("dragging over");
     e.preventDefault();
   };
 
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    console.log("DROPPING");
     const x = e.nativeEvent.offsetX;
     const y = e.nativeEvent.offsetY;
+
+    console.log(x, y);
 
     setIsGlobalDragging(false);
 
@@ -100,8 +104,8 @@ const NftBox = ({
   };
 
   return (
-    <div className=" w-full">
-      <div className="flex justify-between items-center mb-2 md:mb-6">
+    <div className=" w-full h-full">
+      <div className="flex justify-between items-center mb-2">
         <div className="flex">
           <p className=" text-[22px] leading-none">Non Staked Bozos</p>
           <p className="ml-2 text-primary text-[22px] leading-none">
@@ -111,13 +115,13 @@ const NftBox = ({
         <Button text="Stake All" onClick={stakeAllNfts} />
       </div>
       <div
-        className="relative w-auto"
+        className="relative w-auto h-[250px] md:h-[84%] pb-2"
         onDragOver={handleDragOver}
         onDrop={handleDrop}
         ref={boxRef}
       >
         <div
-          className="relative min-h-[25vh] md:min-h-[35vh] w-full "
+          className="relative h-full w-full "
           style={{
             backgroundImage: "url('/img/dashboard/loyalty/nftsbox.png')",
             backgroundRepeat: "no-repeat",
@@ -139,7 +143,7 @@ const NftBox = ({
           return (
             <div
               key={index}
-              className="w-[120px] h-[120px] absolute flex center "
+              className="md:w-[120px] md:h-[120px] w-[80px] h-[80px] absolute flex center "
               style={{
                 top: nftsPositions.find((n) => n.nft_id == nft.id)?.y,
                 left: nftsPositions.find((n) => n.nft_id == nft.id)?.x,

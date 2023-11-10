@@ -21,6 +21,10 @@ export default withAuth(function middleware(req) {}, {
   },
 });
 
-export const config = {
+/* export const config = {
   matcher: "/((?!_next/static|_next/image|favicon.ico|auth|api).*)",
+};
+ */
+export const config = {
+  matcher: ["/dashboard/:path*"],
 };
