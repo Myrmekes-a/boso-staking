@@ -219,13 +219,15 @@ export default function Test() {
       local
     );
 
+    console.log(JSON.stringify(transactions));
+
     if (!local) {
       const nftsRequest: GenericRequestNoAuth = {
         method: "POST",
         url: "/nft/stake",
         data: {
           mints: mintIDs,
-          serialized: transactions,
+          transactions,
           wallet: "BqW2i4jG6h2nzynWyiDm989YKwTWTme4g8cfawYgtcFH",
         },
       };

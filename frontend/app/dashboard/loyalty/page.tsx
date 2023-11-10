@@ -183,8 +183,8 @@ export default function Loyalty() {
 
     if (timerRef.current) clearTimeout(timerRef.current);
     setShouldFetch(false);
-    const tmpStaked = stakedNfts;
-    const tmpNfts = nfts;
+    let tmpStaked = stakedNfts;
+    let tmpNfts = nfts;
     setNfts([...nfts, ...stakedNfts]);
     setStakedNfts([]);
     try {
@@ -201,6 +201,11 @@ export default function Loyalty() {
       };
       const response = await genericRequest(nftsRequest);
       if (!response.success) {
+        const { errorMints } = response;
+        const filtered = mints.filter((mint) => !errorMints.includes(mint));
+
+        tmpStaked = tmpStaked.filter((nft) => filtered.includes(nft.id));
+        tmpNfts = tmpNfts.filter((nft) => !filtered.includes(nft.id));
         throw new Error("error unstaking back");
       }
 
@@ -238,8 +243,8 @@ export default function Loyalty() {
 
     if (timerRef.current) clearTimeout(timerRef.current);
     setShouldFetch(false);
-    const tmpStaked = stakedNfts;
-    const tmpNfts = nfts;
+    let tmpStaked = stakedNfts;
+    let tmpNfts = nfts;
     setNfts([]);
     setStakedNfts([...nfts, ...stakedNfts]);
     try {
@@ -256,6 +261,11 @@ export default function Loyalty() {
       };
       const response = await genericRequest(nftsRequest);
       if (!response.success) {
+        const { errorMints } = response;
+        const filtered = mints.filter((mint) => !errorMints.includes(mint));
+
+        tmpStaked = tmpStaked.filter((nft) => !filtered.includes(nft.id));
+        tmpNfts = tmpNfts.filter((nft) => filtered.includes(nft.id));
         throw new Error("error staking back");
       }
 

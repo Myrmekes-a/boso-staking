@@ -86,16 +86,17 @@ const sendTxs = async (
       return tx;
     })
   );
-  const serialized = [];
-  for (let i = 0; i < signedTxs.length; i++) {
-    const signedTx = signedTxs[i];
-    if (!local) {
+  if (local) {
+    const sendedTxs = [];
+    for (let i = 0; i < signedTxs.length; i++) {
+      const signedTx = signedTxs[i];
+      /*  if (!local) {
       console.log(JSON.stringify(signedTx));
       serialized.push(signedTx.serialize());
-    } else {
+    } else { */
       try {
         const txid = await connection.sendRawTransaction(signedTx.serialize());
-        serialized.push(txid);
+        sendedTxs.push(txid);
         const blockHash = await connection.getLatestBlockhash();
         await connection.confirmTransaction(
           {
@@ -112,9 +113,12 @@ const sendTxs = async (
         //await new Promise((resolve) => setTimeout(resolve, 1000));
         console.log(`sended ${i + 1} of ${signedTxs.length}`);
       }
+      //}
     }
+    return sendedTxs;
+  } else {
+    return signedTxs;
   }
-  return serialized;
 };
 
 const stakeNfts = async (
