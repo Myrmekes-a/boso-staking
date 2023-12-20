@@ -8,7 +8,7 @@ import { sendTxs } from './sendTx';
 
 dotenv.config();
 
-const stakePoolIdentifier = 'test-0.8263983804229342';
+const stakePoolIdentifier = "test-0.15774236139258568";
 
 const main = async () => {
   const authorityPrvKey = process.env.UPDATE_AUTHORTY_PRV_KEY;
