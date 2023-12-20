@@ -676,9 +676,14 @@ export type SolanaNftProgramsRewardsCenter = {
           isSigner: false;
         },
         {
-          name: "user";
+          name: "payer";
           isMut: true;
           isSigner: true;
+        },
+        {
+          name: "user";
+          isMut: false;
+          isSigner: false;
         },
         {
           name: "userEscrow";
@@ -3338,9 +3343,14 @@ export const IDL: SolanaNftProgramsRewardsCenter = {
           isSigner: false,
         },
         {
-          name: "user",
+          name: "payer",
           isMut: true,
           isSigner: true,
+        },
+        {
+          name: "user",
+          isMut: false,
+          isSigner: false,
         },
         {
           name: "userEscrow",

@@ -249,20 +249,22 @@ export const unstake = async (
   stakePoolIdentifier: string,
   mintInfos: {
     mintId: PublicKey;
+    staker: PublicKey;
     fungible?: boolean;
   }[],
   rewardDistributorIds?: PublicKey[],
 ) => {
   const stakePoolId = findStakePoolId(stakePoolIdentifier);
-  const mints = mintInfos.map(({ mintId, fungible }) => {
+  const mints = mintInfos.map(({ mintId, staker, fungible }) => {
     const stakeEntryId = findStakeEntryId(
       stakePoolId,
       mintId,
-      fungible ? wallet.publicKey : undefined,
+      fungible ? staker : undefined,
     );
     return {
       mintId,
       stakeEntryId,
+      staker,
       rewardEntryIds: rewardDistributorIds?.map((rewardDistributorId) =>
         findRewardEntryId(rewardDistributorId, stakeEntryId),
       ),
@@ -298,10 +300,10 @@ export const unstake = async (
   accountDataById = { ...accountDataById, ...accountDataById2 };
 
   const txs: Transaction[] = [];
-  for (const { mintId, stakeEntryId, rewardEntryIds } of mints) {
+  for (const { mintId, staker, stakeEntryId, rewardEntryIds } of mints) {
     const tx = new Transaction();
-    const userEscrowId = findUserEscrowId(wallet.publicKey);
-    const userAtaId = getAssociatedTokenAddressSync(mintId, wallet.publicKey);
+    const userEscrowId = findUserEscrowId(staker);
+    const userAtaId = getAssociatedTokenAddressSync(mintId, staker);
     const stakeEntry = accountDataById[stakeEntryId.toString()];
 
     if (
@@ -449,7 +451,8 @@ export const unstake = async (
           stakeTokenRecordAccount: stakeTokenRecordAccountId,
           authorizationRules:
             metadata?.programmableConfig?.ruleSet ?? METADATA_PROGRAM_ID,
-          user: wallet.publicKey,
+          payer: wallet.publicKey,
+          user: staker,
           userEscrow: userEscrowId,
           userStakeMintTokenAccount: userAtaId,
           tokenMetadataProgram: METADATA_PROGRAM_ID,

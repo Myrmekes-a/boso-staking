@@ -4,6 +4,7 @@ import * as dotenv from 'dotenv';
 import { keypairFrom } from './utils';
 import { checkStakeEntries } from './checkStakeEntries';
 import { unstake } from './sdk';
+import { sendTxs } from './sendTx';
 
 dotenv.config();
 
@@ -59,7 +60,7 @@ const main = async () => {
       await new Promise((resolve) => setTimeout(resolve, 1000));
     }
   }
-  return sendTxs(toBeSigned, wallet, local);
+  return sendTxs(toBeSigned, authority, connection, true);
 };
 
 main();

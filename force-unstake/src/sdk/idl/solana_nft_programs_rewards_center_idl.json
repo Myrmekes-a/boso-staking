@@ -676,9 +676,14 @@
           "isSigner": false
         },
         {
-          "name": "user",
+          "name": "payer",
           "isMut": true,
           "isSigner": true
+        },
+        {
+          "name": "user",
+          "isMut": false,
+          "isSigner": false
         },
         {
           "name": "userEscrow",
