@@ -43,9 +43,9 @@ pub enum Action {
 pub fn assert_payment_info(stake_pool: Pubkey, action: Action, payment_info: Pubkey) -> Result<()> {
     let default_allowed_payment_infos = match action {
         _ => [
-            "J29foBWVHUgKcfsH3YhidebMZuVMocB1JTEK1cN8Ld8q".to_string(), // test-wsol //382KXQfzC26jbFmLZBmKoZ6eRz53iwGfxXwoGyyyH8po
-            "CuvfB3Xgs8142BbzP6mCuMXnCnJN4eWGWquELhYka6Uw".to_string(), // test (native) // HqiCY5NqfHfyhyjheQ4ENo5J2XSQBpeqhNoeESkDWBpU
-            "4ScVKBLYc1VziBwTgUQBWwdgLFNHUsDZdg679t5vYyoa".to_string(),  // default 0.002 // SdFEeJxn7XxcnYEMNpnoMMSsTfmA1bHfiRdu6qra7zL
+            "CdmzhWts3cpmWn4yGGocPxmQkvGjreEcspgSnszN1aCv".to_string(), // test-wsol //382KXQfzC26jbFmLZBmKoZ6eRz53iwGfxXwoGyyyH8po
+            "pbDnMFT8nUrCj6xJjmG4ZVT4apEQpNunSC2Ws9QXC7s".to_string(), // test (native) // HqiCY5NqfHfyhyjheQ4ENo5J2XSQBpeqhNoeESkDWBpU
+            "6tD82AAhCA5Hc6dJaerc8oBuGUBwGzn7jsETJ857ibVK".to_string(),  // default 0.002 // SdFEeJxn7XxcnYEMNpnoMMSsTfmA1bHfiRdu6qra7zL
         ]
         .to_vec(),
     };

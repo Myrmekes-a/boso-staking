@@ -18,7 +18,7 @@ pub mod utils;
 
 use anchor_lang::prelude::*;
 
-declare_id!("2T8nXEEvXVYNeNVrjWGbF1wLKkavPef7281tLbFTNo76");
+declare_id!("EnUpcqfqHozLZdojn2595cLSZkUqgPCDujSonJvP27HP");
 
 #[program]
 pub mod solana_nft_programs_rewards_center {
